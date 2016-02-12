@@ -4,28 +4,28 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * The primary key class for the added_outlinks database table.
+ * The primary key class for the removed_outlinks database table.
  * 
  */
 @Embeddable
-public class AddedOutlinksPK implements Serializable {
+public class RemovedOutlinkPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="page_id")
-	private Long pageId;
+	private Integer pageId;
 
 	@Column(name="day_number")
 	private Integer dayNumber;
 
-	private Long outlink;
+	private Integer outlink;
 
-	public AddedOutlinksPK() {
+	public RemovedOutlinkPK() {
 	}
-	public Long getPageId() {
+	public Integer getPageId() {
 		return this.pageId;
 	}
-	public void setPageId(Long pageId) {
+	public void setPageId(Integer pageId) {
 		this.pageId = pageId;
 	}
 	public Integer getDayNumber() {
@@ -34,10 +34,10 @@ public class AddedOutlinksPK implements Serializable {
 	public void setDayNumber(Integer dayNumber) {
 		this.dayNumber = dayNumber;
 	}
-	public Long getOutlink() {
+	public Integer getOutlink() {
 		return this.outlink;
 	}
-	public void setOutlink(Long outlink) {
+	public void setOutlink(Integer outlink) {
 		this.outlink = outlink;
 	}
 
@@ -45,10 +45,10 @@ public class AddedOutlinksPK implements Serializable {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof AddedOutlinksPK)) {
+		if (!(other instanceof RemovedOutlinkPK)) {
 			return false;
 		}
-		AddedOutlinksPK castOther = (AddedOutlinksPK)other;
+		RemovedOutlinkPK castOther = (RemovedOutlinkPK)other;
 		return 
 			this.pageId.equals(castOther.pageId)
 			&& this.dayNumber.equals(castOther.dayNumber)

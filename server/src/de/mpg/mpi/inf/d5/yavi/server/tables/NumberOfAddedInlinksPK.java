@@ -13,17 +13,17 @@ public class NumberOfAddedInlinksPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="page_id")
-	private Long pageId;
+	private Integer pageId;
 
 	@Column(name="day_number")
 	private Integer dayNumber;
 
 	public NumberOfAddedInlinksPK() {
 	}
-	public Long getPageId() {
+	public Integer getPageId() {
 		return this.pageId;
 	}
-	public void setPageId(Long pageId) {
+	public void setPageId(Integer pageId) {
 		this.pageId = pageId;
 	}
 	public Integer getDayNumber() {

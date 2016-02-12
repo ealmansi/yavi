@@ -4,9 +4,9 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2016-02-10T16:53:34.551+0100")
+@Generated(value="Dali", date="2016-02-12T15:18:18.155+0100")
 @StaticMetamodel(NumberOfAddedInlinksPK.class)
 public class NumberOfAddedInlinksPK_ {
-	public static volatile SingularAttribute<NumberOfAddedInlinksPK, Long> pageId;
+	public static volatile SingularAttribute<NumberOfAddedInlinksPK, Integer> pageId;
 	public static volatile SingularAttribute<NumberOfAddedInlinksPK, Integer> dayNumber;
 }

@@ -20,7 +20,7 @@ public class RelatedPagesResource {
   
   @GET
   @JSONP(queryParam = JSONP.DEFAULT_CALLBACK)
-  public List<PageIdScore> doGet(@QueryParam("pageid") long pageId,
+  public List<PageIdScore> doGet(@QueryParam("pageid") int pageId,
       @QueryParam("wikipediaid") String wikipediaId,
       @QueryParam("datefrom") String dateFrom,
       @QueryParam("dateto") String dateTo) {

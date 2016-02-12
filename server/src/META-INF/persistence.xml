@@ -6,8 +6,6 @@
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
-    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
-    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
@@ -20,6 +18,12 @@
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
     <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedInlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedInlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.RemovedInlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.RemovedInlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.RemovedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.RemovedOutlinkPK</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />

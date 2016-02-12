@@ -4,11 +4,11 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * The primary key class for the page_content_size database table.
+ * The primary key class for the removed_inlinks database table.
  * 
  */
 @Embeddable
-public class PageContentSizePK implements Serializable {
+public class RemovedInlinkPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,9 @@ public class PageContentSizePK implements Serializable {
 	@Column(name="day_number")
 	private Integer dayNumber;
 
-	public PageContentSizePK() {
+	private Integer inlink;
+
+	public RemovedInlinkPK() {
 	}
 	public Integer getPageId() {
 		return this.pageId;
@@ -32,18 +34,25 @@ public class PageContentSizePK implements Serializable {
 	public void setDayNumber(Integer dayNumber) {
 		this.dayNumber = dayNumber;
 	}
+	public Integer getInlink() {
+		return this.inlink;
+	}
+	public void setInlink(Integer inlink) {
+		this.inlink = inlink;
+	}
 
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof PageContentSizePK)) {
+		if (!(other instanceof RemovedInlinkPK)) {
 			return false;
 		}
-		PageContentSizePK castOther = (PageContentSizePK)other;
+		RemovedInlinkPK castOther = (RemovedInlinkPK)other;
 		return 
 			this.pageId.equals(castOther.pageId)
-			&& this.dayNumber.equals(castOther.dayNumber);
+			&& this.dayNumber.equals(castOther.dayNumber)
+			&& this.inlink.equals(castOther.inlink);
 	}
 
 	public int hashCode() {
@@ -51,6 +60,7 @@ public class PageContentSizePK implements Serializable {
 		int hash = 17;
 		hash = hash * prime + this.pageId.hashCode();
 		hash = hash * prime + this.dayNumber.hashCode();
+		hash = hash * prime + this.inlink.hashCode();
 		
 		return hash;
 	}

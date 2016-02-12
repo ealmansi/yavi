@@ -1,22 +1,22 @@
 package de.mpg.mpi.inf.d5.yavi.server.util;
 
 public class PageIdScore {
-  private long pageId;
+  private int pageId;
   private double score;
 
   public PageIdScore() {
   }
   
-  public PageIdScore(long pageId, double score) {
+  public PageIdScore(int pageId, double score) {
     this.pageId = pageId;
     this.score = score;
   }
   
-  public long getPageId() {
+  public int getPageId() {
     return pageId;
   }
 
-  public void setPageId(long pageId) {
+  public void setPageId(int pageId) {
     this.pageId = pageId;
   }
 
