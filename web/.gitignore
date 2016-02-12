@@ -19,3 +19,6 @@ bower_components/
 
 # Sass cache
 .sass-cache/
+
+# e2e
+e2e/
