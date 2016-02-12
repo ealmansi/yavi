@@ -1,5 +1,6 @@
 # Local Resources
 local/
+src/assets/images/vendor/
 *.sublime-project
 *.sublime-workspace
 
