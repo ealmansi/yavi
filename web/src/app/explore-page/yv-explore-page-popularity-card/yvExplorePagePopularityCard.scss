@@ -1,0 +1,19 @@
+yv-explore-page-popularity-card {
+  #explore-page-popularity-card-wrapper {
+    #popularity-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+      #popularity-card-panel-heading {
+        @extend .panel-heading;
+        height: 35px;
+        #popularity-card-panel-title {
+          @extend .panel-title;
+          @extend .pull-right;
+        }
+      }
+      #popularity-card-panel-body {
+        @extend .panel-body;
+      }
+    }
+  }
+}

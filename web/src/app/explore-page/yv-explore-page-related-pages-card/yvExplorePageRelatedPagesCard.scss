@@ -1,0 +1,19 @@
+yv-explore-page-related-pages-card {
+  #explore-page-related-pages-card-wrapper {
+    #related-pages-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+    }
+    #related-pages-card-panel-heading {
+      @extend .panel-heading;
+      height: 35px;
+      #related-pages-card-panel-title {
+        @extend .panel-title;
+        @extend .pull-right;
+      }
+    }
+    #related-pages-card-panel-body {
+      @extend .panel-body;
+    }
+  }
+}

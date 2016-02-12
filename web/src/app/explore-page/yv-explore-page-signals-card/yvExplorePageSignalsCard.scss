@@ -1,0 +1,19 @@
+yv-explore-page-signals-card {
+  #explore-page-signals-card-wrapper {
+    #signals-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+    }
+    #signals-card-panel-heading {
+      @extend .panel-heading;
+      height: 35px;
+      #signals-card-panel-title {
+        @extend .panel-title;
+        @extend .pull-right;
+      }
+    }
+    #signals-card-panel-body {
+      @extend .panel-body;
+    }
+  }
+}

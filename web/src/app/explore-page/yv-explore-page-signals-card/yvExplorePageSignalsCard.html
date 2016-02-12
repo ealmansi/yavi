@@ -1,0 +1,32 @@
+<div id="explore-page-signals-card-wrapper">
+  <div id="signals-card-panel">
+    <div id="signals-card-panel-heading" uib-tooltip="Popularity Signals" tooltip-placement="bottom-right">
+      <h3 id="signals-card-panel-title"><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span></h3>
+    </div>
+    <div id="signals-card-panel-body">
+      <uib-tabset stacked="true">
+        <uib-tab heading="Added Inlinks" select="vm.makeChartNumberOfAddedInlinks()">
+          <div id="chart-number-of-added-inlinks" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Added Outlinks" select="vm.makeChartNumberOfAddedOutlinks()">
+          <div id="chart-number-of-added-outlinks" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Reverted Revisions" select="vm.makeChartNumberOfRevertedRevisions()">
+          <div id="chart-number-of-reverted-revisions" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Revisions" select="vm.makeChartNumberOfRevisions()">
+          <div id="chart-number-of-revisions" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Total Outlinks" select="vm.makeChartNumberOfTotalOutlinks()">
+          <div id="chart-number-of-total-outlinks" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Unique Editors" select="vm.makeChartNumberOfUniqueEditors()">
+          <div id="chart-number-of-unique-editors" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Page Content Size" select="vm.makeChartPageContentSize()">
+          <div id="chart-page-content-size" style="width:100%;height:500px;"></div>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </div>
+</div>

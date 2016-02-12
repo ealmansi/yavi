@@ -1,0 +1,48 @@
+yv-explore-page-main-card {
+  #explore-page-main-card-wrapper {
+    #main-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+      #main-card-panel-heading {
+        @extend .panel-heading;
+        height: 35px;
+        #main-card-panel-title {
+          @extend .panel-title;
+          @extend .pull-right;
+        }
+      }
+      #main-card-panel-body {
+        @extend .panel-body;
+        @extend .row;
+        #main-card-panel-body-left {
+          @extend .col-xs-12;
+          @extend .col-sm-8;
+          #page-title {
+          }
+          #page-images-carrousel {
+            height: 300px;
+            margin-bottom: 10px;
+            img {
+              height: 300px;
+              margin: auto;
+            }
+          }
+          #page-description {
+            max-height: 300px;
+            margin-bottom: 10px;
+          }
+        }
+        #main-card-panel-body-right {
+          @extend .col-xs-12;
+          @extend .col-sm-4;
+          #page-category-list {
+            @extend .list-group;
+            .page-category-item {
+              @extend .list-group-item;
+            }
+          }
+        }
+      }
+    }
+  }
+}

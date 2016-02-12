@@ -1,0 +1,26 @@
+#explore-page-wrapper {
+  @extend .container-fluid;
+  padding: 0px;
+  #explore-page-cards-wrapper-1 {
+    @extend .row;
+    margin: 0px;
+    #explore-page-cards-wrapper-2 {
+      @extend .col-xs-12;
+      @extend .col-md-offset-0;
+      @extend .col-md-10;
+      @extend .col-md-offset-1;
+      #explore-page-cards-wrapper-3 {
+        @extend .row;
+        margin: 0px;
+        #explore-page-cards-left {
+          @extend .col-xs-12;
+          @extend .col-md-6;
+        }
+        #explore-page-cards-right {
+          @extend .col-xs-12;
+          @extend .col-md-6;
+        }
+      }
+    }
+  }
+}

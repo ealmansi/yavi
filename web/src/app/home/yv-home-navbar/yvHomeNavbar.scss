@@ -1,0 +1,12 @@
+yv-home-navbar {
+  @extend .row;
+  margin: 0px;
+  #home-navbar-wrapper {
+    .navbar {
+      border-radius: 0px;
+      #isotype {
+        height: 100%;
+      }
+    }
+  }
+}

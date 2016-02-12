@@ -1,0 +1,28 @@
+<div id="explore-page-main-card-wrapper">
+  <div id="main-card-panel">
+    <div id="main-card-panel-heading" uib-tooltip="General Information" tooltip-placement="bottom-right">
+      <h3 id="main-card-panel-title"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span></h3>
+    </div>
+    <div id="main-card-panel-body">
+      <div id="main-card-panel-body-left">
+        <h2 id="page-title"></h2>
+        <hr>
+        <div id="page-images-carrousel">
+          <uib-carousel no-wrap="vm.carrouselNoWrap">
+            <uib-slide ng-repeat="slide in vm.carrouselSlides" active="slide.active" index="slide.id">
+              <img ng-src="{{slide.image}}">
+              <div class="carousel-caption">
+              </div>
+            </uib-slide>
+          </uib-carousel>
+        </div>
+        <div id="page-description"></div>
+      </div>
+      <div id="main-card-panel-body-right">
+        <ul id="page-category-list"></ul>
+        <a id="page-wikipedia-link" target="_blank" href="#">Wikipedia</a>
+        <a id="page-google-link" target="_blank" href="#">Google</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+yv-home-search-results-card {
+  .home-search-results-card-wrapper {
+    @extend .col-xs-12;
+    @extend .col-sm-4;
+    @extend .col-md-3;
+    padding: 0px;
+    .card {
+      @extend .panel;
+      @extend .panel-default;
+      @extend .levitate;
+      padding: 0px;
+      margin: 0px 10px 10px 0px;
+      overflow: hidden;
+      .card-body {
+        @extend .row;
+        @extend .panel-body;
+        padding: 0px;
+        overflow: hidden;
+        .card-body-left {
+          @extend .col-xs-12;
+          @extend .col-xs-offset-0;
+          height: 200px;
+          .page-thumbnail {
+            height: 100%;
+            background-image: url('/assets/images/fallback-thumbnail.png');
+            background-position: 50% 0%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-bottom: 1px solid #DCDCDC;
+          } 
+        }
+        .card-body-right {
+          @extend .col-xs-12;
+          @extend .col-xs-offset-0;
+          height: 200px;
+          margin: 10px;
+          .card-text {
+            padding: 0px 20px 20px 0px;
+            .page-title {
+
+            }
+            .page-description {
+              max-height: 150px;
+              overflow: hidden;
+              @extend .text-justify;
+            }
+          }
+        }
+      }
+      .card-footer {
+        @extend .panel-footer;
+        height: 30px;
+        overflow: hidden;
+        padding: 5px;
+        .page-category-list {
+          @extend .list-inline;
+          margin: 0px;
+          .page-category-item {
+            @extend .label;
+            @extend .label-info;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}

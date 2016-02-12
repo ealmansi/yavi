@@ -1,0 +1,12 @@
+yv-page-not-found-navbar {
+  @extend .row;
+  margin: 0px;
+  #page-not-found-navbar-wrapper {
+    .navbar {
+      border-radius: 0px;
+      #isotype {
+        height: 100%;
+      }
+    }
+  }
+}

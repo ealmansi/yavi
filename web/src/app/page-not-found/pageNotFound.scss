@@ -1,0 +1,25 @@
+#page-not-found-wrapper {
+  @extend .container-fluid;
+  padding: 0px;
+  #page-not-found-content {
+    @extend .row;
+    margin: 0px 0px 0px 0px;
+    #page-not-found-header {
+      @extend .col-xs-10;
+      @extend .col-xs-offset-1;
+      @extend .col-md-4;
+      @extend .col-md-offset-4;
+      @extend .page-header;
+    }
+    #page-not-found-isotype {
+      @extend .col-xs-10;
+      @extend .col-xs-offset-1;
+      @extend .col-md-4;
+      @extend .col-md-offset-4;
+      height: 200px;
+      background-image: url('/assets/images/isotype.png');
+      background-position: 50% 0%;
+      background-repeat: no-repeat;
+    }
+  }
+}
