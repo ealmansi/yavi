@@ -1,0 +1,10 @@
+{"title":"A", "namespace": 0, "page_id": 1, "redirect": null}
+{"title":"B", "namespace": 0, "page_id": 2, "redirect": null}
+{"title":"C", "namespace": 0, "page_id": 3, "redirect": null}
+{"title":"D", "namespace": 14, "page_id": 4, "redirect": null}
+{"title":"E", "namespace": 14, "page_id": 5, "redirect": null}
+{"title":"F", "namespace": 0, "page_id": 6, "redirect":"A"}
+{"title":"G", "namespace": 0, "page_id": 7, "redirect":"B"}
+{"title":"H", "namespace": 0, "page_id": 8, "redirect":"C"}
+{"title":"I", "namespace": 14, "page_id": 9, "redirect":"D"}
+{"title":"J", "namespace": 14, "page_id": 10, "redirect":"E"}
