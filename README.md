@@ -1,2 +1,2 @@
-# yavi
+# Yavi
 Wikipedia Text+Time Visualization.
