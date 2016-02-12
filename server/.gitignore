@@ -1,0 +1,13 @@
+# Local Resources
+local/
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Build
+build/
+target/

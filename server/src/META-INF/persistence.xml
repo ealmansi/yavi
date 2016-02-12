@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="dewiki">
+    <mapping-file>META-INF/dewiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="enwiki">
+    <mapping-file>META-INF/enwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="eswiki">
+    <mapping-file>META-INF/eswiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="frwiki">
+    <mapping-file>META-INF/frwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="itwiki">
+    <mapping-file>META-INF/itwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="jawiki">
+    <mapping-file>META-INF/jawiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="plwiki">
+    <mapping-file>META-INF/plwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="ptwiki">
+    <mapping-file>META-INF/ptwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="ruwiki">
+    <mapping-file>META-INF/ruwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="zhwiki">
+    <mapping-file>META-INF/zhwiki-orm.xml</mapping-file>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinkPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedInlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfAddedOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisions</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfRevertedRevisionsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinks</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfTotalOutlinksPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditors</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.NumberOfUniqueEditorsPK</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSize</class>
+    <class>de.mpg.mpi.inf.d5.yavi.server.tables.PageContentSizePK</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://postgres2.d5.mpi-inf.mpg.de:5432/ealmansi" />
+      <property name="javax.persistence.jdbc.user" value="ealmansi" />
+      <property name="javax.persistence.jdbc.password" value="kahsh5aPQuae0iun" />
+    </properties>
+  </persistence-unit>
+</persistence>
