@@ -19,7 +19,7 @@
     return directive;
   
     /** @ngInject */
-    function controllerFunction($scope, $location, $anchorScroll, $timeout, wikipediaAPI, $state) {
+    function controllerFunction($scope, wikipediaSources, $timeout, wikipediaAPI, $state) {
       var vm = this;
 
       // Home properties.
@@ -27,6 +27,10 @@
       vm.searchResults = $scope.$parent.vm.searchResults;
       vm.searchBoxInputDebounce = 150;
       vm.searchOngoing = false;
+
+      // Wikipedia sources.
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
+      vm.wikipediaSources = wikipediaSources.getWikipediaSources();
 
       // Search box change.
       var onChangeTimerCurrent = undefined;

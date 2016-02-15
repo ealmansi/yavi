@@ -18,7 +18,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction($scope, wikipediaSources, yaviConfig, $state) {
+    function controllerFunction($scope, wikipediaSources, $state) {
       var vm = this;
       
       // Home properties.
@@ -31,26 +31,13 @@
       }
 
       // Wikipedia sources.
-      vm.wikipediaSources = wikipediaSources;
-      vm.activeWikipediaSource = getWikipediaSourceById(yaviConfig.wikipediaId);
+      vm.wikipediaSources = wikipediaSources.getWikipediaSources();
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
       vm.selectWikipediaSource = function(wikipediaId) {
-        var wikipediaSource = getWikipediaSourceById(wikipediaId);
-        if (angular.isDefined(wikipediaSource)) {
-          yaviConfig.wikipediaId = wikipediaSource.wikipediaId;
-          $state.go($state.current, {
-            query: vm.query.value
-          }, {reload: true, inherit: false});
-        }
-      }
-      
-      function getWikipediaSourceById(wikipediaId) {
-        var matchingWikipediaSource = undefined;
-        angular.forEach(wikipediaSources, function(wikipediaSource) {
-          if (wikipediaSource.wikipediaId == wikipediaId) {
-            matchingWikipediaSource = wikipediaSource;
-          }
-        });
-        return matchingWikipediaSource;
+        wikipediaSources.setActiveWikipediaSourceById(wikipediaId);
+        $state.go($state.current, {
+          query: vm.query.value
+        }, {reload: true, inherit: false});
       }
     }
   }
