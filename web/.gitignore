@@ -10,9 +10,6 @@ coverage/
 # Gulp intermediate storage
 .tmp/
 
-# Build output
-dist/
-
 # Dependency directories
 node_modules/
 bower_components/
