@@ -50,7 +50,7 @@
 
     function buildPageSignalQuery(signalType, pageId, dateFrom, dateTo) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/signal?';
+      queryTemplate += 'https://gate.d5.mpi-inf.mpg.de/yavi-server/signal?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
@@ -68,7 +68,7 @@
     
     function buildPageRelatedPagesQuery(pageId, dateFrom, dateTo) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/relatedpages?';
+      queryTemplate += 'https://gate.d5.mpi-inf.mpg.de/yavi-server/relatedpages?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
