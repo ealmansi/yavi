@@ -47,6 +47,13 @@
         "./amcharts/themes/light.js",
         "./amcharts/images/*"
       ]
+    },
+    "flag-icon-css": {
+      "main": [
+        "css/flag-icon.min.css",
+        "flags/1x1/*.svg",
+        "flags/4x3/*.svg"
+      ]
     }
   }
 }

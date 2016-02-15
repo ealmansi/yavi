@@ -10,7 +10,7 @@ var $ = require('gulp-load-plugins')({
 
 gulp.task('assets', [], function() {
   return gulp.src($.mainBowerFiles())
-    .pipe($.filter('**/*.{png,jpg,jpeg,bmp,gif}'))
+    .pipe($.filter('**/*.{png,jpg,jpeg,bmp,gif,svg}'))
     .pipe($.flatten())
     .pipe(gulp.dest(path.join(conf.paths.src, '/assets/images/vendor/')));
 });
