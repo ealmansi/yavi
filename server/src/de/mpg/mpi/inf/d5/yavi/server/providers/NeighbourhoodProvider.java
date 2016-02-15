@@ -11,7 +11,7 @@ import javax.persistence.Query;
 
 import com.google.common.base.Joiner;
 
-import de.mpg.mpi.inf.d5.yavi.server.tables.AddedOutlink;
+import de.mpg.mpi.inf.d5.yavi.server.entities.AddedOutlink;
 
 public class NeighbourhoodProvider {
   public Set<Integer> getPageNeighbourhood(int pageId, String wikipediaId, int dayFrom, int dayTo) {

@@ -1,5 +1,6 @@
 package de.mpg.mpi.inf.d5.yavi.server.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import org.glassfish.jersey.server.JSONP;
 import de.mpg.mpi.inf.d5.yavi.server.providers.SignalProvider;
 import de.mpg.mpi.inf.d5.yavi.server.util.DateUtil;
 import de.mpg.mpi.inf.d5.yavi.server.util.DateValue;
+import de.mpg.mpi.inf.d5.yavi.server.util.DayValue;
 
 @Path("/signal")
 @Produces("application/x-javascript")
@@ -29,23 +31,42 @@ public class SignalResource {
       @QueryParam("signaltype") String signalType) {
     int dayFrom = DateUtil.dateToDayNumber(dateFrom);
     int dayTo = DateUtil.dateToDayNumber(dateTo);
+    List<DayValue> dayValueList = null;
     switch(signalType) {
     case "numberofrevisions":
-      return signalProvider.getNumberOfRevisions(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfRevisions(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "numberofrevertedrevisions":
-      return signalProvider.getNumberOfRevertedRevisions(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfRevertedRevisions(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "numberofuniqueeditors":
-      return signalProvider.getNumberOfUniqueEditors(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfUniqueEditors(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "pagecontentsize":
-      return signalProvider.getPageContentSize(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getPageContentSize(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "numberoftotaloutlinks":
-      return signalProvider.getNumberOfTotalOutlinks(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfTotalOutlinks(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "numberofaddedoutlinks":
-      return signalProvider.getNumberOfAddedOutlinks(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfAddedOutlinks(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     case "numberofaddedinlinks":
-      return signalProvider.getNumberOfAddedInlinks(pageId, wikipediaId, dayFrom, dayTo);
+      dayValueList = signalProvider.getNumberOfAddedInlinks(pageId, wikipediaId, dayFrom, dayTo);
+      break;
     default:
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
+    return convertDayValuesToDateValues(dayValueList);
+  }
+
+  private List<DateValue> convertDayValuesToDateValues(List<DayValue> dayValueList) {
+    List<DateValue> dateValueList = new ArrayList<>();
+    for (DayValue dayValue : dayValueList) {
+      String date = DateUtil.dayNumberToDate(dayValue.getDay());
+      int value = dayValue.getValue();
+      dateValueList.add(new DateValue(date, value));
+    }
+    return dateValueList;
   }
 }

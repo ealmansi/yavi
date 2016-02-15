@@ -14,11 +14,11 @@ import de.mpg.mpi.inf.d5.yavi.server.providers.NeighbourhoodProvider;
 import de.mpg.mpi.inf.d5.yavi.server.util.PageIdScore;
 
 public class RelatedPages {
-  private static final Comparator<Entry<Integer, Double>> MAP_ENTRY_VALUE_COMPARATOR_DESC =
-      Collections.reverseOrder(new MapEntryValueComparator());
-
   private static final int NEIGHBOURS_LIMIT = 50;
   private static final int RELATED_PAGES_LIMIT = 10;
+  
+  private static final Comparator<Entry<Integer, Double>> MAP_ENTRY_VALUE_COMPARATOR_DESC =
+      Collections.reverseOrder(new MapEntryValueComparator());
 
   private NeighbourhoodProvider neighbourhoodProvider = new NeighbourhoodProvider();
   
@@ -44,8 +44,10 @@ public class RelatedPages {
 
   private Map<Integer, Double> scoreRelatedPages(Set<Integer> relatedPages, String wikipediaId, int dayFrom, int dayTo) {
     Map<Integer, Double> relatedPageScores = new HashMap<>();
-    for (Integer relatedPageId : relatedPages) {
-      relatedPageScores.put(relatedPageId, 1.0);
+    for (int relatedPageId : relatedPages) {
+      double popularityScore =
+          PagePopularity.computePopularityScore(relatedPageId, wikipediaId, dayFrom, dayTo);
+      relatedPageScores.put(relatedPageId, popularityScore);
     }
     return relatedPageScores;
   }
