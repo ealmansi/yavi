@@ -13,7 +13,8 @@
       link: linkFunction,
       restrict: 'E',
       scope: {
-        'pageId': '='
+        'pageId': '=',
+        'period': '='
       },
       templateUrl: 'app/explore-page/yv-explore-page-related-pages-card/yv-related-pages-bubble-chart/yvRelatedPagesBubbleChart.html'
     };
@@ -24,21 +25,31 @@
     function controllerFunction(wikipediaPages, $scope, $rootScope) {
       var vm = this;
       
+      // Check if page id is valid.
+      if (!wikipediaPages.isValidId($scope.pageId)) {
+        return;
+      }
+      
+      // Get page and period.
       vm.page = wikipediaPages.getPageById($scope.pageId);
+      vm.period = $scope.period;
 
-      var periodSelectionWatch = $rootScope.$on('periodSelection', function(event, period) {
-        onPeriodSelection(vm.page, period);
+      var periodSelectionWatch = $rootScope.$on('periodSelection', function(event, newPeriod) {
+        vm.period.startDate = newPeriod.startDate;
+        vm.period.endDate = newPeriod.endDate;
+        onPeriodSelection(vm.page, vm.period.startDate, vm.period.endDate);
       });
 
       $scope.$on('$destroy', periodSelectionWatch);
     }
 
     function linkFunction(scope) {
-      onPeriodSelection(scope.vm.page, undefined);
+      onPeriodSelection(scope.vm.page, scope.vm.period.startDate, scope.vm.period.endDate);
     }
 
-    function onPeriodSelection(page, period) {
-      page.getRelatedPages("2000-01-01", "2020-01-01").then(function(relatedPages) {
+    function onPeriodSelection(page, startDate, endDate) {
+      angular.element("#bubble-chart").empty();
+      page.getRelatedPages(startDate, endDate).then(function(relatedPages) {
         var items = [], wrappedPromises = [];
         angular.forEach(relatedPages, function(pageIdScore) {
           if (angular.isDefined(pageIdScore)
@@ -88,7 +99,7 @@
                 classed: classedFunction,
                 eval: buildEvalFunction(maxScore),
                 items: items
-            });
+            }, startDate, endDate);
             
             // var absUrl = $location.absUrl();
             // angular.forEach(items, function(item) {
@@ -120,8 +131,7 @@
         }
       });
 
-      function makeChart(chartData) {
-        angular.element("#bubble-chart").empty();
+      function makeChart(chartData, startDate, endDate) {
         new d3.svg.BubbleChart({
           supportResponsive: true,
           container: '#bubble-chart',
@@ -151,7 +161,9 @@
                 attr: {dy: "65px"},
                 centralClick: function(item) {
                   $state.go('explorePage', {
-                    pageId: item.pageId
+                    pageId: item.pageId,
+                    startDate: startDate,
+                    endDate: endDate
                   });
                 }
               }

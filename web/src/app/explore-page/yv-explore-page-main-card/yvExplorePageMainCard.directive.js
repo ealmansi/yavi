@@ -13,7 +13,8 @@
       link: linkFunction,
       restrict: 'E',
       scope: {
-        pageId: '='
+        pageId: '=',
+        period: '='
       },
       templateUrl: 'app/explore-page/yv-explore-page-main-card/yvExplorePageMainCard.html'
     };
@@ -31,12 +32,14 @@
       }];
       vm.carrouselNoWrap = false;
 
-      //
+      // Check if page id is valid.
       if (!wikipediaPages.isValidId($scope.pageId)) {
         return;
       }
       
+      // Get page and period.
       vm.page = wikipediaPages.getPageById($scope.pageId);
+      vm.period = $scope.period;
 
       // TODO: deduplicate this code.
       vm.activeWikipediaSource = getWikipediaSourceById(yaviConfig.wikipediaId);

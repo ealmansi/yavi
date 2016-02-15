@@ -3,7 +3,7 @@
 
   angular
     .module('yavi')
-    .directive('yvExplorePageRelatedPagesCard', directiveFunction);
+    .directive('yvExplorePagePeriodSelectorCard', directiveFunction);
 
   /** @ngInject */
   function directiveFunction() {
@@ -15,13 +15,13 @@
         pageId: '=',
         period: '='
       },
-      templateUrl: 'app/explore-page/yv-explore-page-related-pages-card/yvExplorePageRelatedPagesCard.html'
+      templateUrl: 'app/explore-page/yv-explore-page-period-selector-card/yvExplorePagePeriodSelectorCard.html'
     };
 
     return directive;
-  
+    
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope) {
+    function controllerFunction(wikipediaPages, $scope, $log) {
       var vm = this;
 
       // Check if page id is valid.
@@ -32,6 +32,14 @@
       // Get page and period.
       vm.page = wikipediaPages.getPageById($scope.pageId);
       vm.period = $scope.period;
+
+      vm.datePicker = {date: {startDate: vm.period.startDate, endDate: vm.period.endDate}};
+      vm.onApply = function() {
+        $scope.$emit('periodSelection', {
+          startDate: vm.datePicker.date.startDate.format('YYYY-MM-DD'),
+          endDate: vm.datePicker.date.endDate.format('YYYY-MM-DD')
+        });
+      }
     }
   }
 

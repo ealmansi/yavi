@@ -65,7 +65,7 @@
       }
 
       self.getNumberOfAddedInlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfAddedInlinksList)) {
+        if (true || angular.isUndefined(numberOfAddedInlinksList)) {
         return yaviServer.getPageSignal("numberofaddedinlinks", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfAddedInlinksList = val;
@@ -76,7 +76,7 @@
       }
 
       self.getNumberOfAddedOutlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfAddedOutlinksList)) {
+        if (true || angular.isUndefined(numberOfAddedOutlinksList)) {
         return yaviServer.getPageSignal("numberofaddedoutlinks", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfAddedOutlinksList = val;
@@ -87,7 +87,7 @@
       }
 
       self.getNumberOfRevertedRevisionsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfRevertedRevisionsList)) {
+        if (true || angular.isUndefined(numberOfRevertedRevisionsList)) {
         return yaviServer.getPageSignal("numberofrevertedrevisions", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfRevertedRevisionsList = val;
@@ -98,7 +98,7 @@
       }
 
       self.getNumberOfRevisionsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfRevisionsList)) {
+        if (true || angular.isUndefined(numberOfRevisionsList)) {
         return yaviServer.getPageSignal("numberofrevisions", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfRevisionsList = val;
@@ -109,7 +109,7 @@
       }
 
       self.getNumberOfTotalOutlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfTotalOutlinksList)) {
+        if (true || angular.isUndefined(numberOfTotalOutlinksList)) {
         return yaviServer.getPageSignal("numberoftotaloutlinks", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfTotalOutlinksList = val;
@@ -120,7 +120,7 @@
       }
 
       self.getNumberOfUniqueEditorsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfUniqueEditorsList)) {
+        if (true || angular.isUndefined(numberOfUniqueEditorsList)) {
         return yaviServer.getPageSignal("numberofuniqueeditors", pageId, dateFrom, dateTo)
             .then(function(val) {
               numberOfUniqueEditorsList = val;
@@ -131,7 +131,7 @@
       }
 
       self.getPageContentSizeList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(pageContentSizeList)) {
+        if (true || angular.isUndefined(pageContentSizeList)) {
         return yaviServer.getPageSignal("pagecontentsize", pageId, dateFrom, dateTo)
             .then(function(val) {
               pageContentSizeList = val;
@@ -142,7 +142,7 @@
       }
 
       self.getRelatedPages = function(dateFrom, dateTo) {
-        if (angular.isUndefined(relatedPages)) {
+        if (true || angular.isUndefined(relatedPages)) {
           return yaviServer.getPageRelatedPages(pageId, dateFrom, dateTo)
               .then(function(val) {
                 relatedPages = val;

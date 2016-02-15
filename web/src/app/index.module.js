@@ -4,6 +4,7 @@
   angular
     .module('yavi', [
       'chart.js',
+      'daterangepicker',
       'ngAnimate',
       'ngAria',
       'ngCookies',

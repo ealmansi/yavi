@@ -9,7 +9,10 @@
   function routerConfig($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
       .state('home', {
-        url: '/:query?',
+        url: '/',
+        params: {
+          query: null
+        },
         templateUrl: 'app/home/home.html',
         controller: 'HomeController',
         controllerAs: 'vm'
@@ -18,6 +21,10 @@
     $stateProvider
       .state('explorePage', {
         url: '/explorePage/:pageId',
+        params: {
+          startDate: null,
+          endDate: null
+        },
         templateUrl: 'app/explore-page/explorePage.html',
         controller: 'ExplorePageController',
         controllerAs: 'vm'

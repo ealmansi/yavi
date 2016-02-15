@@ -1,0 +1,17 @@
+<div id="explore-page-period-selector-card-wrapper">
+  <div id="period-selector-card-panel">
+    <div id="period-selector-card-panel-heading" uib-tooltip="Period selection" tooltip-placement="bottom-right">
+      <h3 id="period-selector-card-panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></h3>
+    </div>
+    <div id="period-selector-card-panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8">
+        <h5>Select period of interest:</h5>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <input date-range-picker class="form-control date-picker" type="text" ng-model="vm.datePicker.date" options="{eventHandlers: {'apply.daterangepicker': vm.onApply}}" />
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
