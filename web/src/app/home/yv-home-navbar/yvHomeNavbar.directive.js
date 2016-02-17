@@ -20,7 +20,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction($scope, wikipediaSources, $state) {
+    function controllerFunction($scope, $state, $interpolate, wikipediaSources, toastr) {
       var vm = this;
       
       // Home properties.
@@ -37,9 +37,13 @@
       vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
       vm.selectWikipediaSource = function(wikipediaId) {
         wikipediaSources.setActiveWikipediaSourceById(wikipediaId);
+        vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
         $state.go($state.current, {
           query: vm.query.value
         }, {reload: true, inherit: false});
+        var messageTemplate = 'Changed Wikipiedia source to: {{language}}';
+        var message = $interpolate(messageTemplate)({language: vm.activeWikipediaSource.language});
+        toastr.success(message);
       }
     }
   }
