@@ -21,7 +21,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope, $log) {
+    function controllerFunction(wikipediaPages, $scope) {
       var vm = this;
 
       // Check if page id is valid.

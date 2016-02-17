@@ -1,4 +1,23 @@
 #home-wrapper {
   @extend .container-fluid;
   padding: 0px;
+  #home-loading-animation {
+    @extend .horizontally-centered;
+    z-index: 5;
+    width: 150px;
+    height: 150px;
+    background-image: url('/assets/images/loading.svg');
+    background-position: 50% 0%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  #home-search-results-wrapper {
+    @extends .row;
+    #home-search-results {
+      @extend .col-xs-12;
+      @extend .col-sm-10;
+      @extend .col-sm-offset-1;
+      padding: 0px 15px 0px 15px;
+    }
+  }
 }

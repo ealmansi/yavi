@@ -11,7 +11,9 @@
       controller: controllerFunction,
       controllerAs: 'vm',
       restrict: 'E',
-      scope: true,
+      scope: {
+        query: '='
+      },
       templateUrl: 'app/home/yv-home-navbar/yvHomeNavbar.html'
     };
 
@@ -22,7 +24,7 @@
       var vm = this;
       
       // Home properties.
-      vm.query = $scope.$parent.vm.query;
+      vm.query = $scope.query;
 
       // Collapsing.
       vm.navbarMenuIsCollapsed = true;

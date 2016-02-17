@@ -173,7 +173,7 @@
       }
     }
 
-    factory.search = function(query) {
+    factory.searchQuery = function(query) {
       return $http
         .jsonp(buildSearchQuery(query))
         .then(onSuccess, onError);
@@ -184,30 +184,16 @@
             && response.data.query
             && response.data.query.search
             && angular.isArray(response.data.query.search)) {
-          var results = response.data.query.search;
-          var pageIds = [], wrappedPromises = [];
-          angular.forEach(results, function(result) {
-            if (angular.isDefined(result.title)) {
-              var wrappedPromise = factory.getPageIdByTitle(result.title)
-                  .then(function(pageId) {
-                    return factory.getPageDescription(pageId)
-                        .then(function(pageDescription) {
-                          // TODO: improve disambiguation page detection logic.
-                          /* Only add if description is not too short. */
-                          if (pageDescription.length > 50) {
-                            pageIds.push(pageId);
-                          }
-                        });
-                  })
-                  .catch(function() {
-                    /* Skip if pageId cannot be retrieved. */
-                  });
-              wrappedPromises.push(wrappedPromise);
+          var queryResults = response.data.query.search;
+          var pageIdPromises = [];
+          angular.forEach(queryResults, function(queryResult) {
+            if (angular.isDefined(queryResult.title)) {
+              var pageTitle = queryResult.title;
+              var pageIdPromise = factory.getPageIdByTitle(pageTitle);
+              pageIdPromises.push(pageIdPromise);
             }
-          })
-          return $q.all(wrappedPromises).then(function() {
-            return pageIds;
           });
+          return pageIdPromises;
         }
         onError();
       }

@@ -1,6 +1,9 @@
 <div id="home-wrapper">
-  <yv-home-navbar></yv-home-navbar>
+  <yv-home-navbar query="vm.query"></yv-home-navbar>
   <yv-home-imagetype></yv-home-imagetype>
-  <yv-home-search-box yv-scroll-on-click></yv-home-search-box>
-  <yv-home-search-results></yv-home-search-results>
+  <yv-home-search-box query="vm.query" on-search-box-change="vm.onSearchBoxChange" on-search-box-submit="vm.onSearchBoxSubmit" yv-scroll-on-click></yv-home-search-box>
+  <div id="home-loading-animation" ng-show="vm.showLoadingAnimation"></div>
+  <div id="home-search-results-wrapper">
+    <div id="home-search-results"></div>
+  </div>
 </div>

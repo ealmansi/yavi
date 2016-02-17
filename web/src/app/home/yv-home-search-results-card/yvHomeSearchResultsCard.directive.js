@@ -12,14 +12,16 @@
       controllerAs: 'vm',
       link: linkFunction,
       restrict: 'E',
-      scope: true,
-      templateUrl: 'app/home/yv-home-search-results/yv-home-search-results-card/yvHomeSearchResultsCard.html'
+      scope: {
+        pageId: '='
+      },
+      templateUrl: 'app/home/yv-home-search-results-card/yvHomeSearchResultsCard.html'
     };
 
     return directive;
 
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope, $state) {
+    function controllerFunction(wikipediaPages, $scope, $state, $log) {
       var vm = this;
 
       vm.page = wikipediaPages.getPageById($scope.pageId);

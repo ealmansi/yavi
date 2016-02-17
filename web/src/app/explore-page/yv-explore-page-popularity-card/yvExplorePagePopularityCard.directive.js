@@ -6,7 +6,7 @@
     .directive('yvExplorePagePopularityCard', directiveFunction);
 
   /** @ngInject */
-  function directiveFunction(wikipediaPages, $q, $log) {
+  function directiveFunction(wikipediaPages, $q) {
     var directive = {
       controller: controllerFunction,
       controllerAs: 'vm',
