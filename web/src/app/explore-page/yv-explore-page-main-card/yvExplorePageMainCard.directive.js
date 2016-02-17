@@ -22,7 +22,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope) {
+    function controllerFunction($scope, wikipediaPages, wikipediaSources) {
       var vm = this;
       
       //
@@ -42,16 +42,7 @@
       vm.period = $scope.period;
 
       // TODO: deduplicate this code.
-      vm.activeWikipediaSource = getWikipediaSourceById(yaviConfig.wikipediaId);
-      function getWikipediaSourceById(wikipediaId) {
-        var matchingWikipediaSource = undefined;
-        angular.forEach(wikipediaSources, function(wikipediaSource) {
-          if (wikipediaSource.wikipediaId == wikipediaId) {
-            matchingWikipediaSource = wikipediaSource;
-          }
-        });
-        return matchingWikipediaSource;
-      }
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
     }
 
     function linkFunction(scope, element) {

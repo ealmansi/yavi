@@ -6,7 +6,7 @@
     .controller('HomeController', controllerFunction);
 
   /** @ngInject */
-  function controllerFunction(yvPageTitleConfig, $stateParams) {
+  function controllerFunction(yvPageTitleConfig, $stateParams, wikipediaPages, $log) {
     var vm = this;
 
     //
@@ -16,5 +16,4 @@
     vm.query = {value: $stateParams.query};
     vm.searchResults = {value: []};
   }
-
 })();

@@ -90,7 +90,7 @@
       $scope.$on('$destroy', periodSelectionWatch);
       
       vm.makeChartNumberOfAddedInlinks = function(startDate, endDate) {
-          vm.page.getNumberOfAddedInlinksList(startDate, endDate)
+          vm.page.getNPageActivitySignal(startDate, endDate, 'umberofaddedinlinks')
               .then(function(numberOfAddedInlinksList) {
                   numberOfAddedInlinksList.sort(dateValueComparator);
                   vm.numberOfAddedInlinksChart = makeChart('chart-number-of-added-inlinks',
@@ -99,7 +99,7 @@
       }
       
       vm.makeChartNumberOfAddedOutlinks = function(startDate, endDate) {
-          vm.page.getNumberOfAddedOutlinksList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofaddedoutlinks')
               .then(function(numberOfAddedOutlinksList) {
                   numberOfAddedOutlinksList.sort(dateValueComparator);
                   vm.numberOfAddedOutlinksChart = makeChart('chart-number-of-added-outlinks',
@@ -108,7 +108,7 @@
       }
       
       vm.makeChartNumberOfRevertedRevisions = function(startDate, endDate) {
-          vm.page.getNumberOfRevertedRevisionsList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevertedrevisions')
               .then(function(numberOfRevertedRevisionsList) {
                   numberOfRevertedRevisionsList.sort(dateValueComparator);
                   vm.numberOfRevertedRevisionsChart = makeChart('chart-number-of-reverted-revisions',
@@ -117,7 +117,7 @@
       }
       
       vm.makeChartNumberOfRevisions = function(startDate, endDate) {
-          vm.page.getNumberOfRevisionsList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevisions')
               .then(function(numberOfRevisionsList) {
                   numberOfRevisionsList.sort(dateValueComparator);
                   vm.numberOfRevisionsChart = makeChart('chart-number-of-revisions',
@@ -126,7 +126,7 @@
       }
       
       vm.makeChartNumberOfTotalOutlinks = function(startDate, endDate) {
-          vm.page.getNumberOfTotalOutlinksList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberoftotaloutlinks')
               .then(function(numberOfTotalOutlinksList) {
                   numberOfTotalOutlinksList.sort(dateValueComparator);
                   vm.numberOfTotalOutlinksChart = makeChart('chart-number-of-total-outlinks',
@@ -135,7 +135,7 @@
       }
       
       vm.makeChartNumberOfUniqueEditors = function(startDate, endDate) {
-          vm.page.getNumberOfUniqueEditorsList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofuniqueeditors')
               .then(function(numberOfUniqueEditorsList) {
                   numberOfUniqueEditorsList.sort(dateValueComparator);
                   vm.numberOfUniqueEditorsChart = makeChart('chart-number-of-unique-editors',
@@ -144,7 +144,7 @@
       }
       
       vm.makeChartPageContentSize = function(startDate, endDate) {
-          vm.page.getPageContentSizeList(startDate, endDate)
+          vm.page.getPageActivitySignal(startDate, endDate, 'pagecontentsize')
               .then(function(pageContentSizeList) {
                   pageContentSizeList.sort(dateValueComparator);
                   vm.pageContentSizeChart = makeChart('chart-page-content-size',

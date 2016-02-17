@@ -228,7 +228,7 @@
             && response.data.query
             && response.data.query.pages) {
           var pageIdArray = Object.keys(response.data.query.pages);
-          if (pageIdArray.length > 0) {
+          if (pageIdArray.length > 0 && pageIdArray[0] != -1) {
             return pageIdArray[0];
           }
         }

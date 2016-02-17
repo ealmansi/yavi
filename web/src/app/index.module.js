@@ -7,6 +7,7 @@
       'daterangepicker',
       'ngAnimate',
       'ngAria',
+      'ngclipboard',
       'ngCookies',
       'ngMessages',
       'ngResource',
