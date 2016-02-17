@@ -6,10 +6,11 @@
     .directive('yvExplorePagePopularityCard', directiveFunction);
 
   /** @ngInject */
-  function directiveFunction() {
+  function directiveFunction(wikipediaPages, $q, $log) {
     var directive = {
       controller: controllerFunction,
       controllerAs: 'vm',
+      link: linkFunction,
       restrict: 'E',
       scope: {
         pageId: '=',
@@ -21,7 +22,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope) {
+    function controllerFunction($scope, $rootScope) {
       var vm = this;
 
       // Check if page id is valid.
@@ -33,19 +34,73 @@
       vm.page = wikipediaPages.getPageById($scope.pageId);
       vm.period = $scope.period;
 
-      // Mock data for chart.
-      vm.radarLabels = ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"];
-      vm.radarData = [
-        [65, 59, 90, 81, 56, 55, 40],
-        [28, 48, 40, 19, 96, 27, 100]
-      ];
+      // Radar properties.
+      vm.radarLabels = [];
+      vm.radarSeries = [];
+      vm.radarData = [];
 
-      vm.lineLabels = ["January", "February", "March", "April", "May", "June", "July"];
-      vm.lineSeries = ['Series A', 'Series B'];
-      vm.lineData = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-      ];
+      var periodSelectionWatch = $rootScope.$on('periodSelection', function(event, newPeriod) {
+        vm.period.startDate = newPeriod.startDate;
+        vm.period.endDate = newPeriod.endDate;
+        onPeriodSelection(vm.page, vm.period, vm.radarLabels, vm.radarSeries, vm.radarData);
+      });
+
+      $scope.$on('$destroy', periodSelectionWatch);
+    }
+
+    function onPeriodSelection(page, period, radarLabels, radarSeries, radarData) {
+      radarSeries.length = 0;
+      radarData.length = 0;
+      page.getRelatedPages(period.startDate, period.endDate)
+      .then(function(relatedPages) {
+        var relatedPagesTop5 = relatedPages.slice(0, 5);
+        angular.forEach(relatedPagesTop5, function(pageIdScorePair) {
+          var relatedPageId = pageIdScorePair.pageId;
+          var relatedPage = wikipediaPages.getPageById(relatedPageId);
+          var titlePromise = relatedPage.getTitle();
+          var pageActivityFeaturesPromise = relatedPage.getPageActivityFeatures(period.startDate, period.endDate);
+          $q.all([titlePromise, pageActivityFeaturesPromise])
+          .then(function(values) {
+            if (values.length == 2) {
+              var pageTitle = values[0];
+              var pageActivityFeatures = values[1];
+              radarSeries.push(pageTitle);
+              if (radarLabels.length == 0) {
+                angular.forEach(pageActivityFeatures, function(value, key) {
+                  radarLabels.push(prettifyRadarLabel(key));
+                });
+              }
+              var pageActivityFeaturesVector = [];
+              angular.forEach(pageActivityFeatures, function(value) {
+                pageActivityFeaturesVector.push(value.toFixed(2));
+              });
+              radarData.push(pageActivityFeaturesVector);
+            }
+          });
+        });
+      });
+    }
+
+    function linkFunction(scope, element) {
+      var page = scope.vm.page;
+      var period = scope.vm.period;
+      var radarLabels = scope.vm.radarLabels;
+      var radarSeries = scope.vm.radarSeries;
+      var radarData = scope.vm.radarData;
+      onPeriodSelection(page, period, radarLabels, radarSeries, radarData);
+    }
+
+    function prettifyRadarLabel(label) {
+      if (label.length == 0) {
+        return label;
+      }
+      var displayLabel = label;
+      displayLabel = displayLabel.charAt(0).toUpperCase() + displayLabel.slice(1);
+      displayLabel = displayLabel.replace(/(?=[A-Z])/g," ");
+      if (displayLabel.length > 35) {
+        displayLabel = displayLabel.substring(0, 35) + "...";
+      }
+      return displayLabel;
     }
   }
 
