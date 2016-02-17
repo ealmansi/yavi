@@ -1,14 +1,13 @@
-package de.mpg.mpi.inf.d5.yavi.server.util;
+package de.mpg.mpi.inf.d5.yavi.server.beans;
 
-public class DateValue {
-  private String date;
-  private int value;
+public class DateValuePair {
+  String date;
+  int value;
   
-  public DateValue() {
-    
+  public DateValuePair() {
   }
   
-  public DateValue(String date, int value) {
+  public DateValuePair(String date, int value) {
     this.date = date;
     this.value = value;
   }

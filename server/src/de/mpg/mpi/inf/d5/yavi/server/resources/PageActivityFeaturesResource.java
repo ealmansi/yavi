@@ -1,7 +1,5 @@
 package de.mpg.mpi.inf.d5.yavi.server.resources;
 
-import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -11,17 +9,17 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.JSONP;
 
-import de.mpg.mpi.inf.d5.yavi.server.RelatedPages;
-import de.mpg.mpi.inf.d5.yavi.server.beans.PageIdScorePair;
+import de.mpg.mpi.inf.d5.yavi.server.PageActivityFeatures;
+import de.mpg.mpi.inf.d5.yavi.server.beans.PageActivityFeaturesVector;
 import de.mpg.mpi.inf.d5.yavi.server.util.DateUtil;
 
-@Path("/relatedpages")
+@Path("/pageactivityfeatures")
 @Produces("application/x-javascript")
-public class RelatedPagesResource {
-
+public class PageActivityFeaturesResource {
+  
   @GET
   @JSONP(queryParam = JSONP.DEFAULT_CALLBACK)
-  public List<PageIdScorePair> doGet(@QueryParam("pageid") int pageId,
+  public PageActivityFeaturesVector doGet(@QueryParam("pageid") int pageId,
       @QueryParam("wikipediaid") String wikipediaId,
       @QueryParam("datefrom") String dateFrom,
       @QueryParam("dateto") String dateTo) {
@@ -30,12 +28,12 @@ public class RelatedPagesResource {
     if (pageId > 0 &&
         ResourceUtil.isValidWikipediaId(wikipediaId) &&
         ResourceUtil.isValidPeriod(dayFrom, dayTo)) {
-      List<PageIdScorePair> relatedPagesRanking =
-          RelatedPages.getRelatedPagesRanking(pageId, wikipediaId, dayFrom, dayTo);
-      if (relatedPagesRanking != null) {
-        return relatedPagesRanking;
-      }
+      return PageActivityFeatures.getPageActivityFeaturesVector(pageId,
+                                                                wikipediaId,
+                                                                dayFrom,
+                                                                dayTo);
     }
     throw new WebApplicationException(Response.Status.BAD_REQUEST);
   }
 }
+
