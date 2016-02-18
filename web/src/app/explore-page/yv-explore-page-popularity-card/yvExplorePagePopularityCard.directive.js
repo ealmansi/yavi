@@ -64,7 +64,7 @@
             if (values.length == 2) {
               var pageTitle = values[0];
               var pageActivityFeatures = values[1];
-              radarSeries.push(pageTitle);
+              radarSeries.push(prettifyRadarLabel(pageTitle));
               if (radarLabels.length == 0) {
                 angular.forEach(pageActivityFeatures, function(value, key) {
                   radarLabels.push(prettifyRadarLabel(key));

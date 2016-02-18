@@ -185,15 +185,17 @@
             && response.data.query.search
             && angular.isArray(response.data.query.search)) {
           var queryResults = response.data.query.search;
-          var pageIdPromises = [];
+          var pageIdTitlePromises = [];
           angular.forEach(queryResults, function(queryResult) {
             if (angular.isDefined(queryResult.title)) {
-              var pageTitle = queryResult.title;
-              var pageIdPromise = factory.getPageIdByTitle(pageTitle);
-              pageIdPromises.push(pageIdPromise);
+              var title = queryResult.title;
+              var pageIdPromise = factory.getPageIdByTitle(title);
+              var titlePromise = $q.when(title);
+              var pageIdTitlePromise = $q.all([pageIdPromise, titlePromise]);
+              pageIdTitlePromises.push(pageIdTitlePromise);
             }
           });
-          return pageIdPromises;
+          return pageIdTitlePromises;
         }
         onError();
       }
