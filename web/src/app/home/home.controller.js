@@ -46,7 +46,7 @@
                 .then(function(pageIdTitle) {
                   var pageId = pageIdTitle[0];
                   var title = pageIdTitle[1];
-                  var levenshteinDistance = new Levenshtein(queryValue, title).distance;
+                  var levenshteinDistance = new Levenshtein(queryValue.slice(0, 50), title.slice(0, 50)).distance;
                   if (queryValue == vm.query.value && searchResults.length < searchResultsLimit) {
                     vm.showLoadingAnimation = false;
                     searchResults.push(pageId);

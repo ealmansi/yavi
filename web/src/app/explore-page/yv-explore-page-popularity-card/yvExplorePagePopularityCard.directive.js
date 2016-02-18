@@ -81,7 +81,7 @@
       });
     }
 
-    function linkFunction(scope, element) {
+    function linkFunction(scope) {
       var page = scope.vm.page;
       var period = scope.vm.period;
       var radarLabels = scope.vm.radarLabels;

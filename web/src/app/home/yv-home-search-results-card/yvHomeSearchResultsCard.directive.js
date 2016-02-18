@@ -21,7 +21,7 @@
     return directive;
 
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope, $state, $log) {
+    function controllerFunction($scope, $state, wikipediaPages) {
       var vm = this;
 
       vm.page = wikipediaPages.getPageById($scope.pageId);

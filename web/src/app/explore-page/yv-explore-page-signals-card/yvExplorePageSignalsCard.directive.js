@@ -6,7 +6,7 @@
     .directive('yvExplorePageSignalsCard', directiveFunction);
 
   /** @ngInject */
-  function directiveFunction(wikipediaPages, $log) {
+  function directiveFunction(wikipediaPages) {
     var directive = {
       controller: controllerFunction,
       controllerAs: 'vm',
@@ -246,24 +246,10 @@
         chart.addListener("rendered", renderedListener);
         renderedListener();
 
-        chart.addListener("zoomed", zoomedListener);
-
         return chart;
 
         function renderedListener() {
           chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-        }
-
-        function zoomedListener(event) {
-          // if (angular.isDefined(zoomedListenerTimer)) {
-          //   $timeout.cancel(zoomedListenerTimer);
-          // }
-          // zoomedListenerTimer = $timeout(function() {
-          //   $scope.$emit('periodSelection', {
-          //     startDate: event.startDate,
-          //     endDate: event.endDate
-          //   });
-          // }, 50 /* zooomed event buffer wait */);
         }
       }
     }
