@@ -27,7 +27,7 @@
       
       //
       vm.carrouselSlides = [{
-        image: '/assets/images/fallback-thumbnail.png',
+        image: 'assets/images/fallback-thumbnail.png',
         id: 0
       }];
       vm.carrouselNoWrap = false;

@@ -46,8 +46,7 @@
       "main": [
         "./amcharts/amcharts.js",
         "./amcharts/serial.js",
-        "./amcharts/themes/light.js",
-        "./amcharts/images/*"
+        "./amcharts/themes/light.js"
       ]
     }
   }

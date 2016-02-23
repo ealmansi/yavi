@@ -200,6 +200,7 @@
           "marginLeft": 40,
           "autoMarginOffset": 20,
           "dataDateFormat": "YYYY-MM-DD",
+          "path": 'assets/images/amcharts/',
           "valueAxes": [{
             "id": "v1",
             "axisAlpha": 0,
