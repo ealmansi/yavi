@@ -1,5 +1,6 @@
 package de.mpg.mpi.inf.d5.yavi.server.providers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,9 @@ class ProviderUtil {
 
   @SuppressWarnings("unchecked")
   public static <T> List<T> getPagesEntriesInRange(String table, Set<Integer> pageIds, String wikipediaId, int dayFrom, int dayTo) {
+    if (pageIds.isEmpty()) {
+      return new ArrayList<>();
+    }
     EntityManager entityManager = ProviderUtil.getEntityManagerByWikipediaId(wikipediaId);
     String queryStatement = Joiner.on("\n").join(
         "SELECT e",
@@ -74,6 +78,9 @@ class ProviderUtil {
 
   @SuppressWarnings("unchecked")
   public static <T> List<T> getPagesEntriesTillDay(String table, Set<Integer> pageIds, String wikipediaId, int dayTo) {
+    if (pageIds.isEmpty()) {
+      return new ArrayList<>();
+    }
     EntityManager entityManager = ProviderUtil.getEntityManagerByWikipediaId(wikipediaId);
     String queryStatement = Joiner.on("\n").join(
         "SELECT e",

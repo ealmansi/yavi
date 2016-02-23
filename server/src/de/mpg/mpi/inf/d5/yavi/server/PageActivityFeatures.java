@@ -1,7 +1,5 @@
 package de.mpg.mpi.inf.d5.yavi.server;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,33 +102,33 @@ public class PageActivityFeatures {
                                                                               int dayTo) {
     int periodLength = dayTo - dayFrom + 1;
     double totalNumberOfRevisions =
-        computeSumOfValues(numberOfRevisionsList);
+        PageActivitySignalUtil.computeSumOfValues(numberOfRevisionsList);
     double totalNumberOfRevertedRevisions =
-        computeSumOfValues(numberOfRevertedRevisionsList);
+        PageActivitySignalUtil.computeSumOfValues(numberOfRevertedRevisionsList);
     double percentageOfRevisionsReverted =
-        computeSafePercentage(totalNumberOfRevertedRevisions, totalNumberOfRevisions);
+        PageActivitySignalUtil.computeSafePercentage(totalNumberOfRevertedRevisions, totalNumberOfRevisions);
     double numberOfRevisionsPeakOrder1 =
-        computeMaxValue(numberOfRevisionsList);
+        PageActivitySignalUtil.computeMaxValue(numberOfRevisionsList);
     double numberOfRevisionsPeakOrder3 =
-        computeMaxValueWindow(numberOfRevisionsList, 3);
+        PageActivitySignalUtil.computeMaxValueWindow(numberOfRevisionsList, 3);
     double numberOfRevisionsPeakOrder5 =
-        computeMaxValueWindow(numberOfRevisionsList, 5);
+        PageActivitySignalUtil.computeMaxValueWindow(numberOfRevisionsList, 5);
     double numberOfRevisionsPeakOrder7 =
-        computeMaxValueWindow(numberOfRevisionsList, 7);
+        PageActivitySignalUtil.computeMaxValueWindow(numberOfRevisionsList, 7);
     double numberOfRevisionsPeakOrder10 =
-        computeMaxValueWindow(numberOfRevisionsList, 10);
+        PageActivitySignalUtil.computeMaxValueWindow(numberOfRevisionsList, 10);
     double numberOfUniqueEditorsDailyAverage =
-        computeSumOfValues(numberOfUniqueEditorsList) / periodLength;
+        PageActivitySignalUtil.computeSumOfValues(numberOfUniqueEditorsList) / periodLength;
     double addedInlinksDailyAverage =
-        computeSumOfValues(numberOfAddedInlinksList) / periodLength;
+        PageActivitySignalUtil.computeSumOfValues(numberOfAddedInlinksList) / periodLength;
     double addedOutlinksDailyAverage =
-        computeSumOfValues(numberOfAddedOutlinksList) / periodLength;
+        PageActivitySignalUtil.computeSumOfValues(numberOfAddedOutlinksList) / periodLength;
     double percentageIncreaseNumberOfTotalOutlinks =
-        computePercentageIncreaseInValues(numberOfTotalOutlinksList);
+        PageActivitySignalUtil.computePercentageIncreaseInValues(numberOfTotalOutlinksList);
     double percentageIncreasePageContentSize =
-        computePercentageIncreaseInValues(pageContentSizeList);
+        PageActivitySignalUtil.computePercentageIncreaseInValues(pageContentSizeList);
     double aggregatedPercentageIncreasePageContentSize =
-        computeAggregatedPercentageIncreaseInValues(pageContentSizeList);
+        PageActivitySignalUtil.computeAggregatedPercentageIncreaseInValues(pageContentSizeList);
     return new PageActivityFeaturesVector(totalNumberOfRevisions,
                                           totalNumberOfRevertedRevisions,
                                           percentageOfRevisionsReverted,
@@ -145,93 +143,6 @@ public class PageActivityFeatures {
                                           percentageIncreaseNumberOfTotalOutlinks,
                                           percentageIncreasePageContentSize,
                                           aggregatedPercentageIncreasePageContentSize);
-  }
-
-  private static double computeSumOfValues(List<DayNumberValuePair> pageActivitySignal) {
-    double sumOfValues = 0.0;
-    for (DayNumberValuePair dayNumberValuePair : pageActivitySignal) {
-      sumOfValues += dayNumberValuePair.getValue();
-    }
-    return sumOfValues;
-  }
-
-  private static double computeMaxValue(List<DayNumberValuePair> pageActivitySignal) {
-    if (pageActivitySignal.isEmpty()) {
-      return 0;
-    }
-    int maxValue = pageActivitySignal.get(0).getValue();
-    for (DayNumberValuePair dayNumberValuePair : pageActivitySignal) {
-      int value = dayNumberValuePair.getValue();
-      if (value > maxValue) {
-        maxValue = value;
-      }
-    }
-    return maxValue;
-  }
-
-  private static double computeMaxValueWindow(List<DayNumberValuePair> pageActivitySignal, int windowSize) {
-    int queueLength = windowSize + 1;
-    List<Integer> dayQueue = new ArrayList<>(Collections.nCopies(queueLength, -1));
-    List<Integer> valueQueue = new ArrayList<>(Collections.nCopies(queueLength, -1));
-    int queueBegin = 0;
-    int queueEnd = 0;
-    int valueQueueSum = 0, maxValueQueueSum = 0;
-    for (DayNumberValuePair dayNumberValuePair : pageActivitySignal) {
-      int day = dayNumberValuePair.getDayNumber();
-      int value = dayNumberValuePair.getValue();
-      // Vacate elements no longer within the window.
-      while (queueBegin != queueEnd && dayQueue.get(queueBegin) <= day - windowSize) {
-        valueQueueSum -= valueQueue.get(queueBegin);
-        queueBegin = (queueBegin + 1) % queueLength;
-      }
-      dayQueue.set(queueEnd, day);
-      valueQueue.set(queueEnd, value);
-      valueQueueSum += value;
-      if (valueQueueSum > maxValueQueueSum) {
-        maxValueQueueSum = valueQueueSum; 
-      }
-      queueEnd = (queueEnd + 1) % queueLength;
-    }
-    return maxValueQueueSum;
-  }
-
-  private static double computePercentageIncreaseInValues(List<DayNumberValuePair> pageActivitySignal) {
-    if (pageActivitySignal.isEmpty()) {
-      return 0.0;
-    }
-    double firstDayValue = pageActivitySignal.get(0).getValue();
-    double lastDayValue = pageActivitySignal.get(pageActivitySignal.size() - 1).getValue();
-    return computePercentageIncrease(firstDayValue, lastDayValue);
-  }
-
-  private static double computeAggregatedPercentageIncreaseInValues(List<DayNumberValuePair> pageActivitySignal) {
-    if (pageActivitySignal.isEmpty()) {
-      return 0.0;
-    }
-    double aggregatedPercentageIncrease = 0.0;
-    for (int i = 0; i < pageActivitySignal.size() - 1; ++i) {
-      double dayValue = pageActivitySignal.get(i).getValue();
-      double nextDayValue = pageActivitySignal.get(i + 1).getValue();
-      double percentageIncrease = computePercentageIncrease(dayValue, nextDayValue);
-      if (percentageIncrease >= 0.0) {
-        aggregatedPercentageIncrease += percentageIncrease;
-      } else {
-        aggregatedPercentageIncrease -= percentageIncrease;
-      }
-    }
-    return aggregatedPercentageIncrease;
-  }
-
-  private static double computeSafePercentage(double numerator, double denominator) {
-    double ratio = numerator / denominator;
-    if (Double.isNaN(ratio)) {
-      return 0.0;
-    }
-    return 100.0 * ratio;
-  }
-
-  private static double computePercentageIncrease(double value, double nextValue) {
-    return computeSafePercentage(nextValue - value, value);
   }
 
   public static double computePageFeaturesVectorScore(PageActivityFeaturesVector pageActivityFeaturesVector) {
