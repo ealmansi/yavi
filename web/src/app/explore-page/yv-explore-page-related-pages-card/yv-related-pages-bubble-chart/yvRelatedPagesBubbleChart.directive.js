@@ -56,7 +56,7 @@
               && angular.isDefined(pageIdScore.pageId)
               && angular.isDefined(pageIdScore.score)) {
             var pageId = pageIdScore.pageId;
-            var score = pageIdScore.score;
+            var score = Math.min(pageIdScore.score, 100000.0);
             var relatedPage = wikipediaPages.getPageById(pageId);
             var wrappedPromise = relatedPage.getTitle()
                 .then(function(title) {

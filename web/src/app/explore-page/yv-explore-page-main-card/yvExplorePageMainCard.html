@@ -1,12 +1,24 @@
 <div id="explore-page-main-card-wrapper">
   <div id="main-card-panel">
-    <div id="main-card-panel-heading" uib-tooltip="General Information" tooltip-placement="bottom-right">
+    <div id="main-card-panel-heading" data-toggle="tooltip" data-placement="left" title="General page information">
       <h3 id="main-card-panel-title"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span></h3>
     </div>
     <div id="main-card-panel-body">
-      <div id="main-card-panel-body-left">
+      <div id="page-title-wrapper">
         <h2 id="page-title"></h2>
+        <div id="page-external-links">
+          <a id="page-google-link" target="_blank" href="#" data-toggle="tooltip" data-placement="left" title="Search with Google">
+            <img id="google-isotype" src="/assets/images/google-isotype.png">
+          </a>
+          <a id="page-wikipedia-link" target="_blank" href="#" data-toggle="tooltip" data-placement="left" title="View in Wikipedia">
+            <img id="wikipedia-isotype" src="/assets/images/wikipedia-isotype.png">
+          </a>
+        </div>
+      </div>
+      <div id="page-title-separator">
         <hr>
+      </div>
+      <div id="page-images-carrousel-wrapper">
         <div id="page-images-carrousel">
           <uib-carousel no-wrap="vm.carrouselNoWrap">
             <uib-slide ng-repeat="slide in vm.carrouselSlides" active="slide.active" index="slide.id">
@@ -16,13 +28,13 @@
             </uib-slide>
           </uib-carousel>
         </div>
+      </div>
+      <div id="page-description-wrapper">
         <div id="page-description"></div>
       </div>
-      <div id="main-card-panel-body-right">
-        <ul id="page-category-list"></ul>
-        <a id="page-wikipedia-link" target="_blank" href="#">Wikipedia</a>
-        <a id="page-google-link" target="_blank" href="#">Google</a>
-      </div>
+    </div>
+    <div id="main-card-panel-footer">
+      <div id="page-categories"></div>
     </div>
   </div>
 </div>

@@ -21,7 +21,7 @@
     return directive;
   
     /** @ngInject */
-    function controllerFunction($scope, $rootScope, $timeout) {
+    function controllerFunction($scope, $rootScope, $timeout, toastr) {
       var vm = this;
 
       //
@@ -92,63 +92,91 @@
       vm.makeChartNumberOfAddedInlinks = function(startDate, endDate) {
           vm.page.getNPageActivitySignal(startDate, endDate, 'umberofaddedinlinks')
               .then(function(numberOfAddedInlinksList) {
-                  numberOfAddedInlinksList.sort(dateValueComparator);
-                  vm.numberOfAddedInlinksChart = makeChart('chart-number-of-added-inlinks',
-                      numberOfAddedInlinksList);
+                  if (numberOfAddedInlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfAddedInlinksList.sort(dateValueComparator);
+                    vm.numberOfAddedInlinksChart = makeChart('chart-number-of-added-inlinks',
+                        numberOfAddedInlinksList);
+                  }
               });
       }
       
       vm.makeChartNumberOfAddedOutlinks = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'numberofaddedoutlinks')
               .then(function(numberOfAddedOutlinksList) {
-                  numberOfAddedOutlinksList.sort(dateValueComparator);
-                  vm.numberOfAddedOutlinksChart = makeChart('chart-number-of-added-outlinks',
-                      numberOfAddedOutlinksList);
+                  if (numberOfAddedOutlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfAddedOutlinksList.sort(dateValueComparator);
+                    vm.numberOfAddedOutlinksChart = makeChart('chart-number-of-added-outlinks',
+                        numberOfAddedOutlinksList);
+                  }
               });
       }
       
       vm.makeChartNumberOfRevertedRevisions = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevertedrevisions')
               .then(function(numberOfRevertedRevisionsList) {
-                  numberOfRevertedRevisionsList.sort(dateValueComparator);
-                  vm.numberOfRevertedRevisionsChart = makeChart('chart-number-of-reverted-revisions',
-                      numberOfRevertedRevisionsList);
+                  if (numberOfRevertedRevisionsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfRevertedRevisionsList.sort(dateValueComparator);
+                    vm.numberOfRevertedRevisionsChart = makeChart('chart-number-of-reverted-revisions',
+                        numberOfRevertedRevisionsList);
+                  }
               });
       }
       
       vm.makeChartNumberOfRevisions = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevisions')
               .then(function(numberOfRevisionsList) {
-                  numberOfRevisionsList.sort(dateValueComparator);
-                  vm.numberOfRevisionsChart = makeChart('chart-number-of-revisions',
-                      numberOfRevisionsList);
+                  if (numberOfRevisionsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfRevisionsList.sort(dateValueComparator);
+                    vm.numberOfRevisionsChart = makeChart('chart-number-of-revisions',
+                        numberOfRevisionsList);
+                  }
               });
       }
       
       vm.makeChartNumberOfTotalOutlinks = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'numberoftotaloutlinks')
               .then(function(numberOfTotalOutlinksList) {
-                  numberOfTotalOutlinksList.sort(dateValueComparator);
-                  vm.numberOfTotalOutlinksChart = makeChart('chart-number-of-total-outlinks',
-                      numberOfTotalOutlinksList);
+                  if (numberOfTotalOutlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfTotalOutlinksList.sort(dateValueComparator);
+                    vm.numberOfTotalOutlinksChart = makeChart('chart-number-of-total-outlinks',
+                        numberOfTotalOutlinksList);
+                  }
               });
       }
       
       vm.makeChartNumberOfUniqueEditors = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'numberofuniqueeditors')
               .then(function(numberOfUniqueEditorsList) {
-                  numberOfUniqueEditorsList.sort(dateValueComparator);
-                  vm.numberOfUniqueEditorsChart = makeChart('chart-number-of-unique-editors',
-                      numberOfUniqueEditorsList);
+                  if (numberOfUniqueEditorsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfUniqueEditorsList.sort(dateValueComparator);
+                    vm.numberOfUniqueEditorsChart = makeChart('chart-number-of-unique-editors',
+                        numberOfUniqueEditorsList);
+                  }
               });
       }
       
       vm.makeChartPageContentSize = function(startDate, endDate) {
           vm.page.getPageActivitySignal(startDate, endDate, 'pagecontentsize')
               .then(function(pageContentSizeList) {
-                  pageContentSizeList.sort(dateValueComparator);
-                  vm.pageContentSizeChart = makeChart('chart-page-content-size',
-                      pageContentSizeList);
+                  if (pageContentSizeList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    pageContentSizeList.sort(dateValueComparator);
+                    vm.pageContentSizeChart = makeChart('chart-page-content-size',
+                        pageContentSizeList);
+                  }
               });
       }
 

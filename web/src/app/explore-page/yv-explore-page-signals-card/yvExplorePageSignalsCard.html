@@ -1,31 +1,31 @@
 <div id="explore-page-signals-card-wrapper">
   <div id="signals-card-panel">
-    <div id="signals-card-panel-heading" uib-tooltip="Popularity Signals" tooltip-placement="bottom-right">
+    <div id="signals-card-panel-heading" data-toggle="tooltip" data-placement="left" title="Popularity Signals">
       <h3 id="signals-card-panel-title"><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span></h3>
     </div>
     <div id="signals-card-panel-body">
       <uib-tabset stacked="true">
+        <uib-tab heading="Number of Revisions per Day" select="vm.onSelect('number-of-revisions')">
+          <div id="chart-number-of-revisions" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Page Content Size in Characters" select="vm.onSelect('page-content-size')">
+          <div id="chart-page-content-size" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Number of Reverted Revisions per Day" select="vm.onSelect('number-of-reverted-revisions')">
+          <div id="chart-number-of-reverted-revisions" style="width:100%;height:500px;"></div>
+        </uib-tab>
+        <uib-tab heading="Number of Unique Editors per Day" select="vm.onSelect('number-of-unique-editors')">
+          <div id="chart-number-of-unique-editors" style="width:100%;height:500px;"></div>
+        </uib-tab>
 <!--         <uib-tab heading="Added Inlinks" select="vm.onSelect('number-of-added-inlinks')">
           <div id="chart-number-of-added-inlinks" style="width:100%;height:500px;"></div>
         </uib-tab>
         <uib-tab heading="Added Outlinks" select="vm.onSelect('number-of-added-outlinks')">
           <div id="chart-number-of-added-outlinks" style="width:100%;height:500px;"></div>
-        </uib-tab>
-        <uib-tab heading="Reverted Revisions" select="vm.onSelect('number-of-reverted-revisions')">
-          <div id="chart-number-of-reverted-revisions" style="width:100%;height:500px;"></div>
         </uib-tab> -->
-        <uib-tab heading="Revisions" select="vm.onSelect('number-of-revisions')">
-          <div id="chart-number-of-revisions" style="width:100%;height:500px;"></div>
-        </uib-tab>
-<!--         <uib-tab heading="Total Outlinks" select="vm.onSelect('number-of-total-outlinks')">
+        <!-- <uib-tab heading="Total Outlinks" select="vm.onSelect('number-of-total-outlinks')">
           <div id="chart-number-of-total-outlinks" style="width:100%;height:500px;"></div>
-        </uib-tab>
-        <uib-tab heading="Unique Editors" select="vm.onSelect('number-of-unique-editors')">
-          <div id="chart-number-of-unique-editors" style="width:100%;height:500px;"></div>
         </uib-tab> -->
-        <uib-tab heading="Page Content Size" select="vm.onSelect('page-content-size')">
-          <div id="chart-page-content-size" style="width:100%;height:500px;"></div>
-        </uib-tab>
       </uib-tabset>
     </div>
   </div>

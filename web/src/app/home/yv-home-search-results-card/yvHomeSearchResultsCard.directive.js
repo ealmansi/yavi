@@ -48,8 +48,15 @@
       });
       
       scope.vm.page.getDescription().then(function(description) {
+        var normalizedDescription = description;
+        normalizedDescription = normalizedDescription.replace(/style="display: block;"/g, '');
+        normalizedDescription = normalizedDescription.replace(/<ul>|<\/ul>/g, '');
+        normalizedDescription = normalizedDescription.replace(/<li>|<\/li>/g, '');
+        normalizedDescription = normalizedDescription.replace(/<p>|<\/p>/g, '');
+        normalizedDescription = normalizedDescription.replace(/<dl>|<\/dl>/g, '');
+        normalizedDescription = normalizedDescription.replace(/<dt>|<\/dt>/g, '');
         var pageDescriptionElement = element.find('.page-description');
-        pageDescriptionElement.html(description);
+        pageDescriptionElement.html(normalizedDescription);
         pageDescriptionElement.dotdotdot({
           ellipsis: ' ...'
         });

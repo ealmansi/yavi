@@ -252,7 +252,7 @@
       queryTemplate += '&action=query';
       queryTemplate += '&prop=extracts';
       queryTemplate += '&exintro=';
-      queryTemplate += '&explaintext=';
+      // queryTemplate += '&explaintext=';
       queryTemplate += '&format=json';
       queryTemplate += '&callback=JSON_CALLBACK';
       return $interpolate(queryTemplate)({
