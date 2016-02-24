@@ -173,7 +173,7 @@
       }
     }
 
-    factory.search = function(query) {
+    factory.searchQuery = function(query) {
       return $http
         .jsonp(buildSearchQuery(query))
         .then(onSuccess, onError);
@@ -184,30 +184,18 @@
             && response.data.query
             && response.data.query.search
             && angular.isArray(response.data.query.search)) {
-          var results = response.data.query.search;
-          var pageIds = [], wrappedPromises = [];
-          angular.forEach(results, function(result) {
-            if (angular.isDefined(result.title)) {
-              var wrappedPromise = factory.getPageIdByTitle(result.title)
-                  .then(function(pageId) {
-                    return factory.getPageDescription(pageId)
-                        .then(function(pageDescription) {
-                          // TODO: improve disambiguation page detection logic.
-                          /* Only add if description is not too short. */
-                          if (pageDescription.length > 50) {
-                            pageIds.push(pageId);
-                          }
-                        });
-                  })
-                  .catch(function() {
-                    /* Skip if pageId cannot be retrieved. */
-                  });
-              wrappedPromises.push(wrappedPromise);
+          var queryResults = response.data.query.search;
+          var pageIdTitlePromises = [];
+          angular.forEach(queryResults, function(queryResult) {
+            if (angular.isDefined(queryResult.title)) {
+              var title = queryResult.title;
+              var pageIdPromise = factory.getPageIdByTitle(title);
+              var titlePromise = $q.when(title);
+              var pageIdTitlePromise = $q.all([pageIdPromise, titlePromise]);
+              pageIdTitlePromises.push(pageIdTitlePromise);
             }
-          })
-          return $q.all(wrappedPromises).then(function() {
-            return pageIds;
           });
+          return pageIdTitlePromises;
         }
         onError();
       }
@@ -228,7 +216,7 @@
             && response.data.query
             && response.data.query.pages) {
           var pageIdArray = Object.keys(response.data.query.pages);
-          if (pageIdArray.length > 0) {
+          if (pageIdArray.length > 0 && pageIdArray[0] != -1) {
             return pageIdArray[0];
           }
         }
@@ -264,7 +252,7 @@
       queryTemplate += '&action=query';
       queryTemplate += '&prop=extracts';
       queryTemplate += '&exintro=';
-      queryTemplate += '&explaintext=';
+      // queryTemplate += '&explaintext=';
       queryTemplate += '&format=json';
       queryTemplate += '&callback=JSON_CALLBACK';
       return $interpolate(queryTemplate)({

@@ -11,18 +11,20 @@
       controller: controllerFunction,
       controllerAs: 'vm',
       restrict: 'E',
-      scope: true,
+      scope: {
+        query: '='
+      },
       templateUrl: 'app/home/yv-home-navbar/yvHomeNavbar.html'
     };
 
     return directive;
     
     /** @ngInject */
-    function controllerFunction($scope, wikipediaSources, yaviConfig, $state) {
+    function controllerFunction($scope, $state, $interpolate, wikipediaSources, toastr) {
       var vm = this;
       
       // Home properties.
-      vm.query = $scope.$parent.vm.query;
+      vm.query = $scope.query;
 
       // Collapsing.
       vm.navbarMenuIsCollapsed = true;
@@ -31,26 +33,17 @@
       }
 
       // Wikipedia sources.
-      vm.wikipediaSources = wikipediaSources;
-      vm.activeWikipediaSource = getWikipediaSourceById(yaviConfig.wikipediaId);
+      vm.wikipediaSources = wikipediaSources.getWikipediaSources();
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
       vm.selectWikipediaSource = function(wikipediaId) {
-        var wikipediaSource = getWikipediaSourceById(wikipediaId);
-        if (angular.isDefined(wikipediaSource)) {
-          yaviConfig.wikipediaId = wikipediaSource.wikipediaId;
-          $state.go($state.current, {
-            query: vm.query.value
-          }, {reload: true, inherit: false});
-        }
-      }
-      
-      function getWikipediaSourceById(wikipediaId) {
-        var matchingWikipediaSource = undefined;
-        angular.forEach(wikipediaSources, function(wikipediaSource) {
-          if (wikipediaSource.wikipediaId == wikipediaId) {
-            matchingWikipediaSource = wikipediaSource;
-          }
-        });
-        return matchingWikipediaSource;
+        wikipediaSources.setActiveWikipediaSourceById(wikipediaId);
+        vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
+        $state.go($state.current, {
+          query: vm.query.value
+        }, {reload: true, inherit: false});
+        var messageTemplate = 'Changed Wikipiedia source to: {{language}}';
+        var message = $interpolate(messageTemplate)({language: vm.activeWikipediaSource.language});
+        toastr.success(message);
       }
     }
   }

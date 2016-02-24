@@ -12,7 +12,8 @@
       controllerAs: 'vm',
       restrict: 'E',
       scope: {
-        pageId: '='
+        pageId: '=',
+        period: '='
       },
       templateUrl: 'app/explore-page/yv-explore-page-signals-card/yvExplorePageSignalsCard.html'
     };
@@ -20,7 +21,7 @@
     return directive;
   
     /** @ngInject */
-    function controllerFunction($scope, $timeout) {
+    function controllerFunction($scope, $rootScope, $timeout, toastr) {
       var vm = this;
 
       //
@@ -40,88 +41,143 @@
       vm.numberOfUniqueEditorsChart = undefined;
       vm.pageContentSizeChart = undefined;
 
-      //
+      // Check if page id is valid.
       if (!wikipediaPages.isValidId($scope.pageId)) {
         return;
       }
       
+      // Get page and period.
       vm.page = wikipediaPages.getPageById($scope.pageId);
+      vm.period = $scope.period;
+
+      var startDate = vm.period.startDate, endDate = vm.period.endDate;
+      var activeTab = undefined;
+      vm.onSelect = function(tabId) {
+        activeTab = tabId;
+        switch (activeTab) {
+        case 'number-of-added-inlinks':
+          vm.makeChartNumberOfAddedInlinks(startDate, endDate);
+          break;
+        case 'number-of-added-outlinks':
+          vm.makeChartNumberOfAddedOutlinks(startDate, endDate);
+          break;
+        case 'number-of-reverted-revisions':
+          vm.makeChartNumberOfRevertedRevisions(startDate, endDate);
+          break;
+        case 'number-of-revisions':
+          vm.makeChartNumberOfRevisions(startDate, endDate);
+          break;
+        case 'number-of-total-outlinks':
+          vm.makeChartNumberOfTotalOutlinks(startDate, endDate);
+          break;
+        case 'number-of-unique-editors':
+          vm.makeChartNumberOfUniqueEditors(startDate, endDate);
+          break;
+        case 'page-content-size':
+          vm.makeChartPageContentSize(startDate, endDate);
+          break;
+        default:
+          break;
+        }
+      }
+
+      var periodSelectionWatch = $rootScope.$on('periodSelection', function(event, period) {
+        startDate = period.startDate;
+        endDate = period.endDate;
+        vm.onSelect(activeTab);
+      });
+
+      $scope.$on('$destroy', periodSelectionWatch);
       
-      vm.makeChartNumberOfAddedInlinks = function() {
-        if (angular.isUndefined(vm.numberOfAddedInlinksChart)) {
-          vm.page.getNumberOfAddedInlinksList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfAddedInlinks = function(startDate, endDate) {
+          vm.page.getNPageActivitySignal(startDate, endDate, 'umberofaddedinlinks')
               .then(function(numberOfAddedInlinksList) {
-                  numberOfAddedInlinksList.sort(dateValueComparator);
-                  vm.numberOfAddedInlinksChart = makeChart('chart-number-of-added-inlinks',
-                      numberOfAddedInlinksList);
+                  if (numberOfAddedInlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfAddedInlinksList.sort(dateValueComparator);
+                    vm.numberOfAddedInlinksChart = makeChart('chart-number-of-added-inlinks',
+                        numberOfAddedInlinksList);
+                  }
               });
-        }
       }
       
-      vm.makeChartNumberOfAddedOutlinks = function() {
-        if (angular.isUndefined(vm.numberOfAddedOutlinksChart)) {
-          vm.page.getNumberOfAddedOutlinksList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfAddedOutlinks = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofaddedoutlinks')
               .then(function(numberOfAddedOutlinksList) {
-                  numberOfAddedOutlinksList.sort(dateValueComparator);
-                  vm.numberOfAddedOutlinksChart = makeChart('chart-number-of-added-outlinks',
-                      numberOfAddedOutlinksList);
+                  if (numberOfAddedOutlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfAddedOutlinksList.sort(dateValueComparator);
+                    vm.numberOfAddedOutlinksChart = makeChart('chart-number-of-added-outlinks',
+                        numberOfAddedOutlinksList);
+                  }
               });
-        }
       }
       
-      vm.makeChartNumberOfRevertedRevisions = function() {
-        if (angular.isUndefined(vm.numberOfRevertedRevisionsChart)) {
-          vm.page.getNumberOfRevertedRevisionsList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfRevertedRevisions = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevertedrevisions')
               .then(function(numberOfRevertedRevisionsList) {
-                  numberOfRevertedRevisionsList.sort(dateValueComparator);
-                  vm.numberOfRevertedRevisionsChart = makeChart('chart-number-of-reverted-revisions',
-                      numberOfRevertedRevisionsList);
+                  if (numberOfRevertedRevisionsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfRevertedRevisionsList.sort(dateValueComparator);
+                    vm.numberOfRevertedRevisionsChart = makeChart('chart-number-of-reverted-revisions',
+                        numberOfRevertedRevisionsList);
+                  }
               });
-        }
       }
       
-      vm.makeChartNumberOfRevisions = function() {
-        if (angular.isUndefined(vm.numberOfRevisionsChart)) {
-          vm.page.getNumberOfRevisionsList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfRevisions = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofrevisions')
               .then(function(numberOfRevisionsList) {
-                  numberOfRevisionsList.sort(dateValueComparator);
-                  vm.numberOfRevisionsChart = makeChart('chart-number-of-revisions',
-                      numberOfRevisionsList);
+                  if (numberOfRevisionsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfRevisionsList.sort(dateValueComparator);
+                    vm.numberOfRevisionsChart = makeChart('chart-number-of-revisions',
+                        numberOfRevisionsList);
+                  }
               });
-        }
       }
       
-      vm.makeChartNumberOfTotalOutlinks = function() {
-        if (angular.isUndefined(vm.numberOfTotalOutlinksChart)) {
-          vm.page.getNumberOfTotalOutlinksList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfTotalOutlinks = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberoftotaloutlinks')
               .then(function(numberOfTotalOutlinksList) {
-                  numberOfTotalOutlinksList.sort(dateValueComparator);
-                  vm.numberOfTotalOutlinksChart = makeChart('chart-number-of-total-outlinks',
-                      numberOfTotalOutlinksList);
+                  if (numberOfTotalOutlinksList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfTotalOutlinksList.sort(dateValueComparator);
+                    vm.numberOfTotalOutlinksChart = makeChart('chart-number-of-total-outlinks',
+                        numberOfTotalOutlinksList);
+                  }
               });
-        }
       }
       
-      vm.makeChartNumberOfUniqueEditors = function() {
-        if (angular.isUndefined(vm.numberOfUniqueEditorsChart)) {
-          vm.page.getNumberOfUniqueEditorsList("2000-01-01", "2020-01-01")
+      vm.makeChartNumberOfUniqueEditors = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'numberofuniqueeditors')
               .then(function(numberOfUniqueEditorsList) {
-                  numberOfUniqueEditorsList.sort(dateValueComparator);
-                  vm.numberOfUniqueEditorsChart = makeChart('chart-number-of-unique-editors',
-                      numberOfUniqueEditorsList);
+                  if (numberOfUniqueEditorsList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    numberOfUniqueEditorsList.sort(dateValueComparator);
+                    vm.numberOfUniqueEditorsChart = makeChart('chart-number-of-unique-editors',
+                        numberOfUniqueEditorsList);
+                  }
               });
-        }
       }
       
-      vm.makeChartPageContentSize = function() {
-        if (angular.isUndefined(vm.pageContentSizeChart)) {
-          vm.page.getPageContentSizeList("2000-01-01", "2020-01-01")
+      vm.makeChartPageContentSize = function(startDate, endDate) {
+          vm.page.getPageActivitySignal(startDate, endDate, 'pagecontentsize')
               .then(function(pageContentSizeList) {
-                  pageContentSizeList.sort(dateValueComparator);
-                  vm.pageContentSizeChart = makeChart('chart-page-content-size',
-                      pageContentSizeList);
+                  if (pageContentSizeList.length < 5) {
+                    toastr.info('Not enough data points to plot activity chart during this period.', 'Chart could not be displayed.');
+                  } else {
+                    pageContentSizeList.sort(dateValueComparator);
+                    vm.pageContentSizeChart = makeChart('chart-page-content-size',
+                        pageContentSizeList);
+                  }
               });
-        }
       }
 
       function dateValueComparator(dateValueA, dateValueB) {
@@ -136,6 +192,7 @@
       }
 
       function makeChart(divId, dataList) {
+        angular.element('#' + divId).empty();
         var chart = AmCharts.makeChart(divId, {
           "type": "serial",
           "theme": "light",
@@ -143,6 +200,7 @@
           "marginLeft": 40,
           "autoMarginOffset": 20,
           "dataDateFormat": "YYYY-MM-DD",
+          "path": 'assets/images/amcharts/',
           "valueAxes": [{
             "id": "v1",
             "axisAlpha": 0,
@@ -217,24 +275,10 @@
         chart.addListener("rendered", renderedListener);
         renderedListener();
 
-        chart.addListener("zoomed", zoomedListener);
-
         return chart;
 
         function renderedListener() {
           chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-        }
-
-        function zoomedListener(event) {
-          if (angular.isDefined(zoomedListenerTimer)) {
-            $timeout.cancel(zoomedListenerTimer);
-          }
-          zoomedListenerTimer = $timeout(function() {
-            $scope.$emit('periodSelection', {
-              startDate: event.startDate,
-              endDate: event.endDate
-            });
-          }, 50 /* zooomed event buffer wait */);
         }
       }
     }

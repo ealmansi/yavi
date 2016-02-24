@@ -6,10 +6,13 @@
     .config(routerConfig);
 
   /** @ngInject */
-  function routerConfig($stateProvider, $urlRouterProvider, $locationProvider) {
+  function routerConfig($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
-        url: '/:query?',
+        url: '/',
+        params: {
+          query: null
+        },
         templateUrl: 'app/home/home.html',
         controller: 'HomeController',
         controllerAs: 'vm'
@@ -18,6 +21,10 @@
     $stateProvider
       .state('explorePage', {
         url: '/explorePage/:pageId',
+        params: {
+          startDate: null,
+          endDate: null
+        },
         templateUrl: 'app/explore-page/explorePage.html',
         controller: 'ExplorePageController',
         controllerAs: 'vm'
@@ -32,8 +39,6 @@
       });
 
     $urlRouterProvider.otherwise('/');
-
-    $locationProvider.html5Mode(true);
   }
 
 })();

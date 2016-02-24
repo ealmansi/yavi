@@ -6,14 +6,15 @@
     .directive('yvExplorePageMainCard', directiveFunction);
 
   /** @ngInject */
-  function directiveFunction(yaviConfig, wikipediaSources, $interpolate) {
+  function directiveFunction(yaviConfig, wikipediaSources, $interpolate, $compile) {
     var directive = {
       controller: controllerFunction,
       controllerAs: 'vm',
       link: linkFunction,
       restrict: 'E',
       scope: {
-        pageId: '='
+        pageId: '=',
+        period: '='
       },
       templateUrl: 'app/explore-page/yv-explore-page-main-card/yvExplorePageMainCard.html'
     };
@@ -21,33 +22,37 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope) {
+    function controllerFunction($scope, $state, wikipediaPages, wikipediaSources) {
       var vm = this;
       
       //
       vm.carrouselSlides = [{
-        image: '/assets/images/fallback-thumbnail.png',
+        image: 'assets/images/fallback-thumbnail.png',
         id: 0
       }];
       vm.carrouselNoWrap = false;
 
-      //
+      // Check if page id is valid.
       if (!wikipediaPages.isValidId($scope.pageId)) {
         return;
       }
       
+      // Get page and period.
       vm.page = wikipediaPages.getPageById($scope.pageId);
+      vm.period = $scope.period;
 
-      // TODO: deduplicate this code.
-      vm.activeWikipediaSource = getWikipediaSourceById(yaviConfig.wikipediaId);
-      function getWikipediaSourceById(wikipediaId) {
-        var matchingWikipediaSource = undefined;
-        angular.forEach(wikipediaSources, function(wikipediaSource) {
-          if (wikipediaSource.wikipediaId == wikipediaId) {
-            matchingWikipediaSource = wikipediaSource;
-          }
-        });
-        return matchingWikipediaSource;
+      // Wikipedia sources.
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
+
+      //
+      vm.onClickCategory = function(event) {
+        if (angular.isDefined(event.currentTarget)) {
+          var clickedCategoryElement = angular.element(event.currentTarget);
+          var category = clickedCategoryElement.html();
+          $state.go('home', {
+            query: category
+          });
+        }
       }
     }
 
@@ -77,18 +82,15 @@
       scope.vm.page.getDescription().then(function(description) {
         var pageDescriptionElement = element.find('#page-description');
         pageDescriptionElement.html(description);
-        pageDescriptionElement.dotdotdot({
-          ellipsis: ' ...'
-        });
       });
 
       scope.vm.page.getCategoryList().then(function(categoryList) {
-        var listElement = element.find('#page-category-list');
-        var itemElementTemplate = '<li class="page-category-item">{{ category }}</li>';
+        var listElement = element.find('#page-categories');
+        var itemElementTemplate = '<span class="page-category label label-info" ng-click="vm.onClickCategory($event)">{{ category }}</span>';
         angular.forEach(categoryList, function(category) {
-          listElement.append($interpolate(itemElementTemplate)({
-            category: category
-          }));
+          var itemElementHTML = $interpolate(itemElementTemplate)({category: category});
+          var itemElement = $compile(itemElementHTML)(scope);
+          listElement.append(itemElement);
         });
       });
 

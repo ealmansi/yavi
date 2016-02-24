@@ -20,7 +20,7 @@
     return directive;
     
     /** @ngInject */
-    function controllerFunction(wikipediaPages, $scope, $state) {
+    function controllerFunction($scope, $state, $interpolate, wikipediaPages, wikipediaSources, toastr) {
       var vm = this;
 
       //      
@@ -56,6 +56,18 @@
       vm.page.getTitle().then(function(title) {
         vm.searchBoxInput = title;
       });
+
+      // Wikipedia sources.
+      vm.wikipediaSources = wikipediaSources.getWikipediaSources();
+      vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
+      vm.selectWikipediaSource = function(wikipediaId) {
+        wikipediaSources.setActiveWikipediaSourceById(wikipediaId);
+        vm.activeWikipediaSource = wikipediaSources.getActiveWikipediaSource();
+        var messageTemplate = 'Changed Wikipiedia source to: {{language}}';
+        var message = $interpolate(messageTemplate)({language: vm.activeWikipediaSource.language});
+        toastr.success(message);
+        $state.go('home');
+      }
     }
   }
 

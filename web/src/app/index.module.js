@@ -4,8 +4,10 @@
   angular
     .module('yavi', [
       'chart.js',
+      'daterangepicker',
       'ngAnimate',
       'ngAria',
+      'ngclipboard',
       'ngCookies',
       'ngMessages',
       'ngResource',

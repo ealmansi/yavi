@@ -6,14 +6,14 @@
     .factory('yaviServer', factoryFunction);
 
   /** @ngInject */
-  function factoryFunction($http, yaviConfig, $interpolate) {
+  function factoryFunction($http, $interpolate) {
 
     var factory = {};
 
-    factory.getPageSignal = function(signalType, pageId, dateFrom, dateTo) {
+    factory.getPageActivityFeatures = function(pageId, wikipediaId, dateFrom, dateTo) {
       return $http
-        .jsonp(buildPageSignalQuery(signalType, pageId, dateFrom, dateTo))
-        .then(onSuccess, onError);
+          .jsonp(buildPageActivityFeaturesQuery(pageId, wikipediaId, dateFrom, dateTo))
+          .then(onSuccess, onError);
 
       function onSuccess(response) {
         if (angular.isDefined(response)
@@ -24,14 +24,14 @@
       }
 
       function onError() {
-        throwYaviServerError("Signal could not be retrieved");
+        throwYaviServerError('PageActivityFeatures could not be retrieved.');
       }
     }
 
-    factory.getPageRelatedPages = function(pageId, dateFrom, dateTo) {
+    factory.getPageActivitySignal = function(pageId, wikipediaId, dateFrom, dateTo, signalType) {
       return $http
-        .jsonp(buildPageRelatedPagesQuery(pageId, dateFrom, dateTo))
-        .then(onSuccess, onError);
+          .jsonp(buildPageActivitySignalQuery(pageId, wikipediaId, dateFrom, dateTo, signalType))
+          .then(onSuccess, onError);
 
       function onSuccess(response) {
         if (angular.isDefined(response)
@@ -42,15 +42,49 @@
       }
 
       function onError() {
-        throwYaviServerError("RelatedPages could not be retrieved");
+        throwYaviServerError('PageActivitySignal could not be retrieved.');
+      }
+    }
+
+    factory.getRelatedPages = function(pageId, wikipediaId, dateFrom, dateTo) {
+      return $http
+          .jsonp(buildRelatedPagesQuery(pageId, wikipediaId, dateFrom, dateTo))
+          .then(onSuccess, onError);
+
+      function onSuccess(response) {
+        if (angular.isDefined(response)
+            && angular.isDefined(response.data)) {
+          return response.data;
+        }
+        onError();
+      }
+
+      function onError() {
+        throwYaviServerError('RelatedPages could not be retrieved.');
       }
     }
 
     return factory;
 
-    function buildPageSignalQuery(signalType, pageId, dateFrom, dateTo) {
+    function buildPageActivityFeaturesQuery(pageId, wikipediaId, dateFrom, dateTo) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/signal?';
+      queryTemplate += 'http://localhost:8080/yavi-server/pageactivityfeatures?';
+      queryTemplate += '&pageid={{pageId}}';
+      queryTemplate += '&wikipediaid={{wikipediaId}}';
+      queryTemplate += '&datefrom={{dateFrom}}';
+      queryTemplate += '&dateto={{dateTo}}';
+      queryTemplate += '&callback=JSON_CALLBACK';
+      return $interpolate(queryTemplate)({
+        pageId: pageId,
+        wikipediaId: wikipediaId,
+        dateFrom: dateFrom,
+        dateTo: dateTo
+      });
+    }
+
+    function buildPageActivitySignalQuery(pageId, wikipediaId, dateFrom, dateTo, signalType) {
+      var queryTemplate = '';
+      queryTemplate += 'http://localhost:8080/yavi-server/pageactivitysignal?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
@@ -58,15 +92,15 @@
       queryTemplate += '&signaltype={{signalType}}';
       queryTemplate += '&callback=JSON_CALLBACK';
       return $interpolate(queryTemplate)({
-        signalType: signalType,
         pageId: pageId,
-        wikipediaId: yaviConfig.wikipediaId,
+        wikipediaId: wikipediaId,
         dateFrom: dateFrom,
-        dateTo: dateTo
+        dateTo: dateTo,
+        signalType: signalType
       });
     }
     
-    function buildPageRelatedPagesQuery(pageId, dateFrom, dateTo) {
+    function buildRelatedPagesQuery(pageId, wikipediaId, dateFrom, dateTo) {
       var queryTemplate = '';
       queryTemplate += 'http://localhost:8080/yavi-server/relatedpages?';
       queryTemplate += '&pageid={{pageId}}';
@@ -76,7 +110,7 @@
       queryTemplate += '&callback=JSON_CALLBACK';
       return $interpolate(queryTemplate)({
         pageId: pageId,
-        wikipediaId: yaviConfig.wikipediaId,
+        wikipediaId: wikipediaId,
         dateFrom: dateFrom,
         dateTo: dateTo
       });

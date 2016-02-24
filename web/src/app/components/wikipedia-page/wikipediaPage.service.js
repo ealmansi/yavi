@@ -6,7 +6,7 @@
     .service('WikipediaPage', serviceFunction);
 
   /** @ngInject */
-  function serviceFunction($q, wikipediaAPI, yaviServer) {
+  function serviceFunction(wikipediaAPI, yaviServer, yaviConfig, $q) {
     return WikipediaPage;
 
     function WikipediaPage(pageId) {
@@ -15,22 +15,14 @@
 
       self.pageId = pageId;
 
-      // Page properties.
+      // Wikipedia API properties.
       var categoryList = undefined;
       var description = undefined;
       var imagesList = undefined;
-      var numberOfAddedInlinksList = undefined;
-      var numberOfAddedOutlinksList = undefined;
-      var numberOfRevertedRevisionsList = undefined;
-      var numberOfRevisionsList = undefined;
-      var numberOfTotalOutlinksList = undefined;
-      var numberOfUniqueEditorsList = undefined;
-      var pageContentSizeList = undefined;
-      var relatedPages = undefined;
       var thumbnail = undefined;
       var title = undefined;
 
-      // Property promise getters.
+      // Wikipedia API property getters.
       self.getCategoryList = function() {
         if (angular.isUndefined(categoryList)) {
           return wikipediaAPI.getPageCategories(pageId)
@@ -64,94 +56,6 @@
         return $q.when(imagesList);
       }
 
-      self.getNumberOfAddedInlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfAddedInlinksList)) {
-        return yaviServer.getPageSignal("numberofaddedinlinks", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfAddedInlinksList = val;
-              return numberOfAddedInlinksList;
-            });
-        }
-        return $q.when(numberOfAddedInlinksList);
-      }
-
-      self.getNumberOfAddedOutlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfAddedOutlinksList)) {
-        return yaviServer.getPageSignal("numberofaddedoutlinks", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfAddedOutlinksList = val;
-              return numberOfAddedOutlinksList;
-            });
-        }
-        return $q.when(numberOfAddedOutlinksList);
-      }
-
-      self.getNumberOfRevertedRevisionsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfRevertedRevisionsList)) {
-        return yaviServer.getPageSignal("numberofrevertedrevisions", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfRevertedRevisionsList = val;
-              return numberOfRevertedRevisionsList;
-            });
-        }
-        return $q.when(numberOfRevertedRevisionsList);
-      }
-
-      self.getNumberOfRevisionsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfRevisionsList)) {
-        return yaviServer.getPageSignal("numberofrevisions", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfRevisionsList = val;
-              return numberOfRevisionsList;
-            });
-        }
-        return $q.when(numberOfRevisionsList);
-      }
-
-      self.getNumberOfTotalOutlinksList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfTotalOutlinksList)) {
-        return yaviServer.getPageSignal("numberoftotaloutlinks", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfTotalOutlinksList = val;
-              return numberOfTotalOutlinksList;
-            });
-        }
-        return $q.when(numberOfTotalOutlinksList);
-      }
-
-      self.getNumberOfUniqueEditorsList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(numberOfUniqueEditorsList)) {
-        return yaviServer.getPageSignal("numberofuniqueeditors", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              numberOfUniqueEditorsList = val;
-              return numberOfUniqueEditorsList;
-            });
-        }
-        return $q.when(numberOfUniqueEditorsList);
-      }
-
-      self.getPageContentSizeList = function(dateFrom, dateTo) {
-        if (angular.isUndefined(pageContentSizeList)) {
-        return yaviServer.getPageSignal("pagecontentsize", pageId, dateFrom, dateTo)
-            .then(function(val) {
-              pageContentSizeList = val;
-              return pageContentSizeList;
-            });
-        }
-        return $q.when(pageContentSizeList);
-      }
-
-      self.getRelatedPages = function(dateFrom, dateTo) {
-        if (angular.isUndefined(relatedPages)) {
-          return yaviServer.getPageRelatedPages(pageId, dateFrom, dateTo)
-              .then(function(val) {
-                relatedPages = val;
-                return relatedPages;
-              });
-        }
-        return $q.when(relatedPages);
-      }
-
       self.getThumbnail = function() {
         if (angular.isUndefined(thumbnail)) {
           return wikipediaAPI.getPageThumbnail(pageId)
@@ -172,6 +76,19 @@
               });
         }
         return $q.when(title);
+      }
+
+      // Yavi property getters.
+      self.getPageActivityFeatures = function(dateFrom, dateTo) {
+        return yaviServer.getPageActivityFeatures(pageId, yaviConfig.wikipediaId, dateFrom, dateTo);
+      }
+
+      self.getPageActivitySignal = function(dateFrom, dateTo, signalType) {
+        return yaviServer.getPageActivitySignal(pageId, yaviConfig.wikipediaId, dateFrom, dateTo, signalType);
+      }
+
+      self.getRelatedPages = function(dateFrom, dateTo) {
+        return yaviServer.getRelatedPages(pageId, yaviConfig.wikipediaId, dateFrom, dateTo);
       }
     }
   }

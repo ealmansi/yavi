@@ -1,0 +1,58 @@
+yv-explore-page-period-selector-card {
+  #explore-page-period-selector-card-wrapper {
+    #period-selector-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+      #period-selector-card-panel-heading {
+        @extend .panel-heading;
+        height: 35px;
+        #period-selector-card-panel-title {
+          @extend .panel-title;
+          @extend .pull-right;
+        }
+      }
+      #period-selector-card-panel-body {
+        @extend .panel-body;
+        padding-bottom: 0px;
+        #date-pickers {
+          @extend .row;
+          overflow: hidden;
+          #start-date-picker-wrapper {
+            @extend .col-xs-12;
+            @extend .col-sm-6;
+            padding: 0px;
+            #start-date-display {
+              padding: 10px;
+            }
+            #start-date-picker {
+              div.uib-datepicker {
+                min-height: 250px;
+                margin-bottom: 0px;
+              }
+              table {
+                @extend .horizontally-centered;
+              }
+            }
+          }
+          #end-date-picker-wrapper {
+            @extend .col-xs-12;
+            @extend .col-sm-6;
+            padding: 0px;
+            #end-date-display {
+              padding: 10px;
+            }
+            #end-date-picker {
+              div.uib-datepicker {
+                min-height: 250px;
+                margin-bottom: 0px;
+              }
+              table {
+                @extend .horizontally-centered;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

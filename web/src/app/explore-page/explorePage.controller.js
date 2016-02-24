@@ -13,7 +13,12 @@
       $state.go('pageNotFound');
     }
 
+    //
     vm.page = wikipediaPages.getPageById($stateParams.pageId);
+    vm.period = {
+      startDate: $stateParams.startDate || '2014-01-01',
+      endDate: $stateParams.endDate || '2014-03-01'
+    };
 
     vm.page.getTitle().then(function(title) {
       yvPageTitleConfig.setPageTitle(title);
