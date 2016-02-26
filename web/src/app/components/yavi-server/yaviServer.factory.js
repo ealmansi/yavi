@@ -46,9 +46,9 @@
       }
     }
 
-    factory.getRelatedPages = function(pageId, wikipediaId, dateFrom, dateTo) {
+    factory.getRelatedPagesRanking = function(pageId, wikipediaId, dateFrom, dateTo) {
       return $http
-          .jsonp(buildRelatedPagesQuery(pageId, wikipediaId, dateFrom, dateTo))
+          .jsonp(buildRelatedPagesRankingQuery(pageId, wikipediaId, dateFrom, dateTo))
           .then(onSuccess, onError);
 
       function onSuccess(response) {
@@ -60,7 +60,7 @@
       }
 
       function onError() {
-        throwYaviServerError('RelatedPages could not be retrieved.');
+        throwYaviServerError('RelatedPagesRanking could not be retrieved.');
       }
     }
 
@@ -100,7 +100,7 @@
       });
     }
     
-    function buildRelatedPagesQuery(pageId, wikipediaId, dateFrom, dateTo) {
+    function buildRelatedPagesRankingQuery(pageId, wikipediaId, dateFrom, dateTo) {
       var queryTemplate = '';
       queryTemplate += 'http://localhost:8080/yavi-server/relatedpages?';
       queryTemplate += '&pageid={{pageId}}';

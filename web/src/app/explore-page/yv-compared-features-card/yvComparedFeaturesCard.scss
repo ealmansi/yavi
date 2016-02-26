@@ -1,0 +1,22 @@
+yv-compared-features-card {
+  #compared-features-card-wrapper {
+    #compared-features-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+      #compared-features-card-panel-heading {
+        @extend .panel-heading;
+        height: 35px;
+        #compared-features-card-panel-title {
+          @extend .panel-title;
+          @extend .pull-right;
+        }
+      }
+      #compared-features-card-panel-body {
+        @extend .panel-body;
+        canvas {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

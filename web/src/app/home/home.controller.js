@@ -6,17 +6,16 @@
     .controller('HomeController', controllerFunction);
 
   /** @ngInject */
-  function controllerFunction(yvPageTitleConfig,
+  function controllerFunction($compile,
+                              $interpolate,
+                              $q,
                               $scope,
                               $state,
                               $stateParams,
                               wikipediaAPI,
-                              $q,
-                              $interpolate,
-                              $compile,
-                              $log,
+                              toastr,
                               wikipediaPages,
-                              toastr) {
+                              yvPageTitleConfig) {
     var vm = this;
 
     yvPageTitleConfig.setDefaultPageTitle();
@@ -27,7 +26,7 @@
 
     var searchResults = [];
     var searchResultsElement = angular.element('#home-search-results');
-    var searchResultsLimit = 20;
+    var searchResultsLimit = 14;
 
     vm.onSearchBoxChange = function() {
       var queryValue = vm.query.value;

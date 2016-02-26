@@ -28,7 +28,9 @@
             var categoryTitle = category.title;
             var categoryTitleNoPrefix =
                 categoryTitle.substr(categoryTitle.indexOf(':') + 1, categoryTitle.length);
-            this.push(categoryTitleNoPrefix);
+            var categoryTitleClean = categoryTitleNoPrefix;
+            categoryTitleClean = categoryTitleClean.replace(/<font>|<\/font>/g, '');
+            this.push(categoryTitleClean);
           }, categoryTitles);
           return categoryTitles;
         }

@@ -6,7 +6,7 @@
     .service('WikipediaPage', serviceFunction);
 
   /** @ngInject */
-  function serviceFunction(wikipediaAPI, yaviServer, yaviConfig, $q) {
+  function serviceFunction($log, $q, wikipediaAPI, yaviServer, yaviConfig) {
     return WikipediaPage;
 
     function WikipediaPage(pageId) {
@@ -87,8 +87,44 @@
         return yaviServer.getPageActivitySignal(pageId, yaviConfig.wikipediaId, dateFrom, dateTo, signalType);
       }
 
-      self.getRelatedPages = function(dateFrom, dateTo) {
-        return yaviServer.getRelatedPages(pageId, yaviConfig.wikipediaId, dateFrom, dateTo);
+      self.getRelatedPagesRanking = function(dateFrom, dateTo) {
+        // Get pageIdScore pairs and add page titles.
+        return yaviServer.getRelatedPagesRanking(pageId, yaviConfig.wikipediaId, dateFrom, dateTo)
+        .then(function(rawRelatedPagesRanking) {
+          var wrappedTitlePromises = [];
+          var relatedPagesRanking = [];
+          angular.forEach(rawRelatedPagesRanking, function(pageIdScore) {
+            var pageId = pageIdScore.pageId;
+            var score = pageIdScore.score;
+            var wrappedTitlePromise = wikipediaAPI.getPageTitle(pageId)
+              .then(function(title) {
+                relatedPagesRanking.push({
+                  pageId: pageId,
+                  title: title,
+                  score: score
+                });
+              })
+              .catch(function() { /* Simply ignore page if title cannot be retrieved. */ });
+            wrappedTitlePromises.push(wrappedTitlePromise);
+          })
+          var relatedPagesRankingPromise = $q.all(wrappedTitlePromises)
+          .then(function() {
+            relatedPagesRanking.sort(function(pageIdTitleScoreA, pageIdTitleScoreB) {
+              var pageIdA = pageIdTitleScoreA.pageId;
+              var scoreA = pageIdTitleScoreA.score;
+              var pageIdB = pageIdTitleScoreB.pageId;
+              var scoreB = pageIdTitleScoreB.score;
+              var scoreDifference = scoreA - scoreB;
+              if (scoreDifference != 0) {
+                return scoreDifference;
+              }
+              return pageIdA - pageIdB;
+            });
+            relatedPagesRanking.reverse();
+            return relatedPagesRanking;
+          });
+          return relatedPagesRankingPromise;
+        });
       }
     }
   }

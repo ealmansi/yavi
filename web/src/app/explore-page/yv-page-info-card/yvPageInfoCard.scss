@@ -1,0 +1,82 @@
+yv-page-info-card {
+  #page-info-card-wrapper {
+    #page-info-card-panel {
+      @extend .panel;
+      @extend .panel-default;
+      #page-info-card-panel-heading {
+        @extend .panel-heading;
+        height: 35px;
+        #page-info-card-panel-title {
+          @extend .panel-title;
+          @extend .pull-right;
+        }
+      }
+      #page-info-card-panel-body {
+        @extend .panel-body;
+        @extend .row;
+        padding-bottom: 0px;
+        #page-title-wrapper {
+          @extend .col-xs-12;
+          @extend .row;
+          #page-title {
+            @extend .col-xs-9;
+          }
+          #page-external-links {
+            @extend .col-xs-3;
+            margin-top: 20px;
+            padding-right: 0px;
+            #page-google-link {
+              float: right;
+              text-decoration: none;
+              #google-isotype {
+                height: 35px;
+                margin: 5px;
+              }
+            }
+            #page-wikipedia-link {
+              float: right;
+              text-decoration: none;
+              #wikipedia-isotype {
+                height: 35px;
+                margin: 5px;
+              }
+            }
+          }
+        }
+        #page-title-separator {
+          @extend .col-xs-12;
+        }
+        #page-images-carrousel-wrapper {
+          @extend .col-xs-12;
+          margin-bottom: 10px;
+          #page-images-carrousel {
+            height: 300px;
+            img {
+              height: 300px;
+              margin: auto;
+            }
+          }
+        }
+        #page-description-wrapper {
+          @extend .col-xs-12;
+          overflow: overlay;
+          #page-description {
+            max-height: 300px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+      #page-info-card-panel-footer {
+        @extend .panel-footer;
+        #page-categories {
+          overflow: hidden;
+          .page-category {
+            margin: 2px;
+            word-wrap: normal;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
