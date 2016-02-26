@@ -25,14 +25,10 @@ public class RelatedPages {
                                                               String wikipediaId,
                                                               int dayFrom,
                                                               int dayTo) {
-    System.out.println("A" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Set<Integer> relatedPages = getRelatedPages(pageId, wikipediaId, dayFrom, dayTo);
-    System.out.println("B" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Map<Integer, Double> relatedPageScores =
         scoreRelatedPages(relatedPages, wikipediaId, dayFrom, dayTo);
-    System.out.println("C" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     List<PageIdScorePair> relatedPagesRanking = selectTopRelatedPages(relatedPageScores);
-    System.out.println("D" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     return relatedPagesRanking;
   }
 
@@ -40,20 +36,14 @@ public class RelatedPages {
                                 String wikipediaId,
                                 int dayFrom,
                                 int dayTo) {
-    System.out.println("AA" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Set<Integer> pageNeighbourhood =
         NeighbourhoodProvider.getPageNeighbourhood(pageId, wikipediaId, dayFrom, dayTo);
-    System.out.println("AB" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Set<Integer> pageNeighbourhoodSubset =
         filterNeighbourhoodByNumberOfRevisions(pageNeighbourhood, wikipediaId, dayFrom, dayTo);
-    System.out.println("AC" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Map<Integer, Set<Integer>> neighbourNeighbourhoods =
         NeighbourhoodProvider.getPagesNeighbourhoods(pageNeighbourhoodSubset, wikipediaId, dayFrom, dayTo);
-    System.out.println("AD" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Map<Integer, Double> neighbourScores = scoreNeighbours(pageNeighbourhoodSubset, neighbourNeighbourhoods);
-    System.out.println("AE" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Set<Integer> topNeighbours = selectTopNeighbours(neighbourScores);
-    System.out.println("AF" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     return topNeighbours;
   }
 
@@ -86,11 +76,9 @@ public class RelatedPages {
                                                   String wikipediaId,
                                                   int dayFrom,
                                                   int dayTo) {
-    System.out.println("BA" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Map<Integer, PageActivityFeaturesVector> pageActivityFeaturesVectors =
         PageActivityFeatures.getPagesActivityFeaturesVectors(relatedPages, wikipediaId,
                                                             dayFrom, dayTo);
-    System.out.println("BB" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     Map<Integer, Double> relatedPageScores = new HashMap<>();
     for (int relatedPageId : relatedPages) {
       PageActivityFeaturesVector pageActivityFeaturesVector =
@@ -98,7 +86,6 @@ public class RelatedPages {
       double score = PageActivityFeatures.computePageFeaturesVectorScore(pageActivityFeaturesVector);
       relatedPageScores.put(relatedPageId, score);
     }
-    System.out.println("BC" + new SimpleDateFormat("HH:mm:ss").format(new Date()));
     return relatedPageScores;
   }
 
