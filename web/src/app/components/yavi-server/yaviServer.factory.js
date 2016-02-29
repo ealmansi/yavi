@@ -68,7 +68,7 @@
 
     function buildPageActivityFeaturesQuery(pageId, wikipediaId, dateFrom, dateTo) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/pageactivityfeatures?';
+      queryTemplate += 'https://gate.d5.mpi-inf.mpg.de/yavi-server/pageactivityfeatures?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
@@ -84,7 +84,7 @@
 
     function buildPageActivitySignalQuery(pageId, wikipediaId, dateFrom, dateTo, signalType) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/pageactivitysignal?';
+      queryTemplate += 'https://gate.d5.mpi-inf.mpg.de/yavi-server/pageactivitysignal?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
@@ -102,7 +102,7 @@
     
     function buildRelatedPagesRankingQuery(pageId, wikipediaId, dateFrom, dateTo) {
       var queryTemplate = '';
-      queryTemplate += 'http://localhost:8080/yavi-server/relatedpages?';
+      queryTemplate += 'https://gate.d5.mpi-inf.mpg.de/yavi-server/relatedpages?';
       queryTemplate += '&pageid={{pageId}}';
       queryTemplate += '&wikipediaid={{wikipediaId}}';
       queryTemplate += '&datefrom={{dateFrom}}';
