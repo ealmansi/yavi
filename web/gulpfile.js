@@ -6,19 +6,19 @@ require('require-dir')('gulp-tasks/');
 
 /* Main tasks */
 
-gulp.task('build', [], function() {
-    return runSequence(['html', 'scripts', 'styles']);
+gulp.task('build', ['html', 'scripts', 'styles', 'heroku'], function() {
+  /* empty */
 });
 
-gulp.task('serve', [], function() {
-    return runSequence(['html', 'scripts', 'styles'], 'browser-sync-init', 'browser-sync-watch');
+gulp.task('serve', ['build'], function() {
+  return runSequence('browser-sync-init', 'browser-sync-watch');
 });
 
 gulp.task('clean', [], function() {
-    return gulp.src('dist/', {read: false})
+  return gulp.src(['dist/**/{*,.*}', '!dist/.git'], {read: false})
             .pipe(plugins.clean());
 });
 
 gulp.task('default', [], function() {
-    return runSequence('clean', 'build');
+  return runSequence('clean', 'build');
 });

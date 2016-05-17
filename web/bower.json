@@ -1,6 +1,6 @@
 {
-  "name": "project-skeleton",
-  "description": "Project Skeleton.",
+  "name": "yavi-web",
+  "description": "Yavi Web.",
   "main": "gulpfile.js",
   "authors": [
     "Emilio Almansi <ealmansi@gmail.com>"
