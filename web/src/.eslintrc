@@ -1,0 +1,12 @@
+{
+    "extends": "eslint:recommended",
+    "rules":{
+        "camelcase": 1,
+        "comma-dangle": 2,
+        "no-console": "off",
+        "no-unused-vars": "warn",
+        "quotes": 0
+    },
+    "globals":{
+    }
+}

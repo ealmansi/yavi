@@ -1,29 +1,24 @@
-/**
- *  Welcome to your gulpfile!
- *  The gulp tasks are splitted in several files in the gulp directory
- *  because putting all here was really too long
- */
-
-'use strict';
-
+/* Imports */
 var gulp = require('gulp');
-var wrench = require('wrench');
+var plugins = require('gulp-load-plugins')(['gulp-*']);
+var runSequence = require('run-sequence');
+require('require-dir')('gulp-tasks/');
 
-/**
- *  This will load all js or coffee files in the gulp directory
- *  in order to load all gulp tasks
- */
-wrench.readdirSyncRecursive('./gulp').filter(function(file) {
-  return (/\.(js|coffee)$/i).test(file);
-}).map(function(file) {
-  require('./gulp/' + file);
+/* Main tasks */
+
+gulp.task('build', [], function() {
+    return runSequence(['html', 'scripts', 'styles']);
 });
 
+gulp.task('serve', [], function() {
+    return runSequence(['html', 'scripts', 'styles'], 'browser-sync-init', 'browser-sync-watch');
+});
 
-/**
- *  Default task clean temporaries directories and launch the
- *  main optimization build task
- */
-gulp.task('default', ['clean'], function () {
-  gulp.start('build');
+gulp.task('clean', [], function() {
+    return gulp.src('dist/', {read: false})
+            .pipe(plugins.clean());
+});
+
+gulp.task('default', [], function() {
+    return runSequence('clean', 'build');
 });

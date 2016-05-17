@@ -1,24 +1,8 @@
-# Local Resources
-local/
-src/assets/images/vendor/
-*.sublime-project
-*.sublime-workspace
-
-# Coverage directory
-coverage/
-
-# Gulp intermediate storage
-.tmp/
-
-# Build output
-dist/
-
-# Dependency directories
+# Node
 node_modules/
+
+# Bower
 bower_components/
 
-# Sass cache
-.sass-cache/
-
-# e2e
-e2e/
+# Build
+dist/
