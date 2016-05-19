@@ -1,0 +1,12 @@
+/**
+ *  Custom mixins.
+ */
+
+@mixin centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%); // Ch <36, Saf 5.1+, iOS < 9.2, An =<4.4.4
+        -ms-transform: translate(-50%, -50%); // IE 9
+            transform: translate(-50%, -50%); // IE 10, Fx 16+, Op 12.1+
+}

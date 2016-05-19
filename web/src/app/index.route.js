@@ -1,0 +1,76 @@
+(function() {
+    'use strict';
+
+    angular
+        .module('yavi')
+        .config(routerConfig);
+
+    /** @ngInject */
+    function routerConfig($stateProvider, $urlRouterProvider, $locationProvider) {
+
+        $urlRouterProvider.otherwise('/error');
+        $locationProvider.html5Mode(true);
+
+        $stateProvider
+            .state('home', {
+                url: '/?query&wiki',
+                templateUrl: 'html/home.html',
+                controller: 'HomeController',
+                controllerAs: 'home',
+                onEnter: onEnterHome
+            });
+
+        $stateProvider
+            .state('explore', {
+                url: '/explore/:page?&start&end&wiki',
+                templateUrl: 'html/explore.html',
+                controller: 'ExploreController',
+                controllerAs: 'explore',
+                onEnter: onEnterExplore
+            });
+
+        $stateProvider
+            .state('error', {
+                url: '/error?&wiki',
+                templateUrl: 'html/error.html',
+                controller: 'ErrorController',
+                controllerAs: 'error',
+                onEnter: onEnterError
+            });
+
+        /** @ngInject */
+        function onEnterHome($state, $stateParams, wikipediaSources, yaviDefaults) {
+            $stateParams.query = $stateParams.query || yaviDefaults.query;
+            $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
+            if (angular.isUndefined($stateParams.query)
+                    || angular.isUndefined($stateParams.wiki)
+                    || !wikipediaSources.isValidId($stateParams.wiki)) {
+                $state.go('error', {wiki: $stateParams.wiki});
+            }
+        }
+
+        /** @ngInject */
+        function onEnterExplore($state, $stateParams, wikipediaPages, wikipediaSources, yaviDates, yaviDefaults) {
+            $stateParams.start = $stateParams.start || yaviDefaults.startDate;
+            $stateParams.end = $stateParams.end || yaviDefaults.endDate;
+            $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
+            if (angular.isUndefined($stateParams.page)
+                    || angular.isUndefined($stateParams.start)
+                    || angular.isUndefined($stateParams.end)
+                    || angular.isUndefined($stateParams.wiki)
+                    || !wikipediaPages.isValidId($stateParams.page)
+                    || !yaviDates.isValidDate($stateParams.start)
+                    || !yaviDates.isValidDate($stateParams.end)
+                    || !yaviDates.isValidRange($stateParams.start, $stateParams.end)
+                    || !wikipediaSources.isValidId($stateParams.wiki)) {
+                $state.go('error', {wiki: $stateParams.wiki});
+            }
+        }
+
+        /** @ngInject */
+        function onEnterError($stateParams, yaviDefaults) {
+            $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
+        }
+    }
+
+})();

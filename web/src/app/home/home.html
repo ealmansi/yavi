@@ -1,0 +1,37 @@
+<div id="home-container" class="container-fluid">
+    <div id="home-header-container" class="row">
+        <div id="home-navbar-wrapper" class="col-xs-12">
+            <yv-home-navbar></yv-home-navbar>
+        </div>
+    </div>
+    <div id="home-content-container" class="row">
+        <div id="home-imagetype-wrapper" class="col-xs-12
+                                        col-sm-8 col-sm-offset-2
+                                        col-md-6 col-md-offset-3
+                                        col-lg-4 col-lg-offset-4">
+            <img id="home-imagetype" src="../assets/images/imagetype.png">
+        </div>
+        <div id="home-search-box-wrapper" class="col-xs-12
+                                        col-sm-8 col-sm-offset-2
+                                        col-md-6 col-md-offset-3
+                                        col-lg-4 col-lg-offset-4">
+            <yv-home-search-box></yv-home-search-box>
+        </div>
+        <div id="home-query-results-wrapper" class="col-xs-12">
+            <div id="home-query-results" class="row">
+                <yv-home-query-result-card></yv-home-query-result-card>
+                <yv-home-query-result-card></yv-home-query-result-card>
+                <yv-home-query-result-card></yv-home-query-result-card>
+                <yv-home-query-result-card></yv-home-query-result-card>
+                <yv-home-query-result-card></yv-home-query-result-card>
+                <yv-home-query-result-card></yv-home-query-result-card>
+            </div>
+        </div>
+    </div>
+    <div id="home-footer-container" class="row">
+        <div id="home-footer-wrapper" class="col-xs-12">
+            <yv-home-footer></yv-home-footer>
+        </div>
+    </div>
+    <img src="../assets/images/loading-graphic.gif" class="loading-graphic" ng-show="{{ home.showLoadingGraphic }}" />
+</div>

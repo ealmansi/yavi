@@ -1,0 +1,13 @@
+@import '../../mixins';
+
+yv-home-search-box {
+
+    #home-search-box {
+        padding: 10px;
+        @include centered;
+
+        span {
+            // @include centered;
+        }
+    }
+}

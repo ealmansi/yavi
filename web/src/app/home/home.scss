@@ -1,0 +1,122 @@
+@import '../bootstrap';
+@import '../mixins';
+
+/**
+ *  Variables.
+ */
+
+
+// Home container heights.
+$header-height: 50px;
+$footer-height: 30px;
+$content-min-height: calc(100% - 50px - 30px); // 100% - $header-height - $footer-height;
+
+// Home content container heights.
+$imagetype-wrapper-xs-height: 80px;
+$imagetype-xs-height: 100%;
+$search-box-wrapper-xs-height: 80px;
+$query-results-wrapper-xs-height: 100px;
+$imagetype-wrapper-sm-height: 150px;
+$imagetype-sm-height: 100%;
+$search-box-wrapper-sm-height: 100px;
+$query-results-wrapper-sm-height: 100px;
+$imagetype-wrapper-md-height: $imagetype-wrapper-sm-height;
+$imagetype-md-height: 80%;
+$search-box-wrapper-md-height: $search-box-wrapper-sm-height;
+$query-results-wrapper-md-height: $query-results-wrapper-sm-height;
+$imagetype-wrapper-lg-height: $imagetype-wrapper-md-height;
+$imagetype-lg-height: $imagetype-md-height;
+$search-box-wrapper-lg-height: $search-box-wrapper-md-height;
+$query-results-wrapper-lg-height: $query-results-wrapper-md-height;
+
+/** 
+    Home styles.
+ */
+
+#home-container {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    background-color: orange;
+
+    #home-header-container {
+        height: $header-height;
+        padding: 0px;
+        margin: 0px;
+        background-color: red;
+        
+        #home-navbar-wrapper {
+            height: 100%;
+            padding: 0px;
+            z-index: 1;
+        }
+    }
+    
+    #home-content-container {
+        min-height: $content-min-height;
+        padding: 0px;
+        margin: 0px;
+        background-color: green;
+        
+        #home-imagetype-wrapper {
+            // height: depends on screen-size (see below).
+            background-color: #AAA;
+
+            #home-imagetype {
+                padding: 10px;
+                @include centered;
+            }
+        }
+        
+        #home-search-box-wrapper {
+            // height: depends on screen-size (see below).
+            background-color: #BBB;
+        }
+        
+        #home-query-results-wrapper {
+            // height: depends on screen-size (see below).
+            background-color: #CCC;
+            padding: 20px;
+        }
+    }
+    
+    #home-footer-container {
+        height: $footer-height;
+        padding: 0px;
+        margin: 0px;
+        background-color: yellow;
+        
+        #home-footer-wrapper {
+            height: 100%;
+        }
+    }
+}
+
+// Set Home content container heights by media query.
+@media (max-width: $screen-xs-max) {
+    #home-imagetype-wrapper { height: $imagetype-wrapper-xs-height; }
+    #home-imagetype { height: $imagetype-xs-height; }
+    #home-search-box-wrapper { height: $search-box-wrapper-xs-height; }
+    #home-query-results-wrapper { min-height: $query-results-wrapper-xs-height; }
+}
+
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    #home-imagetype-wrapper { height: $imagetype-wrapper-sm-height; }
+    #home-imagetype { height: $imagetype-sm-height; }
+    #home-search-box-wrapper { height: $search-box-wrapper-sm-height; }
+    #home-query-results-wrapper { min-height: $query-results-wrapper-sm-height; }
+}
+
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+    #home-imagetype-wrapper { height: $imagetype-wrapper-md-height; }
+    #home-imagetype { height: $imagetype-md-height; }
+    #home-search-box-wrapper { height: $search-box-wrapper-md-height; }
+    #home-query-results-wrapper { min-height: $query-results-wrapper-md-height; }
+}
+
+@media (min-width: $screen-lg-min) {
+    #home-imagetype-wrapper { height: $imagetype-wrapper-lg-height; }
+    #home-imagetype { height: $imagetype-lg-height; }
+    #home-search-box-wrapper { height: $search-box-wrapper-lg-height; }
+    #home-query-results-wrapper { min-height: $query-results-wrapper-lg-height; }
+}

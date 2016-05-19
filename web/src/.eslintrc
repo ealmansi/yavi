@@ -4,9 +4,13 @@
         "camelcase": 1,
         "comma-dangle": 2,
         "no-console": "off",
-        "no-unused-vars": "warn",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^\\$" }],
         "quotes": 0
     },
     "globals":{
+        "_": true,
+        "angular": true,
+        "moment": true,
+        "zzz-comma-dangle": true
     }
 }

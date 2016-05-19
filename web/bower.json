@@ -18,8 +18,23 @@
   "dependencies": {
     "jquery": "^2.2.3",
     "normalize-css": "^4.1.1",
-    "font-awesome": "fontawesome#^4.6.2",
-    "bootstrap": "^3.3.6",
-    "underscore": "^1.8.3"
+    "angular": "^1.5.5",
+    "bootstrap-sass": "^3.3.6",
+    "angular-bootstrap": "^1.3.2",
+    "angular-ui-router": "^0.3.0",
+    "underscore": "^1.8.3",
+    "moment": "^2.13.0"
+  },
+  "group": {
+    "bootstrap": ["bootstrap-sass"]
+  },
+  "overrides": {
+    "bootstrap-sass": {
+        "main": [
+            "assets/fonts/**/*",
+            "assets/javascripts/bootstrap.js",
+            "assets/stylesheets/_bootstrap.scss"
+        ]
+    }
   }
 }
