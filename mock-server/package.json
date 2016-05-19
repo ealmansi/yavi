@@ -1,0 +1,24 @@
+{
+  "name": "yavi-mock-server",
+  "version": "0.1.0",
+  "description": "Yavi Mock Server.",
+  "engines": {
+    "node": "5.9.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+  ],
+  "license": "MIT"
+}
