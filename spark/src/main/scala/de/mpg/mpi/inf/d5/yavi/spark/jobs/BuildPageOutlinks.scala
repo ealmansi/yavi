@@ -29,6 +29,7 @@ object BuildPageOutlinks {
     // Configure job.
     hiveContext.setConf("spark.sql.shuffle.partitions", shufflePartitions)
 
+    println(workDirectory)
     // // Load dependencies.
     // jobContext.loadTable(NonRevertedRevisions)
     // jobContext.loadTable(RevisionMetadata)
