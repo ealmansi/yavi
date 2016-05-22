@@ -1,0 +1,18 @@
+/**
+ *  To show on loading.
+ */
+
+.loading-graphic {
+    display: block;
+    width: 133px;
+    height: 133px;
+    background-image: url('../assets/images/loading-graphic.gif');
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    top: 0%;
+    bottom: 10%;
+    left: 0%;
+    right: 0%;
+    margin: auto;
+}

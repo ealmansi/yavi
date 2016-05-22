@@ -23,18 +23,25 @@
     "angular-bootstrap": "^1.3.2",
     "angular-ui-router": "^0.3.0",
     "underscore": "^1.8.3",
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "bootswatch": "^3.3.6+1"
   },
   "group": {
-    "bootstrap": ["bootstrap-sass"]
+    "bootstrap": [
+      "bootstrap-sass"
+    ]
   },
   "overrides": {
     "bootstrap-sass": {
-        "main": [
-            "assets/fonts/**/*",
-            "assets/javascripts/bootstrap.js",
-            "assets/stylesheets/_bootstrap.scss"
-        ]
+      "main": [
+        "assets/fonts/**/*",
+        "assets/javascripts/bootstrap.js",
+        "assets/stylesheets/_bootstrap.scss"
+      ]
+    },
+    "bootstrap": {
+      "main": [
+      ]
     }
   }
 }

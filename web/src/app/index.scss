@@ -15,29 +15,6 @@ html {
     }
 }
 
-.loading-graphic {
-    display: block;
-    width: 133px;
-    height: 133px;
-    background-image: url('../assets/images/loading-graphic.gif');
-    background-repeat: no-repeat;
-    background-color: rgba(0, 0, 0, 0);
-    position: absolute;
-    top: 0%;
-    bottom: 10%;
-    left: 0%;
-    right: 0%;
-    margin: auto;
-}
-
-/**
- *  Yavi main font.
- */
-@font-face {
-    font-family: 'YaviFont';
-    src: url('../assets/fonts/libel-suit.regular.eot'); /* IE9 Compat Modes */
-    src: url('../assets/fonts/libel-suit.regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-        url('../assets/fonts/libel-suit.regular.woff') format('woff'), /* Pretty Modern Browsers */
-        url('../assets/fonts/libel-suit.regular.ttf')  format('truetype'), /* Safari, Android, iOS */
-        url('../assets/fonts/libel-suit.regular.svg#svgFontName') format('svg'); /* Legacy iOS */
+.btn {
+    border-radius: 0px;
 }

@@ -3,11 +3,32 @@
 yv-home-search-box {
 
     #home-search-box {
+        margin: 0px;
         padding: 10px;
         @include centered;
 
-        span {
-            // @include centered;
+        #search-box-input {
+            height: 35px;
+            margin: 0px;
+            padding: 5px;
+        }
+
+        #search-box-button-group {
+            height: 35px;
+            margin: 0px;
+            padding: 0px;
+            
+            #search-box-button {
+                width: 35px;
+                height: 35px;
+                margin: 0px;
+                padding: 0px;
+                
+                span {
+                    @include fixed-position(50%, 40%);
+                    // @include centered;
+                }
+            }
         }
     }
 }

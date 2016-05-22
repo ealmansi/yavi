@@ -39,7 +39,7 @@
             });
 
         /** @ngInject */
-        function onEnterHome($state, $stateParams, wikipediaSources, yaviDefaults) {
+        function onEnterHome(wikipediaSources, yaviDefaults, $state, $stateParams) {
             $stateParams.query = $stateParams.query || yaviDefaults.query;
             $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
             if (angular.isUndefined($stateParams.query)
@@ -50,7 +50,7 @@
         }
 
         /** @ngInject */
-        function onEnterExplore($state, $stateParams, wikipediaPages, wikipediaSources, yaviDates, yaviDefaults) {
+        function onEnterExplore(wikipediaPages, wikipediaSources, yaviDates, yaviDefaults, $state, $stateParams) {
             $stateParams.start = $stateParams.start || yaviDefaults.startDate;
             $stateParams.end = $stateParams.end || yaviDefaults.endDate;
             $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
@@ -68,7 +68,7 @@
         }
 
         /** @ngInject */
-        function onEnterError($stateParams, yaviDefaults) {
+        function onEnterError(yaviDefaults, $stateParams) {
             $stateParams.wiki = $stateParams.wiki || yaviDefaults.wikipediaSourceId;
         }
     }
