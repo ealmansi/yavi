@@ -16,7 +16,7 @@ dump_date=$3
 
 # Run job.
 job_script=":load $job_file
-runJob(\"/home/ealmansi/data/$wiki_id/$dump_date/\", sqlContext)"
+runJob(\"/user/ealmansi/data/$wiki_id/$dump_date/\", sqlContext)"
 
 (cd $(dirname $0) &&
   echo "$job_script" |
