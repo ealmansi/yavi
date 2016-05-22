@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SQLContext
 
-:load jobs/job_utility.scala
+:load /home/ealmansi/dev/yavi/spark/jobs/job_utility.scala
 
 def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
 
