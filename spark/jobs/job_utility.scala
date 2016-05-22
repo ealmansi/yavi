@@ -1,6 +1,24 @@
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SQLContext
 
+def normalizeWikilink(wikilink: String): String = {
+  var normalized = wikilink.trim()
+  normalized = normalized.replaceAll("_+", " ")
+  normalized = normalized.replaceAll(" +", " ")
+  normalized = normalized.replaceAll("^:+", "")
+  if (normalized.indexOf('#') > -1) {
+    normalized = normalized.substring(0, normalized.indexOf('#'))
+  }
+  if (normalized.indexOf('|') > -1) {
+    normalized = normalized.substring(0, normalized.indexOf('|'))
+  }
+  normalized.trim()
+}
+
+def registerUDFs(sqlContext: SQLContext): Unit = {
+  sqlContext.udf.register("normalize_wikilink", normalizeWikilink(_: String))
+}
+
 def loadTable(tableId: String, workDirectory: String, sqlContext: SQLContext): DataFrame = {
   var table = sqlContext.read
     .format("com.databricks.spark.avro")
