@@ -7,9 +7,9 @@ import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.SaveMode
 
 /**
- * BuildTableWikilinks
+ * PageWikilinks
  */
-object BuildTableWikilinks {
+object PageWikilinks {
 
   /**
    * Job entry point.
@@ -33,17 +33,19 @@ object BuildTableWikilinks {
     hiveContext.udf.register("normalize_wikilink", JobUtility.normalizeWikilink(_: String))
 
     // Load dependencies.
-    val revisionWikilinks = hiveContext.load(s"$workDirectory/revision_wikilinks", "com.databricks.spark.avro")
+    val revisionWikilinks = hiveContext.read
+                        .format("com.databricks.spark.avro")
+                        .load(s"$workDirectory/avro/revision_wikilinks")
     revisionWikilinks.registerTempTable("revision_wikilinks")
 
     // Build table.
-    val wikilinks = hiveContext.sql(s"""
-        select rw.page_id as page_id, normalize_wikilink(rw.wikilink) as wikilink
+    val pageWikilinks = hiveContext.sql(s"""
+        select distinct rw.page_id, normalize_wikilink(rw.wikilink) as wikilink
         from revision_wikilinks rw
         where normalize_wikilink(rw.wikilink) <> ''
     """)
-    wikilinks.save(s"$workDirectory/wikilinks",
-                    "com.databricks.spark.avro",
-                    SaveMode.Overwrite)
+    pageWikilinks.write
+        .format("com.databricks.spark.avro")
+        .save(s"$workDirectory/avro/page_wikilinks")
   }
 }

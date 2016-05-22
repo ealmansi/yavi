@@ -7,9 +7,9 @@ import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.SaveMode
 
 /**
- * BuildTableOutlinks
+ * PageOutlinks
  */
-object BuildTableOutlinks {
+object PageOutlinks {
 
   /**
    * Job entry point.
@@ -30,24 +30,32 @@ object BuildTableOutlinks {
     hiveContext.setConf("spark.sql.shuffle.partitions", shufflePartitions)
 
     // Load dependencies.
-    val pageWikilinks = hiveContext.load(s"$workDirectory/avro/page_wikilinks", "com.databricks.spark.avro")
+
+    val pageWikilinks = hiveContext.read
+                        .format("com.databricks.spark.avro")
+                        .load(s"$workDirectory/avro/page_wikilinks")
     pageWikilinks.registerTempTable("page_wikilinks")
-    val pageMetadata = hiveContext.load(s"$workDirectory/avro/page_metadata", "com.databricks.spark.avro")
+    val pageMetadata = hiveContext.read
+                        .format("com.databricks.spark.avro")
+                        .load(s"$workDirectory/avro/page_metadata")
     pageMetadata.registerTempTable("page_metadata")
-    val redirectMap = hiveContext.load(s"$workDirectory/avro/redirect_map", "com.databricks.spark.avro")
+    val redirectMap = hiveContext.read
+                        .format("com.databricks.spark.avro")
+                        .load(s"$workDirectory/avro/redirect_map")
     redirectMap.registerTempTable("redirect_map")
 
+
     // Build table.
-    val outlinks = hiveContext.sql(s"""
+    val pageOutlinks = hiveContext.sql(s"""
         select pw.page_id, rm.redirect
         from page_wikilinks pw
         inner join page_metadata pm
-        on pw.wikilink = pm.title
+        on lower(pw.wikilink) = lower(pm.title)
         inner join redirect_map rm
         on pm.page_id = rm.page_id
     """)
-    outlinks.save(s"$workDirectory/avro/outlinks",
-                    "com.databricks.spark.avro",
-                    SaveMode.Overwrite)
+    pageOutlinks.write
+        .format("com.databricks.spark.avro")
+        .save(s"$workDirectory/avro/page_outlinks")
   }
 }

@@ -7,9 +7,9 @@ import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.SaveMode
 
 /**
- * BuildTableRedirectMap
+ * RedirectMap
  */
-object BuildTableRedirectMap {
+object RedirectMap {
 
   /**
    * Job entry point.
@@ -30,7 +30,9 @@ object BuildTableRedirectMap {
     hiveContext.setConf("spark.sql.shuffle.partitions", shufflePartitions)
 
     // Load dependencies.
-    val pageMetadata = hiveContext.load(s"$workDirectory/avro/page_metadata", "com.databricks.spark.avro")
+    val pageMetadata = hiveContext.read
+                        .format("com.databricks.spark.avro")
+                        .load(s"$workDirectory/avro/page_metadata")
     pageMetadata.registerTempTable("page_metadata")
 
     // Build table.
@@ -42,8 +44,8 @@ object BuildTableRedirectMap {
         left join page_metadata pm3
         on pm2.redirect is not null and pm2.redirect like pm3.title
     """)
-    redirectMap.save(s"$workDirectory/avro/redirect_map",
-                    "com.databricks.spark.avro",
-                    SaveMode.Overwrite)
+    redirectMap.write
+        .format("com.databricks.spark.avro")
+        .save(s"$workDirectory/avro/redirect_map")
   }
 }
