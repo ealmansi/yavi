@@ -9,7 +9,7 @@ def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
   loadTable("redirect_map", workDirectory, sqlContext)
 
   defineTable("page_outlinks", s"""
-        SELECT pw.page_id AS page_id, rm.redirect AS outlink
+        SELECT DISTINCT pw.page_id AS page_id, rm.redirect AS outlink
         FROM page_wikilinks pw
         INNER JOIN page_metadata pm
         ON LOWER(pw.wikilink) = LOWER(pm.title)

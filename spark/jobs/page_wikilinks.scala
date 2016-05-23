@@ -9,7 +9,7 @@ def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
   loadTable("revision_wikilinks", workDirectory, sqlContext)
 
   defineTable("page_wikilinks", s"""
-        SELECT distinct rw.page_id AS page_id, NORMALIZE_WIKILINK(rw.wikilink) AS wikilink
+        SELECT DISTINCT rw.page_id AS page_id, NORMALIZE_WIKILINK(rw.wikilink) AS wikilink
         FROM revision_wikilinks rw
         WHERE NORMALIZE_WIKILINK(rw.wikilink) <> ''
   """, sqlContext)
