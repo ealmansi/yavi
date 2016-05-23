@@ -6,7 +6,7 @@
         .service('WikipediaPageDataProvider', serviceFunction);
 
     /** @ngInject */
-    function serviceFunction(yaviCached, $http, $interpolate, $log) {
+    function serviceFunction(WikipediaApiError, yaviCached, $http, $interpolate, $log) {
 
         return function(pageId) {
 
@@ -32,7 +32,7 @@
                 }
                 
                 function onError() {
-                    throw "Error";
+                    throw new WikipediaApiError(pageId, "BasicData not found.");
                 }
             });
 
@@ -60,7 +60,7 @@
                 }
                 
                 function onError() {
-                    throw "Error";
+                    throw new WikipediaApiError(pageId, "CategoryList not found.");
                 }
             });
 
@@ -75,7 +75,7 @@
                 }
 
                 function onError() {
-                    throw "Error";
+                    throw new WikipediaApiError(pageId, "Description not found.");
                 }
             });
 
@@ -99,7 +99,7 @@
                 }
                 
                 function onError() {
-                    throw "Error";
+                    throw new WikipediaApiError(pageId, "Thumbnail not found.");
                 }
             });
 
@@ -114,7 +114,7 @@
                 }
 
                 function onError() {
-                    throw "Error";
+                    throw new WikipediaApiError(pageId, "Title not found.");
                 }
             });
 

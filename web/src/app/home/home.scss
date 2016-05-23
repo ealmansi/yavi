@@ -77,6 +77,26 @@ $query-results-wrapper-lg-height: $query-results-wrapper-md-height;
             // height: depends on screen-size (see below).
             background-color: #CCC;
             padding: 20px;
+
+            #home-query-results {
+                height: 100%;
+                
+                #home-query-results-column-1 {
+                    height: 100%;
+                }
+                
+                #home-query-results-column-2 {
+                    height: 100%;
+                }
+                
+                #home-query-results-column-3 {
+                    height: 100%;
+                }
+                
+                #home-query-results-column-4 {
+                    height: 100%;
+                }
+            }
         }
     }
     
