@@ -14,13 +14,13 @@ $content-min-height: calc(100% - 50px - 30px); // 100% - $header-height - $foote
 // Home content container heights.
 $imagetype-wrapper-xs-height: 80px;
 $imagetype-xs-height: 100%;
-$search-box-wrapper-xs-height: 80px;
+$search-box-wrapper-xs-height: 60px;
 $query-results-wrapper-xs-height: 100px;
-$imagetype-wrapper-sm-height: 150px;
+$imagetype-wrapper-sm-height: 110px;
 $imagetype-sm-height: 100%;
-$search-box-wrapper-sm-height: 100px;
+$search-box-wrapper-sm-height: 80px;
 $query-results-wrapper-sm-height: 100px;
-$imagetype-wrapper-md-height: $imagetype-wrapper-sm-height;
+$imagetype-wrapper-md-height: 150px;
 $imagetype-md-height: 80%;
 $search-box-wrapper-md-height: $search-box-wrapper-sm-height;
 $query-results-wrapper-md-height: $query-results-wrapper-sm-height;
@@ -37,13 +37,11 @@ $query-results-wrapper-lg-height: $query-results-wrapper-md-height;
     height: 100%;
     padding: 0px;
     margin: 0px;
-    background-color: orange;
 
     #home-header-container {
         height: $header-height;
         padding: 0px;
         margin: 0px;
-        background-color: red;
         
         #home-navbar-wrapper {
             height: 100%;
@@ -56,11 +54,9 @@ $query-results-wrapper-lg-height: $query-results-wrapper-md-height;
         min-height: $content-min-height;
         padding: 0px;
         margin: 0px;
-        background-color: green;
         
         #home-imagetype-wrapper {
             // height: depends on screen-size (see below).
-            background-color: #AAA;
 
             #home-imagetype {
                 padding: 10px;
@@ -70,12 +66,10 @@ $query-results-wrapper-lg-height: $query-results-wrapper-md-height;
         
         #home-search-box-wrapper {
             // height: depends on screen-size (see below).
-            background-color: #BBB;
         }
         
         #home-query-results-wrapper {
             // height: depends on screen-size (see below).
-            background-color: #CCC;
             padding: 20px;
 
             #home-query-results {
@@ -104,10 +98,10 @@ $query-results-wrapper-lg-height: $query-results-wrapper-md-height;
         height: $footer-height;
         padding: 0px;
         margin: 0px;
-        background-color: yellow;
         
         #home-footer-wrapper {
             height: 100%;
+            background-color: #ccc;
         }
     }
 }

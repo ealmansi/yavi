@@ -1,8 +1,10 @@
 .home-query-result-card-wrapper {
 
     .home-query-result-card-panel {
+        height: 100%;
 
         .home-query-result-card-panel-body {
+            height: 100%;
             padding: 0px;
 
             .home-query-result-card-thumbnail {
@@ -11,6 +13,7 @@
             }
 
             .home-query-result-card-panel-content {
+                height: 100%;
                 padding: 15px;
 
                 .home-query-result-card-title {

@@ -11,6 +11,7 @@ yv-home-search-box {
             height: 35px;
             margin: 0px;
             padding: 5px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
         }
 
         #search-box-button-group {
@@ -26,7 +27,6 @@ yv-home-search-box {
                 
                 span {
                     @include fixed-position(50%, 40%);
-                    // @include centered;
                 }
             }
         }
