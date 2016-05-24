@@ -8,10 +8,11 @@
     /** @ngInject */
     function serviceFunction(WikipediaApiError, yaviCached, $http, $interpolate, $log) {
 
-        return function(pageId) {
+        return function(wikipediaSourceId, pageId) {
 
             var self = this;
 
+            self.wikipediaSourceId = wikipediaSourceId;
             self.pageId = pageId;
 
             self.fetchBasicData = yaviCached(function() {
@@ -120,7 +121,7 @@
 
             self.buildBasicDataQuery = function() {
                 var queryTemplate = '';
-                queryTemplate += 'https://en.wikipedia.org/w/api.php?';
+                queryTemplate += 'https://{{wikipediaSourceId}}.wikipedia.org/w/api.php?';
                 queryTemplate += '&pageids={{pageId}}';
                 queryTemplate += '&action=query';
                 queryTemplate += '&prop=extracts';
@@ -128,13 +129,14 @@
                 queryTemplate += '&format=json';
                 queryTemplate += '&callback=JSON_CALLBACK';
                 return $interpolate(queryTemplate)({
+                    wikipediaSourceId: wikipediaSourceId,
                     pageId: pageId
                 });
             }
 
             self.buildCategoryListQuery = function() {
                 var queryTemplate = '';
-                queryTemplate += 'https://en.wikipedia.org/w/api.php?';
+                queryTemplate += 'https://{{wikipediaSourceId}}.wikipedia.org/w/api.php?';
                 queryTemplate += '&pageids={{pageId}}';
                 queryTemplate += '&action=query';
                 queryTemplate += '&prop=categories';
@@ -142,13 +144,14 @@
                 queryTemplate += '&format=json';
                 queryTemplate += '&callback=JSON_CALLBACK';
                 return $interpolate(queryTemplate)({
+                    wikipediaSourceId: wikipediaSourceId,
                    pageId: pageId
                 });
             }
 
             self.buildThumbnailQuery = function() {
                 var queryTemplate = '';
-                queryTemplate += 'https://en.wikipedia.org/w/api.php?';
+                queryTemplate += 'https://{{wikipediaSourceId}}.wikipedia.org/w/api.php?';
                 queryTemplate += '&pageids={{pageId}}';
                 queryTemplate += '&action=query';
                 queryTemplate += '&prop=pageimages';
@@ -156,6 +159,7 @@
                 queryTemplate += '&format=json';
                 queryTemplate += '&callback=JSON_CALLBACK';
                 return $interpolate(queryTemplate)({
+                    wikipediaSourceId: wikipediaSourceId,
                     pageId: pageId
                 });
             }

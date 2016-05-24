@@ -17,11 +17,14 @@
             return !isNaN(pageIdNum) && pageIdNum > 0;
         }
 
-        factory.getPage = function(pageId) {
-            if (!_.has(pages, pageId)) {
-                pages[pageId] = new WikipediaPage(pageId);
+        factory.getPage = function(wikipediaSourceId, pageId) {
+            if (!_.has(pages, wikipediaSourceId)) {
+                pages[wikipediaSourceId] = {};
             }
-            return pages[pageId];
+            if (!_.has(pages[wikipediaSourceId], pageId)) {
+                pages[wikipediaSourceId][pageId] = new WikipediaPage(wikipediaSourceId, pageId);
+            }
+            return pages[wikipediaSourceId][pageId];
         }
 
         return factory;

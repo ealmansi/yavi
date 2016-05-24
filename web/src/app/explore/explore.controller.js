@@ -6,15 +6,29 @@
         .controller('ExploreController', controllerFunction);
 
     /** @ngInject */
-    function controllerFunction($stateParams, $log) {
+    function controllerFunction(wikipediaPages,
+                                $scope,
+                                $stateParams,
+                                $log) {
+        var self = this;
 
-        var explore = this;
+        self.pageId = undefined;
+        self.startDate = undefined;
+        self.endDate = undefined;
+        self.wikipediaSourceId = undefined;
+        self.page = undefined;
 
-        explore.start = $stateParams.start;
-        explore.end = $stateParams.end;
-        explore.wiki = $stateParams.wiki;
+        function init() {
+            self.pageId = $stateParams.page;
+            self.startDate = $stateParams.startDate;
+            self.endDate = $stateParams.endDate;
+            self.wikipediaSourceId = $stateParams.wiki;
+            self.page = wikipediaPages.getPage(self.wikipediaSourceId, self.pageId);
+        }
 
-        return explore;
+        $scope.$on('$stateChangeSuccess', init);
+
+        return self;
     }
     
 })();

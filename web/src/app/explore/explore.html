@@ -1,5 +1,17 @@
-<h1>Explore</h1>
-
-<p>start: {{ explore.start }}</p>
-<p>end: {{ explore.end }}</p>
-<p>wiki: {{ explore.wiki }}</p>
+<div id="explore-container" class="container-fluid">
+    <div id="explore-header-container" class="row">
+        <div id="explore-navbar-wrapper" class="col-xs-12">
+            <yv-explore-navbar></yv-explore-navbar>
+        </div>
+    </div>
+    <div id="explore-content-container" class="row">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-sm-4 col-sm-offset-4">
+            <yavi-bubble-chart></yavi-bubble-chart>
+        </div>
+    </div>
+    <div id="explore-footer-container" class="row">
+        <div id="explore-footer-wrapper" class="col-xs-12">
+            <yv-explore-footer></yv-explore-footer>
+        </div>
+    </div>
+</div>

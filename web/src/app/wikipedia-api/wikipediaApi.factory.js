@@ -12,11 +12,15 @@
 
         var pageDataProviders = {};
 
-        factory.getPageDataProvider = function(pageId) {
-            if (!_.has(pageDataProviders, pageId)) {
-                pageDataProviders[pageId] = new WikipediaPageDataProvider(pageId);
+        factory.getPageDataProvider = function(wikipediaSourceId, pageId) {
+            
+            if (!_.has(pageDataProviders, wikipediaSourceId)) {
+                pageDataProviders[wikipediaSourceId] = {};
             }
-            return pageDataProviders[pageId];
+            if (!_.has(pageDataProviders[wikipediaSourceId], pageId)) {
+                pageDataProviders[wikipediaSourceId][pageId] = new WikipediaPageDataProvider(wikipediaSourceId, pageId);
+            }
+            return pageDataProviders[wikipediaSourceId][pageId];
         }
 
         return factory;

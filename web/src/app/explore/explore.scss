@@ -1,0 +1,47 @@
+@import '../bootstrap';
+@import '../mixins';
+
+/**
+ *  Variables.
+ */
+
+// Explore container heights.
+$header-height: 50px;
+$footer-height: 30px;
+$content-min-height: calc(100% - 50px - 30px); // 100% - $header-height - $footer-height;
+
+#explore-container {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+
+    #explore-header-container {
+        height: $header-height;
+        padding: 0px;
+        margin: 0px;
+
+        #explore-navbar-wrapper {
+            height: 100%;
+            padding: 0px;
+            z-index: 1;
+        }
+    }
+
+    #explore-content-container {
+        min-height: $content-min-height;
+        padding: 0px;
+        margin: 0px;
+
+    }
+
+    #explore-footer-container {
+        min-height: $footer-height;
+        padding: 0px;
+        margin: 0px;
+
+        #explore-footer-wrapper {
+
+        }
+    }
+}
+

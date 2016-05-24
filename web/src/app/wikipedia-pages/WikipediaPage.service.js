@@ -8,13 +8,14 @@
     /** @ngInject */
     function serviceFunction(wikipediaApi, yaviCached, $q, $log) {
 
-        return function(pageId) {
+        return function(wikipediaSourceId, pageId) {
 
             var self = this;
 
+            self.wikipediaSourceId = wikipediaSourceId;
             self.pageId = pageId;
 
-            var wikipediaPageDataProvider = wikipediaApi.getPageDataProvider(pageId);
+            var wikipediaPageDataProvider = wikipediaApi.getPageDataProvider(wikipediaSourceId, pageId);
 
             self.fetchCategoryList = yaviCached(function() {
                 return wikipediaPageDataProvider.fetchCategoryList(pageId);

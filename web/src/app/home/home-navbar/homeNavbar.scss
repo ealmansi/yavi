@@ -18,6 +18,13 @@ yv-home-navbar {
 
             .navbar-header {
             }
+
+            .navbar-collapse {
+                
+                .dropdown-menu {
+                    border-radius: 0px;
+                }
+            }
         }
     }
 }
