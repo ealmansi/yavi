@@ -24,7 +24,8 @@
     "angular-ui-router": "^0.3.0",
     "underscore": "^1.8.3",
     "moment": "^2.13.0",
-    "bootswatch": "^3.3.6+1"
+    "bootswatch": "^3.3.6+1",
+    "bubble-chart": "*"
   },
   "group": {
     "bootstrap": [
@@ -40,8 +41,7 @@
       ]
     },
     "bootstrap": {
-      "main": [
-      ]
+      "main": []
     }
   }
 }
