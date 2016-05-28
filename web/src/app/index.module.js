@@ -1,10 +1,11 @@
 (function() {
-  'use strict';
+    'use strict';
 
-  angular
-    .module('yavi', [
-      'ui.bootstrap',
-      'ui.router'
-    ]);
+    angular
+        .module('yavi', [
+            'rt.debounce',
+            'ui.bootstrap',
+            'ui.router'
+        ]);
 
 })();

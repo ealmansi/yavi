@@ -24,7 +24,13 @@
                 .home-query-result-card-description {
 
                 }
-     
+
+                .home-query-result-card-description.collapsed {
+                    max-height: 300px;
+                    overflow: hidden;
+                    background-image: linear-gradient(to bottom, transparent, transparent 80%, rgba(0, 0, 0, 0.1) 100%);
+                }
+
                 .home-query-result-card-category-list {
 
                 }

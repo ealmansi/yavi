@@ -6,7 +6,7 @@
         .directive('yvHomeQueryResultCard', directiveFunction);
 
     /** @ngInject */
-    function directiveFunction($compile, $interpolate, $q, $log) {
+    function directiveFunction($compile, $interpolate, $q, $timeout, $log) {
 
         var directive = {
             link: linkFunction,
@@ -79,6 +79,16 @@
             // Link description.
             var descriptionTextElement = $compile(description)(scope);
             descriptionElement.html(descriptionTextElement);
+            $timeout(function () {
+                if (descriptionElement.height() > 300) {
+                    descriptionElement.addClass('collapsed');
+                    descriptionElement.click(function(event) {
+                        descriptionElement.removeClass('collapsed');
+                        descriptionElement.off('click');
+                        event.stopPropagation();
+                    });
+                }
+            });
             
             // Link thumbnail.
             if (angular.isDefined(thumbnail)) {

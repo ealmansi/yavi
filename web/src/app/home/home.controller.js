@@ -6,8 +6,11 @@
         .controller('HomeController', controllerFunction);
 
     /** @ngInject */
-    function controllerFunction($compile,
+    function controllerFunction(debounce,
+                                wikipediaApi,
+                                $compile,
                                 $interpolate,
+                                $q,
                                 $scope,
                                 $stateParams,
                                 $log) {
@@ -15,34 +18,90 @@
 
         self.query = undefined;
         self.wikipediaSourceId = undefined;
-        self.showLoadingGraphic = undefined;
-        self.queryResults = undefined;
+        self.searchResults = undefined;
+        self.onSearch = undefined;
+        self.clearSearchResultCards = undefined;
+        self.addSearchResult = undefined;
+        self.loadingGraphic = undefined;
 
         function init() {
             self.query = $stateParams.query;
             self.wikipediaSourceId = $stateParams.wiki;
-            self.showLoadingGraphic = false;
-            self.queryResults = [482824, 1646753, 24601759, 3088905, 32555171, 41955505, 46678678, 13873200, 49863409, 5212064, 5478840, 604727, 6887661, 838057];
-            updateQueryResultCards();
+            self.searchResults = {};
+            self.onSearch = onSearch;
+            self.clearSearchResultCards = clearSearchResultCards;
+            self.addSearchResult = addSearchResult;
+            self.loadingGraphic = angular.element(".loading-graphic");
         }
 
-        function getActiveColumns() {
+        function onSearch() {
+            self.clearSearchResultCards();
+            showLoadingGraphic();
+            var resultSetsPromises = wikipediaApi.multiSearch(self.query);
+            $q.all(_.map(resultSetsPromises, handleResultSetPromise))
+                .then(hideLoadingGraphic);
+        }
+
+        function handleResultSetPromise(resultSetPromise) {
+            return resultSetPromise
+                .then(function(queryResultSet) {
+                    var query = queryResultSet.query;
+                    var resultSet = queryResultSet.resultSet;
+                    if (query == self.query) {
+                        return $q.all(_.map(resultSet, handlePageIdPromise));
+                    }
+                    return $q.when([]);
+                })
+                .catch(function(){ /* ignore*/ });
+        }
+
+        function handlePageIdPromise(pageIdPromise) {
+            return pageIdPromise
+                .then(function(queryPageId) {
+                    var query = queryPageId.query;
+                    var pageId = queryPageId.pageId;
+                    if (query == self.query) {
+                        self.addSearchResult(pageId);
+                        hideLoadingGraphic();
+                    }
+                })
+                .catch(function(){ /* ignore*/ });
+        }
+
+        function showLoadingGraphic() {
+            self.loadingGraphic.show();
+        }
+
+        function hideLoadingGraphic() {
+            self.loadingGraphic.hide();
+        }
+
+        function clearSearchResultCards() {
+            var activeColumnElements = getActiveColumnsElements();
+            _.each(activeColumnElements, function(columnElement) {
+                columnElement.empty();
+            });
+            self.searchResults = {};
+        }
+
+        function addSearchResult(pageId) {
+            if (!(pageId in self.searchResults)) {
+                var activeColumnElements = getActiveColumnsElements();
+                var insertionColumnElement = _.min(activeColumnElements, function(columnElement) {
+                    return columnElement.children().length;
+                });
+                var itemElement = buildQueryResultCardElement(pageId);
+                insertionColumnElement.append(itemElement);
+                self.searchResults[pageId] = itemElement;
+            }
+        }
+
+        function getActiveColumnsElements() {
             var columnElements = _.map(angular.element(".home-query-results-column"), angular.element);
             var activeColumnElements = _.map(_.filter(columnElements, function(columnElement) {
                 return columnElement.css("display") !== "none";
             }), angular.element);
             return activeColumnElements;
-        }
-
-        function updateQueryResultCards() {
-            var activeColumnElements = getActiveColumns();
-            var columnIndex = 0;
-            _.each(self.queryResults, function(pageId) {
-                var columnElement = activeColumnElements[columnIndex];
-                var itemElement = buildQueryResultCardElement(pageId);
-                columnElement.append(itemElement);
-                columnIndex = (columnIndex + 1) % activeColumnElements.length;
-            });
         }
 
         function buildQueryResultCardElement(pageId) {

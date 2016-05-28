@@ -25,7 +25,8 @@
     "underscore": "^1.8.3",
     "moment": "^2.13.0",
     "bootswatch": "^3.3.6+1",
-    "bubble-chart": "*"
+    "bubble-chart": "*",
+    "angular-debounce": "^1.1.0"
   },
   "group": {
     "bootstrap": [

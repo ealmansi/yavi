@@ -17,7 +17,7 @@
         /** @ngInject */
         $provide.decorator("$exceptionHandler", function($log) {
             return function(exception) {
-                $log.debug(exception);
+                $log.debug(exception.name, exception.message);
             };
         });
     }

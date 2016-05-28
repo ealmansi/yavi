@@ -6,7 +6,7 @@
         .service('WikipediaPage', serviceFunction);
 
     /** @ngInject */
-    function serviceFunction(wikipediaApi, yaviCached, $q, $log) {
+    function serviceFunction(wikipediaApi, yaviApi, yaviCached, $q, $log) {
 
         return function(wikipediaSourceId, pageId) {
 
@@ -15,22 +15,30 @@
             self.wikipediaSourceId = wikipediaSourceId;
             self.pageId = pageId;
 
+            // Wikipedia Api.
             var wikipediaPageDataProvider = wikipediaApi.getPageDataProvider(wikipediaSourceId, pageId);
 
             self.fetchCategoryList = yaviCached(function() {
-                return wikipediaPageDataProvider.fetchCategoryList(pageId);
+                return wikipediaPageDataProvider.fetchCategoryList();
             });
 
             self.fetchDescription = yaviCached(function() {
-                return wikipediaPageDataProvider.fetchDescription(pageId);
+                return wikipediaPageDataProvider.fetchDescription();
             });
 
             self.fetchThumbnail = yaviCached(function() {
-                return wikipediaPageDataProvider.fetchThumbnail(pageId);
+                return wikipediaPageDataProvider.fetchThumbnail();
             });
 
             self.fetchTitle = yaviCached(function() {
-                return wikipediaPageDataProvider.fetchTitle(pageId);
+                return wikipediaPageDataProvider.fetchTitle();
+            });
+
+            // Yavi Api.
+            var yaviPageDataProvider = yaviApi.getPageDataProvider(wikipediaSourceId, pageId);
+
+            self.fetchRelatedPages = yaviCached(function() {
+                return yaviPageDataProvider.fetchRelatedPages();
             });
         }
 
