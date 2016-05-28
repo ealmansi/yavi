@@ -20,7 +20,8 @@ var db = pgp({
 var getRelatedPagesQuery = "";
 getRelatedPagesQuery += "SELECT ";
 getRelatedPagesQuery += "  po1.page_id AS page_id, ";
-getRelatedPagesQuery += "  COUNT(po4.page_id) * 1.0 / COUNT(*) as score ";
+getRelatedPagesQuery += "  COUNT(po4.page_id) * 1.0 / (COUNT(*) + ";
+getRelatedPagesQuery += "    (SELECT COUNT(*) FROM enwiki20160501.page_outlinks WHERE page_id = $1)) as score ";
 getRelatedPagesQuery += "FROM enwiki20160501.page_outlinks po1 ";
 getRelatedPagesQuery += "LEFT join enwiki20160501.page_outlinks po4 ";
 getRelatedPagesQuery += "ON po4.page_id = $1 and po1.outlink = po4.outlink ";
@@ -53,6 +54,6 @@ app.get("/related/:page", function(req, res) {
   db.any(getRelatedPagesStatement)
     .then(function (data) {
         var pageIds = _.pluck(data, 'page_id');
-        res.status(200).json(pageIds);
+        res.status(200).jsonp(pageIds);
     })
 });
