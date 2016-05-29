@@ -1,0 +1,10 @@
+{
+  "namespace":"de.mpg.mpi.inf.d5.yavi.wikipedia.export.schemas",
+  "name": "YaviPageMetadata",
+  "type": "record",
+  "fields": [
+    {"name": "page_id", "type": ["null", "long"]},
+    {"name": "title", "type": ["null", "string"]},
+    {"name": "redirect", "type": ["null", "string"]}
+  ]
+}

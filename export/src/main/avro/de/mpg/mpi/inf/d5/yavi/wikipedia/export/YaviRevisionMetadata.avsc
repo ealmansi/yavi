@@ -1,0 +1,14 @@
+{
+  "namespace":"de.mpg.mpi.inf.d5.yavi.wikipedia.export.schemas",
+  "name": "YaviRevisionMetadata",
+  "type": "record",
+  "fields": [
+    {"name": "page_id", "type": ["null", "long"]},
+    {"name": "revision_id", "type": ["null", "long"]},
+    {"name": "day_number", "type": ["null", "int"]},
+    {"name": "contributor_hash", "type": ["null", "int"]},
+    {"name": "text_size", "type": ["null", "long"]},
+    {"name": "parent_revision_id", "type": ["null", "long"]},
+    {"name": "sha1", "type": ["null", "string"]}
+  ]
+}

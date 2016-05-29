@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+jar_file=../target/wiki-export-1.0.0-jar-with-dependencies.jar
+main_class=de.mpg.mpi.inf.d5.yavi.wikipedia.export.YaviPageMetadataExport
+
+# Build jar if missing.
+if [ ! -e "$jar_file" ]; then
+  mvn -f ../pom.xml package || exit 1
+fi 
+
+# Make sure data dir is set.
+YAVI_DATA_DIR=${YAVI_DATA_DIR:?Need to set YAVI_DATA_DIR to non-empty value.}
+
+# Check args.
+if [ ! $# -eq 2 ]
+then
+  >&2 echo "Wrong number of arguments supplied. Expecting wikipedia id and dump date."
+  >&2 echo "Example:"
+  >&2 echo "  $0 ptwiki 20150901"
+  exit 1
+fi
+
+# Read args.
+wiki_id=$1
+dump_date=$2
+
+# Define input/output directories.
+input_dir=$YAVI_DATA_DIR/${wiki_id}/${dump_date}/xml/pages-meta-current/
+output_dir=$YAVI_DATA_DIR/${wiki_id}/${dump_date}/avro/page_metadata/ && mkdir -p $output_dir
+
+# Check input dir exists.
+if [ ! -e "$input_dir" ]; then
+  >&2 echo "Input directory does not exist: $input_dir."
+  exit 1
+fi
+
+# Process all dump files.
+for file_path in $(find $input_dir. -name "*.bz2" -type f); do
+  # Get clean filename.
+  filename_bz2=$(basename "$file_path")   # Remove path.
+  filename_xml="${filename_bz2%.*}"       # Remove bz2 extension.
+  filename="${filename_xml%.*}"           # Remove xml extension.
+  # Define output file.
+  page_metadata_file=$output_dir/$filename.avro && touch $page_metadata_file
+  # Run export.
+  (echo "Starting part: ${filename}" && \
+    cat $file_path | bunzip2 | java -cp \
+      $jar_file \
+      $main_class \
+      -o $page_metadata_file \
+    && echo "Done with part: ${filename}") &
+  disown
+done

@@ -1,0 +1,9 @@
+{
+  "namespace":"de.mpg.mpi.inf.d5.yavi.wikipedia.export.schemas",
+  "name": "YaviPageWikilink",
+  "type": "record",
+  "fields": [
+    {"name": "page_id", "type": ["null", "long"]},
+    {"name": "wikilink", "type": ["null", "string"]}
+  ]
+}
