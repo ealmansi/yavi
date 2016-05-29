@@ -6,12 +6,12 @@ def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
 
   loadTable("revision_metadata", workDirectory, sqlContext)
 
-  defineTable("num_revisions_per_day", s"""
-    SELECT rm.page_id, rm.day_number, COUNT(*)
+  defineTable("daily_num_revisions", s"""
+    SELECT rm.page_id, rm.day_number, COUNT(*) AS num_revisions
     FROM revision_metadata rm
     GROUP BY rm.page_id, rm.day_number
   """, sqlContext)
 
-  saveTable("num_revisions_per_day", workDirectory, sqlContext)
+  saveTable("daily_num_revisions", workDirectory, sqlContext)
 
 }

@@ -7,11 +7,11 @@ YAVI_TEMP_DIR=${YAVI_TEMP_DIR:?Need to set YAVI_TEMP_DIR to non-empty value.}
 
 # Check args.
 if [ ! $# -ge 3 ]
-  then
-    >&2 echo "Wrong number of arguments supplied. Expecting job id, wikipedia id, dump date and (optionally) shell arguments."
-    >&2 echo "Example:"
-    >&2 echo "  $0 redirect_map enwiki 20160501"
-    exit 1
+then
+  >&2 echo "Wrong number of arguments supplied. Expecting job id, wikipedia id, dump date and (optionally) shell arguments."
+  >&2 echo "Example:"
+  >&2 echo "  $0 redirect_map enwiki 20160501"
+  exit 1
 fi
 
 # Read args.
@@ -20,14 +20,20 @@ wiki_id=$2
 dump_date=$3
 shell_args=${@:3}
 
+# Define job file and wiki data directory.
+job_file=$YAVI_SRC_DIR/spark/jobs/$job_id.scala
+wiki_data_dir=$YAVI_DATA_DIR/$wiki_id/$dump_date/
+
+# Fail if job file is missing.
+if [ ! -e "$job_file" ]; then
+  >&2 echo "Job could not be submitted: $job_id. File not found: $job_file."
+  exit 1
+fi 
+
 # Define submit directory and log file.
 current_date_time=$(date '+%Y%m%d-%Hh%Mm%Ss')
 submit_dir=$YAVI_TEMP_DIR/spark/$wiki_id/$dump_date/$job_id/$current_date_time/ && mkdir -p $submit_dir
 log_file=$submit_dir/log.txt && touch $log_file
-
-# Define job file and wiki data directory.
-job_file=$YAVI_SRC_DIR/spark/jobs/$job_id.scala
-wiki_data_dir=$YAVI_DATA_DIR/$wiki_id/$dump_date/
 
 # Define job entry point.
 run_job=":load $job_file
