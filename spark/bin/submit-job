@@ -18,7 +18,7 @@ fi
 job_id=$1
 wiki_id=$2
 dump_date=$3
-shell_args=${@:3}
+shell_args=${@:4}
 
 # Define job file and wiki data directory.
 job_file=$YAVI_SRC_DIR/spark/jobs/$job_id.scala
@@ -41,4 +41,4 @@ runJob(\"$wiki_data_dir\", sqlContext)"
 
 # Submit job.
 (cd $submit_dir && echo "$run_job" | \
-  spark-shell --packages com.databricks:spark-avro_2.10:2.0.1 "$shell_args" >> $log_file 2>&1 &)
+  spark-shell --packages com.databricks:spark-avro_2.10:2.0.1 $shell_args >> $log_file 2>&1 &)
