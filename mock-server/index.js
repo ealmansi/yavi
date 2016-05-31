@@ -3,11 +3,11 @@ var _ = require("underscore");
 var bodyParser = require("body-parser");
 var express = require("express");
 var path = require("path");
-var pgp = require('pg-promise')();
-var pgpPS = require('pg-promise').PreparedStatement;
+var pgPromise = require('pg-promise')();
+var QueryFile = require('pg-promise').QueryFile;
 
 // Define database object.
-var db = pgp({
+var database = pgPromise({
   host: 'pg-19e90881.prj-l68cwb.aivencloud.com',
   port: 24143,
   database: 'd6h3a0r9',
@@ -16,28 +16,10 @@ var db = pgp({
   ssl: true
 });
 
-// Build prepared statements.
-var getRelatedPagesQuery = "";
-getRelatedPagesQuery += "SELECT ";
-getRelatedPagesQuery += "  po1.page_id AS page_id, ";
-getRelatedPagesQuery += "  COUNT(po4.page_id) * 1.0 / (COUNT(*) + ";
-getRelatedPagesQuery += "    (SELECT COUNT(*) FROM enwiki20160501.page_outlinks WHERE page_id = $1)) as score ";
-getRelatedPagesQuery += "FROM enwiki20160501.page_outlinks po1 ";
-getRelatedPagesQuery += "LEFT join enwiki20160501.page_outlinks po4 ";
-getRelatedPagesQuery += "ON po4.page_id = $1 and po1.outlink = po4.outlink ";
-getRelatedPagesQuery += "WHERE po1.page_id IN ( ";
-getRelatedPagesQuery += "  SELECT outlink ";
-getRelatedPagesQuery += "  FROM enwiki20160501.page_outlinks po2 ";
-getRelatedPagesQuery += "  WHERE page_id = $1 ";
-getRelatedPagesQuery += ") AND po1.page_id IN ( ";
-getRelatedPagesQuery += "  SELECT page_id ";
-getRelatedPagesQuery += "  FROM enwiki20160501.page_outlinks po3 ";
-getRelatedPagesQuery += "  WHERE outlink = $1 ";
-getRelatedPagesQuery += ") AND po1.page_id <> $1 ";
-getRelatedPagesQuery += "GROUP BY po1.page_id ";
-getRelatedPagesQuery += "ORDER BY score desc ";
-getRelatedPagesQuery += "LIMIT 10 ";
-var getRelatedPagesStatement = new pgpPS('get-related-pages', getRelatedPagesQuery);
+// Load database queries.
+var relatedPagesQueryFile = new QueryFile('./sql/related_pages.sql', {minify: true});
+var dailySignalsQueryFile = new QueryFile('./sql/daily_signals.sql', {minify: true});
+var activePagesQueryFile = new QueryFile('./sql/active_pages.sql', {minify: true});
 
 // Initialize server.
 var app = express();
@@ -48,12 +30,34 @@ var server = app.listen(port, function () {
 });
 
 // Define API.
-app.get("/related/:page", function(req, res) {
-  var pageId = req.params.page;
-  getRelatedPagesStatement.values = pageId;
-  db.any(getRelatedPagesStatement)
-    .then(function (data) {
-        var pageIds = _.pluck(data, 'page_id');
-        res.status(200).jsonp(pageIds);
-    })
+app.get("/related/:page/:from/:to", function(request, response) {
+  var pageId = request.params.page;
+  var startDay = Math.min(request.params.from, request.params.to);
+  var endDay = Math.max(request.params.from, request.params.to);
+  var relatedPagesQueryArguments = {
+    central_page_id: pageId
+  };
+  database.any(relatedPagesQueryFile, relatedPagesQueryArguments)
+  .then(function (data) {
+    var activePagesQueryArguments = {
+      page_ids: _.pluck(data, 'page_id'),
+      start_day: startDay,
+      end_day: endDay,
+      _: '_'
+    };
+    return database.any(activePagesQueryFile, activePagesQueryArguments);
+  })
+  // .then(function (data) {
+  //   var dailySignalsQueryArguments = {
+  //     page_ids: _.pluck(data, 'page_id')
+  //   };
+  //   return database.any(dailySignalsQueryFile, dailySignalsQueryArguments);
+  // })
+  .then(function(data) {
+    response.status(200).jsonp(data);
+  })
+  .catch(function(err) {
+    response.status(505).send('Internal server error.');
+    console.log(err);
+  });
 });
