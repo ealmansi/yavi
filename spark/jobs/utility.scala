@@ -39,3 +39,9 @@ def saveTable(tableId: String, workDirectory: String, sqlContext: SQLContext): U
     .format("com.databricks.spark.avro")
     .save(s"$workDirectory/avro/$tableId")
 }
+
+def saveTableCsv(tableId: String, workDirectory: String, sqlContext: SQLContext): Unit = {
+  sqlContext.table(tableId).write
+    .format("com.databricks.spark.csv")
+    .save(s"$workDirectory/csv/$tableId")
+}

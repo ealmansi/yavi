@@ -41,4 +41,4 @@ runJob(\"$wiki_data_dir\", sqlContext)"
 
 # Submit job.
 (cd $submit_dir && echo "$run_job" | \
-  spark-shell --packages com.databricks:spark-avro_2.10:2.0.1 $shell_args >> $log_file 2>&1 &)
+  spark-shell --packages com.databricks:spark-avro_2.10:2.0.1,com.databricks:spark-csv_2.10:1.4.0 $shell_args >> $log_file 2>&1 &)
