@@ -6,7 +6,19 @@ var handleError = require('./handle-error');
 
 /* Scripts tasks */
 
-gulp.task('scripts', ['scripts-app', 'scripts-vendor']);
+gulp.task('scripts', ['scripts-config', 'scripts-app', 'scripts-vendor']);
+
+gulp.task('scripts-config', [], function() {
+    return gulp.src('src/config.js')
+        .pipe(plugins.eslint())
+        .pipe(plugins.eslint.format())
+        .pipe(plugins.concat('config.min.js'))
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.uglify())
+        .pipe(plugins.sourcemaps.write('../maps/'))
+        .pipe(gulp.dest('dist/scripts/'))
+        .on('error', handleError);
+});
 
 gulp.task('scripts-app', [], function() {
     return gulp.src('src/**/*.js')

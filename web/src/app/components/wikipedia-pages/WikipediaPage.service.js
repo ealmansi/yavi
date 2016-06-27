@@ -37,8 +37,8 @@
             // Yavi Api.
             var yaviPageDataProvider = yaviApi.getPageDataProvider(wikipediaSourceId, pageId);
 
-            self.fetchRelatedPages = yaviCached(function() {
-                return yaviPageDataProvider.fetchRelatedPages();
+            self.fetchExploreData = yaviCached(function() {
+                return yaviPageDataProvider.fetchExploreData();
             });
         }
 

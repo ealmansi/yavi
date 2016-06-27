@@ -22,7 +22,7 @@ gulp.task('browser-sync-watch', function() {
         runSequence('html', 'browser-sync-reload');
     }).on('error', handleError);
     gulp.watch('**/*.js', { cwd: 'src' }).on('change', function() {
-        runSequence('scripts-app', 'browser-sync-reload');
+        runSequence('scripts-config', 'scripts-app', 'browser-sync-reload');
     }).on('error', handleError);
     gulp.watch('**/*.scss', { cwd: 'src' }).on('change', function() {
         runSequence('styles-app', 'browser-sync-reload');

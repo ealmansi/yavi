@@ -9,6 +9,8 @@
             endDate: '2014-03-01',
             wikipediaSourceId: 'en',
             commaDangle: null
-        });
+        })
+        .constant('yaviApiUrl', CONFIG.get("YAVI_API_URL"))
+        .constant('yaviApiPort', CONFIG.get("YAVI_API_PORT"));
 
 })();
