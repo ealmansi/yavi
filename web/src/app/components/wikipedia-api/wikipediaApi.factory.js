@@ -6,202 +6,249 @@
         .factory('wikipediaApi', factoryFunction);
 
     /** @ngInject */
-    function factoryFunction(WikipediaApiError, WikipediaPageDataProvider, $interpolate, $timeout, $http, $log) {
+    function factoryFunction(
+                $http,
+                $interpolate,
+                WikipediaApiError
+            ) {
 
         var factory = {};
 
-        var pageDataProviders = {};
+        factory.requestPageBasicData = _.memoize(requestPageBasicData, memoizeHashFunction);
+        factory.requestPageCategoryList = _.memoize(requestPageCategoryList, memoizeHashFunction);
+        factory.requestPageThumbnail = _.memoize(requestPageThumbnail, memoizeHashFunction);
+        factory.search = _.memoize(search, memoizeHashFunction);
+        factory.getPageIdByTitle = _.memoize(getPageIdByTitle, memoizeHashFunction);
 
-        factory.getPageDataProvider = function(wikipediaSourceId, pageId) {
+        return factory;
+
+        /**
+         *
+         */
+        function requestPageBasicData(wikipediaId, pageId) {
             
-            if (!_.has(pageDataProviders, wikipediaSourceId)) {
-                pageDataProviders[wikipediaSourceId] = {};
-            }
-            if (!_.has(pageDataProviders[wikipediaSourceId], pageId)) {
-                pageDataProviders[wikipediaSourceId][pageId] = new WikipediaPageDataProvider(wikipediaSourceId, pageId);
-            }
-            return pageDataProviders[wikipediaSourceId][pageId];
-        }
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
 
-        factory.multiSearch = function(query) {
-            var moreLikePromise = searchMoreLike(query);
-            var inTitlePromise = searchInTitle(query);
-            var textPromise = searchText(query);
-            return [moreLikePromise, inTitlePromise, textPromise];
-        }
-
-        function searchMoreLike(query) {
-            return $timeout(function() {
-                return $http
-                    .jsonp(buildSearchMoreLikeQuery(query))
-                    .then(onSuccess)
-                    .catch(onError);
-            }, 2000);
+            function buildRequestUrl() {
+                var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
+                urlTemplate += '&pageids={{pageId}}';
+                urlTemplate += '&action=query';
+                urlTemplate += '&prop=extracts';
+                urlTemplate += '&exintro=';
+                urlTemplate += '&format=json';
+                urlTemplate += '&callback=JSON_CALLBACK';
+                var scope = buildRequestPageUrlScope(wikipediaId, pageId);
+                return $interpolate(urlTemplate)(scope);
+            }
 
             function onSuccess(response) {
-                if (angular.isDefined(response)
-                        && angular.isDefined(response.data)
-                        && angular.isDefined(response.data.query)
-                        && angular.isArray(response.data.query.search)) {
-                    var searchResults = response.data.query.search;
-                    var validSearchResults = _.filter(searchResults, function(searchResult) {
-                        return _.has(searchResult, 'title');
-                    });
-                    var pageTitles = _.pluck(validSearchResults, 'title');
-                    var pageIdPromises = _.map(pageTitles, function(pageTitle) {
-                        return findPageIdByTitle(pageTitle)
-                            .then(function(pageId) {
-                                return {query: query, pageId: pageId};
-                            });
-                    });
-                    return {query: query, resultSet: pageIdPromises};
+                if (angular.isDefined(response) &&
+                        angular.isDefined(response.data) &&
+                        angular.isDefined(response.data.query) &&
+                        angular.isDefined(response.data.query.pages) &&
+                        _.has(response.data.query.pages, pageId)) {
+                    return response.data.query.pages[pageId];
                 }
                 onError();
             }
 
             function onError() {
-                throw new WikipediaApiError(0, " not found.");
+                var errorMessage = buildPageRequestErrorMessage(wikipediaId,
+                                    pageId, "Basic page data");
+                throw new WikipediaApiError(errorMessage);
             }
         }
 
-        function searchInTitle(query) {
-            return $http
-                .jsonp(buildSearchInTitleQuery(query))
-                .then(onSuccess)
-                .catch(onError);
+        /**
+         *
+         */
+        function requestPageCategoryList(wikipediaId, pageId) {
+            
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+
+            function buildRequestUrl() {
+                var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
+                urlTemplate += '&pageids={{pageId}}';
+                urlTemplate += '&action=query';
+                urlTemplate += '&prop=categories';
+                urlTemplate += '&clshow=!hidden';
+                urlTemplate += '&format=json';
+                urlTemplate += '&callback=JSON_CALLBACK';
+                var scope = buildRequestPageUrlScope(wikipediaId, pageId);
+                return $interpolate(urlTemplate)(scope);
+            }
 
             function onSuccess(response) {
-                if (angular.isDefined(response)
-                        && angular.isDefined(response.data)
-                        && angular.isDefined(response.data.query)
-                        && angular.isArray(response.data.query.search)) {
-                    var searchResults = response.data.query.search;
-                    var validSearchResults = _.filter(searchResults, function(searchResult) {
-                        return _.has(searchResult, 'title');
-                    });
-                    var pageTitles = _.pluck(validSearchResults, 'title');
-                    var pageIdPromises = _.map(pageTitles, function(pageTitle) {
-                        return findPageIdByTitle(pageTitle)
-                            .then(function(pageId) {
-                                return {query: query, pageId: pageId};
-                            });
-                    });
-                    return {query: query, resultSet: pageIdPromises};
+                if (angular.isDefined(response) &&
+                        angular.isDefined(response.data) &&
+                        angular.isDefined(response.data.query) &&
+                        angular.isDefined(response.data.query.pages) &&
+                        _.has(response.data.query.pages, pageId) &&
+                        angular.isDefined(response.data.query.pages[pageId].categories)) {
+                    var categories = response.data.query.pages[pageId].categories;
+                    return _.pluck(categories, "title");
                 }
                 onError();
             }
 
             function onError() {
-                throw new WikipediaApiError(0, " not found.");
+                var errorMessage = buildPageRequestErrorMessage(wikipediaId,
+                                    pageId, "Category list");
+                throw new WikipediaApiError(errorMessage);
             }
         }
 
-        function searchText(query) {
-            return $timeout(function() {
-                return $http
-                    .jsonp(buildSearchTextQuery(query))
-                    .then(onSuccess)
-                    .catch(onError);
-            }, 1000);
+        /**
+         *
+         */
+        function requestPageThumbnail(wikipediaId, pageId) {
+            
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+
+            function buildRequestUrl() {
+                var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
+                urlTemplate += '&pageids={{pageId}}';
+                urlTemplate += '&action=query';
+                urlTemplate += '&prop=pageimages';
+                urlTemplate += '&pithumbsize=400';
+                urlTemplate += '&format=json';
+                urlTemplate += '&callback=JSON_CALLBACK';
+                var scope = buildRequestPageUrlScope(wikipediaId, pageId);
+                return $interpolate(urlTemplate)(scope);
+            }
 
             function onSuccess(response) {
                 if (angular.isDefined(response)
                         && angular.isDefined(response.data)
                         && angular.isDefined(response.data.query)
-                        && angular.isArray(response.data.query.search)) {
-                    var searchResults = response.data.query.search;
-                    var validSearchResults = _.filter(searchResults, function(searchResult) {
-                        return _.has(searchResult, 'title');
-                    });
-                    var pageTitles = _.pluck(validSearchResults, 'title');
-                    var pageIdPromises = _.map(pageTitles, function(pageTitle) {
-                        return findPageIdByTitle(pageTitle)
-                            .then(function(pageId) {
-                                return {query: query, pageId: pageId};
-                            });
-                    });
-                    return {query: query, resultSet: pageIdPromises};
+                        && angular.isDefined(response.data.query.pages)
+                        && _.has(response.data.query.pages, pageId)
+                        && angular.isDefined(response.data.query.pages[pageId].thumbnail)
+                        && angular.isDefined(response.data.query.pages[pageId].thumbnail.source)) {
+                    return response.data.query.pages[pageId].thumbnail.source;
                 }
                 onError();
             }
 
             function onError() {
-                throw new WikipediaApiError(0, " not found.");
+                var errorMessage = buildPageRequestErrorMessage(wikipediaId,
+                                    pageId, "Thumbnail");
+                throw new WikipediaApiError(errorMessage);
             }
         }
 
-        function findPageIdByTitle(pageTitle) {
-            return $http
-                .jsonp(buildPageIdByTitleQuery(pageTitle))
-                .then(onSuccess)
-                .catch(onError);
+        /**
+         *
+         */
+        function search(wikipediaId, queryString) {
+            
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+
+            function buildRequestUrl() {
+                var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
+                urlTemplate += "&action=opensearch";
+                urlTemplate += "&search={{queryString}}";
+                urlTemplate += "&namespace=0";
+                urlTemplate += "&limit=10";
+                urlTemplate += "&suggest=true";
+                urlTemplate += "&format=json";
+                urlTemplate += "&formatversion=2";
+                urlTemplate += "&callback=JSON_CALLBACK";
+                return $interpolate(urlTemplate)({
+                    wikipediaId: wikipediaId,
+                    queryString: queryString
+                });
+            }
 
             function onSuccess(response) {
-                if (angular.isDefined(response)
-                        && angular.isDefined(response.data)
-                        && angular.isDefined(response.data.query)
-                        && angular.isDefined(response.data.query.pages)) {
-                    for (var page in response.data.query.pages) {
-                        return page;
+                if (angular.isDefined(response) &&
+                        angular.isArray(response.data) &&
+                        response.data.length === 4 &&
+                        angular.isArray(response.data[1])) {
+                    return response.data[1];
+                }
+                onError();
+            }
+
+            function onError() {
+                throw new WikipediaApiError("Search failed.");
+            }
+        }
+
+        /**
+         *
+         */
+        function getPageIdByTitle(wikipediaId, pageTitle) {
+            
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+
+            function buildRequestUrl() {
+                var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
+                urlTemplate += '&action=query';
+                urlTemplate += '&titles={{pageTitle}}';
+                urlTemplate += '&prop=';
+                urlTemplate += '&format=json';
+                urlTemplate += '&callback=JSON_CALLBACK';
+                return $interpolate(urlTemplate)({
+                    wikipediaId: wikipediaId,
+                    pageTitle: pageTitle
+                });
+            }
+
+            function onSuccess(response) {
+                if (angular.isDefined(response) &&
+                        angular.isDefined(response.data) &&
+                        angular.isDefined(response.data.query) &&
+                        angular.isDefined(response.data.query.pages)) {
+                    for (var pageId in response.data.query.pages) {
+                        return pageId;
                     }
                 }
                 onError();
             }
 
             function onError() {
-                throw new WikipediaApiError(0, " not found.");
+                throw new WikipediaApiError("Page ID could not be retreived.");
             }
         }
 
-        function buildSearchMoreLikeQuery(query) {
-            var queryTemplate = "https://en.wikipedia.org/w/api.php?";
-            queryTemplate += "&action=query";
-            queryTemplate += "&list=search";
-            queryTemplate += "&srsearch=morelike:{{searchQuery}}";
-            queryTemplate += "&srlimit=10";
-            queryTemplate += "&srprop=";
-            queryTemplate += "&format=json";
-            queryTemplate += "&callback=JSON_CALLBACK";
-            return $interpolate(queryTemplate)({ searchQuery: query });
-        }
-        
-        function buildSearchInTitleQuery(query) {
-            var queryTemplate = "https://en.wikipedia.org/w/api.php?";
-            queryTemplate += "&action=query";
-            queryTemplate += "&list=search";
-            queryTemplate += "&srsearch=intitle:{{searchQuery}}~";
-            queryTemplate += "&srlimit=10";
-            queryTemplate += "&srprop=";
-            queryTemplate += "&format=json";
-            queryTemplate += "&callback=JSON_CALLBACK";
-            return $interpolate(queryTemplate)({ searchQuery: query });
-        }
-        
-        function buildSearchTextQuery(query) {
-            var queryTemplate = "https://en.wikipedia.org/w/api.php?";
-            queryTemplate += "&action=query";
-            queryTemplate += "&list=search";
-            queryTemplate += "&srsearch={{searchQuery}}";
-            queryTemplate += "&srwhat=text";
-            queryTemplate += "&srlimit=10";
-            queryTemplate += "&srprop=";
-            queryTemplate += "&continue=";
-            queryTemplate += "&format=json";
-            queryTemplate += "&callback=JSON_CALLBACK";
-            return $interpolate(queryTemplate)({ searchQuery: query });
+        /**
+         *
+         */
+        function doHttpRequest(url, onSuccess, onError) {
+            return $http.jsonp(url).then(onSuccess).catch(onError);
         }
 
-        function buildPageIdByTitleQuery(pageTitle) {
-            var queryTemplate = "https://en.wikipedia.org/w/api.php?";
-            queryTemplate += "&action=query";
-            queryTemplate += "&titles={{pageTitle}}";
-            queryTemplate += "&prop=";
-            queryTemplate += "&format=json";
-            queryTemplate += "&callback=JSON_CALLBACK";
-            return $interpolate(queryTemplate)({ pageTitle: pageTitle });
+        /**
+         *
+         */
+        function buildRequestPageUrlScope(wikipediaId, pageId) {
+            return {
+                wikipediaId: wikipediaId,
+                pageId: pageId
+            };
         }
 
-        return factory;
+        /**
+         *
+         */
+        function buildPageRequestErrorMessage(wikipediaId, pageId, item) {
+            var messageTemplate = "{{item}} could not be retreived.";
+            messageTemplate += " | Wikipedia ID: {{wikipediaId}}, Page ID: {{pageId}}.";
+            var scope = {
+                item: item,
+                wikipediaId: wikipediaId,
+                pageId: pageId
+            };
+            return $interpolate(messageTemplate)(scope);
+        }
+
+        /**
+         *
+         */
+        function memoizeHashFunction(firstArgument, secondArgument) {
+            return firstArgument + "::::" + secondArgument;
+        }
     }
 
 })();

@@ -6,17 +6,16 @@
         .service('WikipediaApiError', serviceFunction);
 
     /** @ngInject */
-    function serviceFunction($interpolate) {
+    function serviceFunction() {
 
-        function WikipediaApiError(pageId, message) {
+        function WikipediaApiError(message) {
             this.name = "WikipediaApiError";
-            this.message = $interpolate("{{message}} | Page ID: {{pageId}}.")({message: message, pageId: pageId});
+            this.message = message;
         }
 
         WikipediaApiError.prototype = Object.create(Error.prototype);
 
         return WikipediaApiError;
-
     }
 
 })();
