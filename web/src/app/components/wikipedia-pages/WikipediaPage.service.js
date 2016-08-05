@@ -50,28 +50,3 @@
 
     }
 })();
-            // // Wikipedia Api.
-            // var wikipediaPageDataProvider = wikipediaApi.getPageDataProvider(wikipediaId, pageId);
-
-            // self.fetchCategoryList = yaviCached(function() {
-            //     return wikipediaPageDataProvider.fetchCategoryList();
-            // });
-
-            // self.fetchDescription = yaviCached(function() {
-            //     return wikipediaPageDataProvider.fetchDescription();
-            // });
-
-            // self.fetchThumbnail = yaviCached(function() {
-            //     return wikipediaPageDataProvider.fetchThumbnail();
-            // });
-
-            // self.fetchTitle = yaviCached(function() {
-            //     return wikipediaPageDataProvider.fetchTitle();
-            // });
-
-            // // Yavi Api.
-            // var yaviPageDataProvider = yaviApi.getPageDataProvider(wikipediaId, pageId);
-
-            // self.fetchExploreData = yaviCached(function() {
-            //     return yaviPageDataProvider.fetchExploreData();
-            // });

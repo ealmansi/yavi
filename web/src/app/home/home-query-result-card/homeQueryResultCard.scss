@@ -22,7 +22,8 @@
                 }
      
                 .home-query-result-card-description {
-
+                    max-height: 300px;
+                    overflow: hidden;
                 }
 
                 .home-query-result-card-description.collapsed {

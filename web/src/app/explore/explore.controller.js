@@ -9,7 +9,10 @@
     function controllerFunction(wikipediaPages,
                                 $compile,
                                 $interpolate,
+                                $q,
                                 $scope,
+                                $state,
+                                $timeout,
                                 $stateParams,
                                 $log) {
         var self = this;
@@ -26,16 +29,16 @@
             self.pageId = 5843419; /*$stateParams.page;*/
             self.startDate = '2015-11-01'; /*$stateParams.startDate;*/
             self.endDate = '2015-12-01'; /*$stateParams.endDate;*/
-            //
-            self.page = wikipediaPages.getPage(self.wikipediaSourceId, self.pageId);
-            render();
-        }
 
-        function render() {
+            //            
+            self.page = wikipediaPages.getPage(self.wikipediaSourceId, self.pageId);
+            //
             renderPageCarousel();
-            renderFeatureChart();
-            renderPageSignalChart();
-            renderPageBubbleChart();
+            self.page.fetchExploreData().then(function(exploreData) {
+                renderFeatureChart(exploreData);
+                renderPageSignalChart(exploreData);
+                renderPageBubbleChart(exploreData);
+            });
         }
 
         function renderPageCarousel() {
@@ -99,10 +102,10 @@
 
         function renderFeatureChart() {
             var data = {
-                labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+                labels: ["No. of revisions", "Peak no. revisions (3)", "Peak no. revisions (5)", "Peak no. revisions (7)", "Peak no. revisions (11)", "Peak no. revisions (15)", "No. reverted revisions"],
                 datasets: [
                     {
-                        label: "My First dataset",
+                        label: "France",
                         backgroundColor: "rgba(179,181,198,0.2)",
                         borderColor: "rgba(179,181,198,1)",
                         pointBackgroundColor: "rgba(179,181,198,1)",
@@ -112,7 +115,7 @@
                         data: [65, 59, 90, 81, 56, 55, 40]
                     },
                     {
-                        label: "My Second dataset",
+                        label: "Paris",
                         backgroundColor: "rgba(255,99,132,0.2)",
                         borderColor: "rgba(255,99,132,1)",
                         pointBackgroundColor: "rgba(255,99,132,1)",
@@ -138,7 +141,7 @@
                 labels: ["January", "February", "March", "April", "May", "June", "July"],
                 datasets: [
                     {
-                        label: "My First dataset",
+                        label: "France",
                         fill: false,
                         lineTension: 0.1,
                         backgroundColor: "rgba(75,192,192,0.4)",
@@ -159,7 +162,7 @@
                         data: [65, 59, 80, 81, 56, 55, 40]
                     },
                     {
-                        label: "My Second dataset",
+                        label: "Paris",
                         fill: false,
                         lineTension: 0.1,
                         backgroundColor: "rgba(192,192,75,0.4)",
@@ -177,7 +180,7 @@
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data: [65 * 1.1, 59 * 1.1, 80 * 1.1, 81 * 1.1, 56 * 1.1, 55 * 1.1, 40 * 1.1]
+                        data: [55, 56, 59, 45, 65, 40, 80]
                     }
                 ]
             };
@@ -191,101 +194,113 @@
             });
         }
 
-        function renderPageBubbleChart() {
-            /*var bubbleChart = */new d3.svg.BubbleChart({
-                supportResponsive: true,
-                container: '#page-bubble-chart',
-                size: 600,
-                //viewBoxSize: => use @default
-                innerRadius: 600 / 3.5,
-                //outerRadius: => use @default
-                radiusMin: 50,
-                //radiusMax: use @default
-                //intersectDelta: use @default
-                //intersectInc: use @default
-                //circleColor: use @default
-                data: {
-                    items: [
-                        {text: "Java", count: "236"},
-                        {text: ".Net", count: "382"},
-                        {text: "Php", count: "170"},
-                        {text: "Ruby", count: "123"},
-                        {text: "D", count: "12"},
-                        {text: "Python", count: "170"},
-                        {text: "C/C++", count: "382"},
-                        {text: "Pascal", count: "10"},
-                        {text: "Something", count: "170"},
-                    ],
-                    eval: function (item) {return item.count;},
-                    classed: function (item) {return item.text.split(" ").join("");}
-                },
-                plugins: [
-                    {
-                        name: "central-click",
-                        options: {
-                            text: "(See more detail)",
-                            style: {
-                                "font-size": "12px",
-                                "font-style": "italic",
-                                "font-family": "Source Sans Pro, sans-serif",
-                                //"font-weight": "700",
-                                "text-anchor": "middle",
-                                "fill": "white"
-                            },
-                            attr: {dy: "65px"},
-                            centralClick: function() {
-                                $log.log("Here is more details!!");
-                            }
-                        }
-                    },
-                    {
-                        name: "lines",
-                        options: {
-                            format: [
-                                {// Line #0
-                                    textField: "count",
-                                    classed: {count: true},
-                                    style: {
-                                        "font-size": "28px",
-                                        "font-family": "Source Sans Pro, sans-serif",
-                                        "text-anchor": "middle",
-                                        fill: "white"
-                                    },
-                                    attr: {
-                                        dy: "0px",
-                                        x: function (d) {return d.cx;},
-                                        y: function (d) {return d.cy;}
-                                    }
-                                },
-                                {// Line #1
-                                    textField: "text",
-                                    classed: {text: true},
-                                    style: {
-                                        "font-size": "14px",
-                                        "font-family": "Source Sans Pro, sans-serif",
-                                        "text-anchor": "middle",
-                                        fill: "white"
-                                    },
-                                    attr: {
-                                        dy: "20px",
-                                        x: function (d) {return d.cx;},
-                                        y: function (d) {return d.cy;}
-                                    }
-                                }
-                            ],
-                            centralFormat: [
-                                {// Line #0
-                                    style: {"font-size": "50px"},
-                                    attr: {}
-                                },
-                                {// Line #1
-                                    style: {"font-size": "30px"},
-                                    attr: {dy: "40px"}
-                                }
-                            ]
-                        }
-                    }]
+        function renderPageBubbleChart(exploreData) {
+            var itemPromises = [];
+            _.each(exploreData.rankedRelatedPages, function(relatedPageData) {
+                if (relatedPageData.pageId != self.pageId) {
+                    var page = wikipediaPages.getPage(self.wikipediaSourceId, relatedPageData.pageId);
+                    var itemPromise = page.fetchTitle().then(function(title) {
+                        return {
+                            pageId: relatedPageData.pageId,
+                            text: title,
+                            count: relatedPageData.activityScore
+                        };
+                    });
+                    itemPromises.push(itemPromise);
+                }
             });
+            $q.all(itemPromises).then(function(items) {
+                /*var bubbleChart = */new d3.svg.BubbleChart({
+                    supportResponsive: true,
+                    container: '#page-bubble-chart',
+                    size: 600,
+                    //viewBoxSize: => use @default
+                    innerRadius: 600 / 3.5,
+                    //outerRadius: => use @default
+                    radiusMin: 50,
+                    //radiusMax: use @default
+                    //intersectDelta: use @default
+                    //intersectInc: use @default
+                    //circleColor: use @default
+                    data: {
+                        items: items,
+                        eval: function (item) {return item.count;},
+                        classed: function (item) {return item.text.split(" ").join("");}
+                    },
+                    plugins: [
+                        {
+                            name: "central-click",
+                            options: {
+                                text: "(See more detail)",
+                                style: {
+                                    "font-size": "12px",
+                                    "font-style": "italic",
+                                    "font-family": "Source Sans Pro, sans-serif",
+                                    //"font-weight": "700",
+                                    "text-anchor": "middle",
+                                    "fill": "white"
+                                },
+                                attr: {dy: "65px"},
+                                centralClick: function(item) {
+                                    var stateParams = {
+                                        wiki: self.wikipediaSourceId,
+                                        page: item.pageId,
+                                        startDate: self.startDate,
+                                        endDate: self.endDate
+                                    };
+                                    $state.go('explore', stateParams, {reload: true});
+                                }
+                            }
+                        },
+                        {
+                            name: "lines",
+                            options: {
+                                format: [
+                                    {// Line #0
+                                        textField: "count",
+                                        classed: {count: true},
+                                        style: {
+                                            "font-size": "28px",
+                                            "font-family": "Source Sans Pro, sans-serif",
+                                            "text-anchor": "middle",
+                                            fill: "white"
+                                        },
+                                        attr: {
+                                            dy: "0px",
+                                            x: function (d) {return d.cx;},
+                                            y: function (d) {return d.cy;}
+                                        }
+                                    },
+                                    {// Line #1
+                                        textField: "text",
+                                        classed: {text: true},
+                                        style: {
+                                            "font-size": "14px",
+                                            "font-family": "Source Sans Pro, sans-serif",
+                                            "text-anchor": "middle",
+                                            fill: "white"
+                                        },
+                                        attr: {
+                                            dy: "20px",
+                                            x: function (d) {return d.cx;},
+                                            y: function (d) {return d.cy;}
+                                        }
+                                    }
+                                ],
+                                centralFormat: [
+                                    {// Line #0
+                                        style: {"font-size": "50px"},
+                                        attr: {}
+                                    },
+                                    {// Line #1
+                                        style: {"font-size": "30px"},
+                                        attr: {dy: "40px"}
+                                    }
+                                ]
+                            }
+                        }]
+                });
+            }).catch(function(err) {$log.log(err);});
         }
 
         $scope.$on('$stateChangeSuccess', init);
@@ -294,33 +309,3 @@
     }
     
 })();
-
-
-
-        // function renderPageCarousel() {
-        //     var pageCarouselWrapperElement = angular.element("#explore-page-carousel-wrapper");
-        //     var pageCarouselElement = buildPageCarouselElement(self.pageId);
-        //     pageCarouselWrapperElement.append(pageCarouselElement);
-        // }
-
-        // function buildPageCarouselElement(pageId) {
-        //     var template = "<yv-explore-page-carousel page-id=\"{{pageId}}\"></yv-explore-page-carousel>";
-        //     var html = $interpolate(template)({pageId: pageId});
-        //     return $compile(html)($scope);
-        // }
-
-        // function updateBubbleChart() {
-        //     self.page.fetchExploreData()
-        //         .then(function(exploreData) {
-        //             var pageIds = _.pluck(exploreData.rankedRelatedPages, 'pageId');
-        //             var bubbleChartWrapperElement = angular.element("#explore-bubble-chart-wrapper");
-        //             var bubbleChartElement = buildBubbleChartElement(pageIds);
-        //             bubbleChartWrapperElement.append(bubbleChartElement);
-        //         });
-        // }
-
-        // function buildBubbleChartElement(pageIds) {
-        //     var template = "<yavi-bubble-chart page-ids=\"{{pageIds}}\"></yavi-bubble-chart>";
-        //     var html = $interpolate(template)({pageIds: pageIds.join(",")});
-        //     return $compile(html)($scope);
-        // }

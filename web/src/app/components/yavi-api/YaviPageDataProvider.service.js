@@ -6,7 +6,7 @@
         .service('YaviPageDataProvider', serviceFunction);
 
     /** @ngInject */
-    function serviceFunction(yaviApiUrl, yaviApiPort, yaviCached, YaviApiError, $http, $interpolate, $log) {
+    function serviceFunction(yaviApiUrl, yaviCached, YaviApiError, $http, $interpolate, $log) {
 
         return function(wikipediaSourceId, pageId) {
 
@@ -36,12 +36,11 @@
 
             self.buildExploreDataQuery = function() {
                 var queryTemplate = '';
-                queryTemplate += "{{yaviApiUrl}}:{{yaviApiPort}}";
-                queryTemplate += '/explore/{{pageId}}/2014-01-01/2014-03-01?';
+                queryTemplate += "{{yaviApiUrl}}";
+                queryTemplate += '/explore/{{pageId}}/01-01-2015/01-06-2015?';
                 queryTemplate += '&callback=JSON_CALLBACK';
                 return $interpolate(queryTemplate)({
                     yaviApiUrl: yaviApiUrl,
-                    yaviApiPort: yaviApiPort,
                     pageId: pageId
                 });
             }

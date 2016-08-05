@@ -9,16 +9,17 @@
     function factoryFunction(
                 $http,
                 $interpolate,
+                $log,
                 WikipediaApiError
             ) {
 
         var factory = {};
 
-        factory.requestPageBasicData = _.memoize(requestPageBasicData, memoizeHashFunction);
-        factory.requestPageCategoryList = _.memoize(requestPageCategoryList, memoizeHashFunction);
-        factory.requestPageThumbnail = _.memoize(requestPageThumbnail, memoizeHashFunction);
-        factory.search = _.memoize(search, memoizeHashFunction);
-        factory.getPageIdByTitle = _.memoize(getPageIdByTitle, memoizeHashFunction);
+        factory.requestPageBasicData = requestPageBasicData;
+        factory.requestPageCategoryList = requestPageCategoryList;
+        factory.requestPageThumbnail = requestPageThumbnail;
+        factory.search = search;
+        factory.getPageIdByTitle = getPageIdByTitle;
 
         return factory;
 
@@ -140,16 +141,16 @@
         /**
          *
          */
-        function search(wikipediaId, queryString) {
+        function search(wikipediaId, queryString, canceller) {
             
-            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError, canceller);
 
             function buildRequestUrl() {
                 var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
                 urlTemplate += "&action=opensearch";
                 urlTemplate += "&search={{queryString}}";
                 urlTemplate += "&namespace=0";
-                urlTemplate += "&limit=10";
+                urlTemplate += "&limit=12";
                 urlTemplate += "&suggest=true";
                 urlTemplate += "&format=json";
                 urlTemplate += "&formatversion=2";
@@ -178,9 +179,9 @@
         /**
          *
          */
-        function getPageIdByTitle(wikipediaId, pageTitle) {
+        function getPageIdByTitle(wikipediaId, pageTitle, canceller) {
             
-            return doHttpRequest(buildRequestUrl(), onSuccess, onError);
+            return doHttpRequest(buildRequestUrl(), onSuccess, onError, canceller);
 
             function buildRequestUrl() {
                 var urlTemplate = 'https://{{wikipediaId}}.wikipedia.org/w/api.php?';
@@ -208,15 +209,19 @@
             }
 
             function onError() {
-                throw new WikipediaApiError("Page ID could not be retreived.");
+                throw new WikipediaApiError("Page ID could not be retreived for title: " + pageTitle);
             }
         }
 
         /**
          *
          */
-        function doHttpRequest(url, onSuccess, onError) {
-            return $http.jsonp(url).then(onSuccess).catch(onError);
+        function doHttpRequest(url, onSuccess, onError, canceller) {
+            var config = {};
+            if (angular.isDefined(canceller)) {
+                config.timeout = canceller.promise;
+            }
+            return $http.jsonp(url, config).then(onSuccess).catch(onError);
         }
 
         /**
@@ -241,13 +246,6 @@
                 pageId: pageId
             };
             return $interpolate(messageTemplate)(scope);
-        }
-
-        /**
-         *
-         */
-        function memoizeHashFunction(firstArgument, secondArgument) {
-            return firstArgument + "::::" + secondArgument;
         }
     }
 

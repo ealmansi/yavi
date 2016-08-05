@@ -16,11 +16,11 @@
 
         function getPage(wikipediaId, pageId) {
             return new WikipediaPage(wikipediaId, pageId);
-        };
+        }
 
         function getPageHash(wikipediaId, pageId) {
             return wikipediaId + ":" + pageId;
-        };
+        }
     }
 
 })();

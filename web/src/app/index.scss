@@ -8,6 +8,7 @@ html {
     body {
         height: 100%;
         background-image: url('../assets/images/background.png');
+        overflow-y: scroll;
         
         #view-container {
             height: 100%;
