@@ -1,4 +1,5 @@
 /* Imports */
+
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')(['gulp-*']);
 var merge = require('merge2');
@@ -10,11 +11,12 @@ gulp.task('html', [], function() {
     var indexStream =
         gulp.src('src/**/index.html');
     
-    var othersStream =
+    var otherStream =
         gulp.src(['src/**/*.html', '!src/**/index.html'])
             .pipe(plugins.rename(function(path) { path.dirname = 'html'; }));
     
-    return merge(indexStream, othersStream)
+    return merge(indexStream, otherStream)
+        .pipe(plugins.newer('dist/'))
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.htmlmin({collapseWhitespace: true}))
         .pipe(plugins.sourcemaps.write('maps/'))
