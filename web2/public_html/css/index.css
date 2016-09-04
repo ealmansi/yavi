@@ -1,0 +1,16 @@
+.navbar-brand img {
+  height: 100%;
+}
+
+.calendar.left {
+  display: block;
+}
+
+.calendar.right {
+  display: block;
+}
+
+.select2-selection {
+  border: 1px solid #aaa!important;
+  min-height: 34px;
+}

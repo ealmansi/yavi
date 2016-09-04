@@ -1,0 +1,11 @@
+{
+  "name": "yavi-node-api",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.0.1",
+    "express": "~4.0.0",
+    "moment": "^2.14.1",
+    "pg-promise": "~5.3.2",
+    "underscore": "^1.8.3"
+  }
+}

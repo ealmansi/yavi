@@ -1,0 +1,25 @@
+{
+  "name": "web2",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Emilio Almansi <ealmansi@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/ealmansi/yavi",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootswatch": "^3.3.7",
+    "bootstrap-daterangepicker": "^2.1.24",
+    "moment": "^2.14.1",
+    "select2": "^4.0.3",
+    "lodash": "^4.15.0"
+  }
+}

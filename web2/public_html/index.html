@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+      <title></title>
+      <link href="bower_components/bootswatch/lumen/bootstrap.min.css" rel="stylesheet">
+      <link href="bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+      <link href="bower_components/select2/dist/css/select2.min.css" rel="stylesheet">
+      <link href="css/index.css" rel="stylesheet">
+  </head>
+  
+  <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            <img alt="Yavi" src="assets/img/isotype-small.png">
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      
+      <div class="row" style="margin-bottom: 40px;">
+        <div class="col-md-4 col-md-offset-4" style="text-align:center;">
+          <img src="assets/img/imagetype.png" style="height: 100px;">
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-6 col-md-offset-3">
+              <div style="width:36px; float:right;">
+                <button type="submit" class="btn btn-primary" style="padding: 6px 12px;">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </div>
+              <div style="width:auto; min-height: 34px; overflow:hidden; padding-right: 2px;">
+                <select class="page-select form-control" id="article-input" multiple="multiple"></select>
+              </div>
+        </div>
+      </div>
+      
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-3 col-md-offset-3">
+          <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+            <div style="float:right"><span></span> <b class="caret"></b></div>
+          </div>
+        </div>
+        <div class="col-md-3" style="text-align:right;">
+<!--           <button class="btn btn-default btn-sm btn-chart-type chart-specific js-test-change-chart" data-target="#chart-type-modal" data-toggle="modal">
+            <span class="glyphicon glyphicon-th"></span> Chart type
+          </button> -->
+          <button class="btn btn-default btn-sm btn-settings js-test-settings" data-target="#settings-modal" data-toggle="modal">
+            <span class="glyphicon glyphicon-wrench"></span> Settings
+          </button>
+          <span class="btn-group dropdown download-btn-group">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-download-alt"></span>
+              Download        <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="download-csv" href="#">
+                  CSV          </a>
+              </li>
+              <li>
+                <a class="download-json" href="#">
+                  JSON          </a>
+              </li>
+              <li class="chart-specific">
+                <a class="download-png" href="#">
+                  PNG          </a>
+              </li>
+              <li class="divider chart-specific" role="separator"></li>
+              <li class="chart-specific">
+                <a class="print-chart" href="#">
+                  <span class="glyphicon glyphicon-print"></span>
+                  Print          </a>
+              </li>
+            </ul>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <span style="float:left; margin-right: 5px;">Compare pages by:</span>
+          <ul class="list-inline" style="float:left">
+            <li><a id="set-number-of-revisions-btn" href="#">Number of edits</a></li>
+            <li><a id="set-number-of-editors-btn" href="#">Number of editors</a></li>
+            <li><a id="set-content-size-btn" href="#">Content size</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <span style="float:left; margin-right: 5px;">See page in detail:</span>
+          <ul class="list-inline" style="float:left">
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <canvas id="lineChart" height="400"></canvas>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <canvas id="radarChart" height="400"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </body>
+
+  <script src="bower_components/lodash/dist/lodash.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script src="node_modules/chart.js/dist/Chart.bundle.min.js"></script>
+  <script src="bower_components/select2/dist/js/select2.min.js"></script>
+  <script src="js/index.js"></script>
+
+</html>
