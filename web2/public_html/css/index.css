@@ -14,3 +14,15 @@
   border: 1px solid #aaa!important;
   min-height: 34px;
 }
+
+li.select2-selection__choice:nth-child(1) {
+  background-color: #01FF70!important;
+}
+
+li.select2-selection__choice:nth-child(2) {
+  background-color: #7FDBFF!important;
+}
+
+li.select2-selection__choice:nth-child(3) {
+  background-color: #FFDC00!important;
+}

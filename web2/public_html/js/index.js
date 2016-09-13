@@ -1,58 +1,64 @@
+/**
+ * Config and state.
+ */
+
+var allSignals = [
+  {id: "number_of_revisions", label: "No. of edits"},
+  {id: "number_of_editors", label: "No. of editors"},
+  {id: "content_size", label: "Article size"},
+  {id: "number_of_outlinks", label: "Number of Wikilinks"}
+];
+var signalInvertedIndex = {};
+_.each(allSignals, function(signal, index) { signalInvertedIndex[signal.id] = index; });
+
 
 
 var pageData = {};
+var pageIndex = {};
+var pageInvertedIndex = {};
 
-var allDates = _.map(_.range(365), function(dayNumber) {
-  return moment("01-01-2016", "DD-MM-YYYY").add(dayNumber, 'days').format("DD-MM-YYYY");
-});
 
-var defaultStart = moment("01-01-2016", "DD-MM-YYYY");
-var defaultEnd = moment("01-04-2016", "DD-MM-YYYY");
+/**
+ * Date range picker.
+ */
 
-var startDate = defaultStart;
-var endDate = defaultEnd;
+var dateFormat = "DD-MM-YYYY";
+var startDate = moment("01-01-2016", dateFormat);
+var endDate = moment("10-01-2016", dateFormat);
 
-function cb(start, end) {
+var rangeShortcuts = {
+    'First Quarter 2016': [moment("01-01-2016", dateFormat), moment("01-04-2016", dateFormat)],
+    'Second Quarter 2016': [moment("01-04-2016", dateFormat), moment("01-07-2016", dateFormat)],
+    'Third Quarter 2016': [moment("01-07-2016", dateFormat), moment("01-10-2016", dateFormat)],
+    'Fourth Quarter 2016': [moment("01-10-2016", dateFormat), moment("01-01-2017", dateFormat)]
+};
 
-  startDate = start;
-  endDate = end;
-  
-  $('#reportrange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
-}
-
-$('#reportrange').daterangepicker({
-  startDate: defaultStart,
-  endDate: defaultEnd,
-  ranges: {
-      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-      'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+var dateRangePickerConfig = {
+  startDate: startDate,
+  endDate: endDate,
+  ranges: rangeShortcuts,
+  locale: {
+    format: dateFormat
   }
-}, cb);
+};
 
-cb(defaultStart, defaultEnd);
+$('#date-range-picker').daterangepicker(dateRangePickerConfig, onRangeSelect);
 
-function formatRepo (repo) {
-  if (repo.loading) return "Searching ...";
+onRangeSelect(startDate, endDate);
 
-  var markup = "<div class='select2-result-repository clearfix'>" +
-    "<div class='select2-result-repository__avatar' style='float: left; margin-right: 10px; background: #ddddff; border-radius: 50%; overflow: hidden;width: 50px; height: 50px;'><img style='left: 50%;top: 50%;position: relative;transform: translate(-50%, -50%);' src='" + ((repo.thumbnail || {}).source || "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/60px-Wikipedia-logo-v2.svg.png") + "' /></div>" +
-    "<div class='select2-result-repository__meta'>" +
-      "<div class='select2-result-repository__title'><b>" + repo.title + "</b></div>";
-
-  if (repo && repo.terms && repo.terms.description && repo.terms.description.length > 0) {
-    markup += "<div class='select2-result-repository__description'>" + repo.terms.description[0] + "</div>";
-  }
-
-  markup += "</div></div>";
-
-  return markup;
+function onRangeSelect(selectedStartDate, selectedEndDate) {
+  startDate = selectedStartDate;
+  endDate = selectedEndDate;
+  var startDateText = startDate.format('MMM D, YYYY');
+  var endDateText = endDate.format('MMM D, YYYY');
+  var inputText = startDateText + ' - ' + endDateText;
+  $('#date-range-picker span').html(inputText);
 }
 
-function formatRepoSelection (repo) {
-  return repo.title || repo.text;
-}
+
+/**
+ * Select2.
+ */
 
 $(".page-select").select2({
   placeholder: "Search for a Wikipedia article ...",
@@ -99,111 +105,256 @@ $(".page-select").select2({
   maximumSelectionLength: 3,
   escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
   minimumInputLength: 1,
-  templateResult: formatRepo, // omitted for brevity, see the source of this page
-  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+  templateResult: formatPage, // omitted for brevity, see the source of this page
+  templateSelection: formatPageSelection // omitted for brevity, see the source of this page
 });
 
-function onPageSelect(page) {
-  $.ajax({
-    url: "http://localhost:8080/stats/" + page.pageid,
-    data: {
-      fr: startDate.format("DD-MM-YYYY"),
-      to: endDate.format("DD-MM-YYYY")
-    },
-    dataType: 'jsonp',
-    success: function(stats) {
-      var dailyStats = _.map(stats, function(statObject) {
-        return _.pick(statObject, 'day', 'number_of_revisions');
-      });
-      updateChart(page.pageid, dailyStats);
-    }
-  });
+function formatPage (page) {
+  if (page.loading) return "Searching ...";
+
+  var markup = "<div class='select2-result-repository clearfix'>" +
+    "<div class='select2-result-repository__avatar' style='float: left; margin-right: 10px; background: #ddddff; border-radius: 50%; overflow: hidden;width: 50px; height: 50px;'><img style='left: 50%;top: 50%;position: relative;transform: translate(-50%, -50%);' src='" + ((page.thumbnail || {}).source || "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/60px-Wikipedia-logo-v2.svg.png") + "' /></div>" +
+    "<div class='select2-result-repository__meta'>" +
+      "<div class='select2-result-repository__title'><b>" + page.title + "</b></div>";
+
+  if (page && page.terms && page.terms.description && page.terms.description.length > 0) {
+    markup += "<div class='select2-result-repository__description'>" + page.terms.description[0] + "</div>";
+  }
+
+  markup += "</div></div>";
+
+  return markup;
 }
 
-function onPageUnselect(page) {
-  console.log(page)
-}
-
-function updateChart(pageId, dailyStats) {
-  //myLineChart.data.datasets[0].data = _.map(dailyStats, 'number_of_revisions');
-  //myLineChart.options.scales.yAxes[0].display = true;
-  //myLineChart.update();
+function formatPageSelection (page) {
+  return page.title || page.text;
 }
 
 $('.page-select').on('select2:select', function (evt) {
   var page = _.get(evt, 'params.data');
+  var index = $(".page-select").val().length - 1;
   pageData[page.pageid] = page;
+  pageIndex[page.pageid] = index;
+  pageInvertedIndex[index] = page.pageid;
+  $("#set-page-" + index + "-btn").text(page.title);
 });
 
 $('.page-select').on("select2:unselect", function (evt) {
-  // var page = _.get(evt, 'params.data');
-  // onPageUnselect(page);
 });
 
 
-var lineChartElement = $("#lineChart");
+/**
+ * Download.
+ */
 
-var lineChartData = {
-  labels: [],
-  datasets: []
-};
-
-var lineChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false
-};
-
-var myLineChart = new Chart(lineChartElement, {
-  type: 'line',
-  data: lineChartData,
-  options: lineChartOptions
+$("#download-csv-btn").on('click', function() {
+  var dataLength = myLineChart.data.labels.length;
+  var datasets = [];
+  var dates = [];
+  var values = [];
+  _.each(getActiveDatasets(), function(dataset) {
+    datasets = datasets.concat(_.map(_.range(dataLength), _.constant(dataset.label)));
+    dates = dates.concat(myLineChart.data.labels);
+    values = values.concat(dataset.data);
+  });
+  var csvMatrix = [["dataset", "date", "value"]];
+  csvMatrix = csvMatrix.concat(_.zip(datasets, dates, values));
+  var csvContent = new CSV(csvMatrix).encode();
+  download(csvContent, myLineChart.options.title.text + ".csv", "text/csv");
 });
 
-function requestPageData(pageId, startDate, endDate, signalId, callback) {
-  var requestUrl = "http://localhost:8080/stats/";
-  var requestData = {
-    p: pageId,
-    f: startDate.format("DD-MM-YYYY"),
-    t: endDate.format("DD-MM-YYYY"),
-    s: signalId
-  };
-  $.ajax({
-    url: requestUrl,
-    data: requestData,
-    dataType: 'jsonp',
-    success: function(response) {
-      callback(pageId, _.map(response, signalId));
-    }
+$("#download-json-btn").on('click', function() {
+  var jsonObject = {};
+  jsonObject.label = myLineChart.options.title.text;
+  jsonObject.dates = myLineChart.data.labels;
+  jsonObject.datasets = {};
+  _.each(getActiveDatasets(), function(dataset) {
+    jsonObject.datasets[dataset.label] = dataset.data;
+  });
+  var jsonContent = JSON.stringify(jsonObject);
+  download(jsonContent, myLineChart.options.title.text + ".json", "text/json");
+});
+
+function getActiveDatasets() {
+  return _.filter(myLineChart.data.datasets, function(dataset, index) {
+    var datasetMeta = myLineChart.getDatasetMeta(index);
+    return !datasetMeta.hidden;
   });
 }
 
-function addDatasetToChart(pageId, values) {
-  lineChartData.datasets.push({
-    label: pageData[pageId].title,
-    fill: false,
-    lineTension: 0.1,
-    backgroundColor: "rgba(75,192,192,0.4)",
-    borderColor: "rgba(75,192,192,1)",
-    borderCapStyle: 'butt',
-    borderDash: [],
-    borderDashOffset: 0.0,
-    borderJoinStyle: 'miter',
-    pointBorderColor: "rgba(75,192,192,1)",
-    pointBackgroundColor: "#fff",
-    pointBorderWidth: 1,
-    pointHoverRadius: 5,
-    pointHoverBackgroundColor: "rgba(75,192,192,1)",
-    pointHoverBorderColor: "rgba(220,220,220,1)",
-    pointHoverBorderWidth: 2,
-    pointRadius: 1,
-    pointHitRadius: 10,
-    data: values,
-    spanGaps: false,
-  });
-  myLineChart.update();
+$("#download-png-btn").on('click', function() {
+  var srcCanvas = document.getElementById("lineChart");
+  var destinationCanvas = document.createElement("canvas");
+  destinationCanvas.width = srcCanvas.width;
+  destinationCanvas.height = srcCanvas.height;
+
+  destCtx = destinationCanvas.getContext('2d');
+  destCtx.fillStyle = "#FFFFFF";
+  destCtx.fillRect(0,0,srcCanvas.width,srcCanvas.height);
+  destCtx.drawImage(srcCanvas, 0, 0);
+
+  var pngContent = destinationCanvas.toDataURL("image/png")
+  download(pngContent, myLineChart.options.title.text + ".png", "image/png");
+});
+
+/**
+ * Chart.js
+ */
+
+var chartColors = [
+  "#01FF70",  // lime
+  "#7FDBFF",  // aqua
+  "#FFDC00",  // yellow
+  "#FF4136",  // red
+  "#B10DC9",  // purple
+  "#FFFFFF",  // white
+  "#3D9970",  // olive
+  "#0074D9",  // blue
+  "#111111",  // black
+  "#2ECC40",  // green
+  "#DDDDDD",  // silver
+  "#85144B",  // maroon
+  "#39CCCC",  // teal
+  "#AAAAAA",  // gray
+  "#001F3F",  // navy
+  "#FF851B",  // orange
+  "#F012BE",  // fuchsia
+];
+
+var myLineChart = new Chart($("#lineChart"), {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: []
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    tooltips: {
+      mode: 'x-axis'
+    },
+    hover: {
+      mode: 'x-axis'
+    },
+    title: {
+      display: true,
+      text: ''
+    },
+    scales: {
+      yAxes: _.map(allSignals, function(signal) {
+        return {
+          id: signal.id,
+          type: 'linear',
+          display: false,
+          scaleLabel: {
+            display: true,
+            labelString: signal.label
+          },
+          ticks: {
+            min: 0
+          }
+        };
+      })
+    },
+    legend: {
+      onClick: _.noop()
+    }
+  }
+});
+
+var myRadarChart = new Chart($("#radarChart"), {
+  type: 'radar',
+  data: {
+    labels: [
+      "Max Edits in a Day",
+      "Max Edits (Window Size 2)",
+      "Max Edits (Window Size 3)",
+      "Max Edits (Window Size 7)"
+    ],
+    datasets: []
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      display: true,
+      text: ''
+    },
+    scale: {
+        ticks: {
+            beginAtZero: true
+        },
+        display: false
+    }
+  }
+});
+
+$("#lineChart").show();
+$("#radarChart").show();
+
+$("#set-number-of-revisions-btn").on('click', function() {
+  updateChartTypeToSignal('number_of_revisions');
+});
+
+$("#set-number-of-editors-btn").on('click', function() {
+  updateChartTypeToSignal('number_of_editors');
+});
+
+$("#set-content-size-btn").on('click', function() {
+  updateChartTypeToSignal('content_size');
+});
+
+$("#set-number-of-outlinks-btn").on('click', function() {
+  updateChartTypeToSignal('number_of_outlinks');
+});
+
+$("#set-page-0-btn").on('click', function() {
+  updateChartTypeToPage(pageInvertedIndex[0]);
+});
+
+$("#set-page-1-btn").on('click', function() {
+  updateChartTypeToPage(pageInvertedIndex[1]);
+});
+
+$("#set-page-2-btn").on('click', function() {
+  updateChartTypeToPage(pageInvertedIndex[2]);
+});
+
+$("#set-edit-features-btn").on('click', function() {
+  var pageIds = $('.page-select').val() || [];
+  updateRadarChart(pageIds);
+});
+
+function updateChartTypeToSignal(signalId) {
+  var chartSpecs = {
+    chartType: 'signal',
+    data: {
+      signalId: signalId,
+      pageIds: $('.page-select').val() || []
+    }
+  };
+  updateChart(chartSpecs);
+}
+
+function updateChartTypeToPage(pageId) {
+  var chartSpecs = {
+    chartType: 'page',
+    data: {
+      pageId: pageId,
+      signalIds: _.map(allSignals, 'id')
+    }
+  };
+  updateChart(chartSpecs);
 }
 
 function updateChart(chartSpecs) {
+  $("#lineChart").show(); $("#radarChart").hide();
+  var periodLength = moment.duration(endDate.diff(startDate)).asDays();
+  var dates = _.map(_.range(periodLength), function(dayOffset) {
+    return startDate.clone().add(dayOffset, 'days').format(dateFormat);
+  });
+  myLineChart.data.labels = dates;
+  myLineChart.data.datasets = [];
   if (chartSpecs.chartType === 'signal') {
     var signalId = chartSpecs.data.signalId;
     var pageIds = chartSpecs.data.pageIds;
@@ -216,40 +367,182 @@ function updateChart(chartSpecs) {
 }
 
 function updateChartForSignal(signalId, pageIds) {
-  var periodLength = moment.duration(endDate.diff(startDate)).asDays();
-  var dates = _.map(_.range(periodLength), function(dayOffset) {
-    return startDate.clone().add(dayOffset, 'days').format("DD-MM-YYYY");
+  myLineChart.options.title.text = "Compare " + signalId + " for all pages";
+  _.each(myLineChart.options.scales.yAxes, function(yAxis) {
+    yAxis.display = yAxis.id === signalId;
   });
-  lineChartData.labels = dates;
-  lineChartData.datasets = [];
+  myLineChart.options.legend.onClick = onLegendClickForSignal;
   _.each(pageIds, function(pageId) {
-    requestPageData(pageId, startDate, endDate, signalId, addDatasetToChart);
+    requestPageSignal(pageId, startDate, endDate, signalId, addPageDatasetToChart);
   });
 }
 
 function updateChartForPage(pageId, signalIds) {
-
+  myLineChart.options.title.text = "View all data on " + pageData[pageId].title;
+  _.each(myLineChart.options.scales.yAxes, function(yAxis) {
+    yAxis.display = true;
+  });
+  myLineChart.options.legend.onClick = onLegendClickForPage;
+  _.each(signalIds, function(signalId) {
+    requestPageSignal(pageId, startDate, endDate, signalId, addSignalDatasetToChart);
+  });
 }
 
-$("#set-number-of-revisions-btn").on('click', function() {
-  updateChartType('number_of_revisions');
-});
+function onLegendClickForSignal(e, legendItem) {
+  // Enable / disable dataset.
+  Chart.defaults.global.legend.onClick.apply(this, [e, legendItem]);
+}
 
-$("#set-number-of-editors-btn").on('click', function() {
-  updateChartType('number_of_editors');
-});
+function onLegendClickForPage(e, legendItem) {
+  // Enable / disable corresponding y-axis.
+  var yAxisId = myLineChart.data.datasets[legendItem.datasetIndex].yAxisID;
+  var yAxis = _.find(myLineChart.options.scales.yAxes, function(axis) {
+    return axis.id == yAxisId;
+  });
+  yAxis.display = !yAxis.display;
+  // Enable / disable dataset.
+  Chart.defaults.global.legend.onClick.apply(this, [e, legendItem]);
+}
 
-$("#set-content-size-btn").on('click', function() {
-  updateChartType('content_size');
-});
-
-function updateChartType(signalId) {
-  var chartSpecs = {
-    chartType: 'signal',
-    data: {
-      signalId: signalId,
-      pageIds: $('.page-select').val() || []
-    }
+function requestPageSignal(pageId, startDate, endDate, signalId, callback) {
+  var requestUrl = "http://localhost:8080/stats/";
+  var requestData = {
+    p: pageId,
+    f: startDate.format(dateFormat),
+    t: endDate.format(dateFormat),
+    s: signalId
   };
-  updateChart(chartSpecs);
+  $.ajax({
+    url: requestUrl,
+    data: requestData,
+    dataType: 'jsonp',
+    success: function(response) {
+      callback(pageId, signalId, _.map(response, signalId));
+    }
+  });
+}
+
+function addPageDatasetToChart(pageId, signalId, values) {
+  var pageColor = chartColors[pageIndex[pageId] % chartColors.length];
+  var dataset = {
+    pageIndex: pageIndex[pageId],
+    signalIndex: signalInvertedIndex[signalId],
+    data: values,
+    label: pageData[pageId].title,
+    // xAxisID: null,
+    yAxisID: signalId,
+    fill: false,
+    lineTension: 0,
+    // backgroundColor: null,
+    borderWidth: 1,
+    borderColor: pageColor,
+    borderCapStyle: "butt", // "round" "square"
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: "bevel", // "round" "miter"
+    pointBackgroundColor: pageColor,
+    pointBorderColor: pageColor,
+    pointBorderWidth: 1,
+    pointRadius: 2,
+    pointHoverRadius: 3,
+    pointHitRadius: 3,
+    pointHoverBackgroundColor: pageColor,
+    pointHoverBorderColor: pageColor,
+    pointHoverBorderWidth: 2,
+    pointStyle: "circle", // "triangle", "rect", "rectRot", "cross", "crossRot", "star", "line", "dash",
+    showLine: true,
+    spanGaps: false
+    // steppedLine: null
+  };
+  myLineChart.data.datasets.splice(_.sortedIndexBy(myLineChart.data.datasets, dataset, function(dataset) {
+    return dataset.pageIndex;
+  }), 0, dataset);
+  myLineChart.update();
+}
+
+function addSignalDatasetToChart(pageId, signalId, values) {
+  var signalIndex = signalInvertedIndex[signalId];
+  var signalColor = chartColors[signalIndex % chartColors.length];
+  var dataset = {
+    pageIndex: pageIndex[pageId],
+    signalIndex: signalIndex,
+    data: values,
+    label: allSignals[signalIndex].label,
+    // xAxisID: null,
+    yAxisID: signalId,
+    fill: false,
+    lineTension: 0,
+    // backgroundColor: null,
+    borderWidth: 1,
+    borderColor: signalColor,
+    borderCapStyle: "butt", // "round" "square"
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: "bevel", // "round" "miter"
+    pointBackgroundColor: signalColor,
+    pointBorderColor: signalColor,
+    pointBorderWidth: 1,
+    pointRadius: 2,
+    pointHoverRadius: 3,
+    pointHitRadius: 3,
+    pointHoverBackgroundColor: signalColor,
+    pointHoverBorderColor: signalColor,
+    pointHoverBorderWidth: 2,
+    pointStyle: "circle", // "triangle", "rect", "rectRot", "cross", "crossRot", "star", "line", "dash",
+    showLine: true,
+    spanGaps: false
+    // steppedLine: null
+  };
+  myLineChart.data.datasets.splice(_.sortedIndexBy(myLineChart.data.datasets, dataset, function(dataset) {
+    return dataset.signalIndex;
+  }), 0, dataset);
+  myLineChart.update();
+}
+
+function updateRadarChart(pageIds) {
+  $("#radarChart").show(); $("#lineChart").hide();
+  myRadarChart.data.datasets = [];
+  myRadarChart.options.scale.display = false;
+  _.each(pageIds, function(pageId) {
+    requestPageFeatures(pageId, startDate, endDate, addPageFeaturesToRadarChart);
+  });
+  myRadarChart.update();
+}
+
+function requestPageFeatures(pageId, startDate, endDate, callback) {
+  var requestUrl = "http://localhost:8080/feats/";
+  var requestData = {
+    p: pageId,
+    f: startDate.format(dateFormat),
+    t: endDate.format(dateFormat)
+  };
+  $.ajax({
+    url: requestUrl,
+    data: requestData,
+    dataType: 'jsonp',
+    success: function(response) {
+      callback(pageId, response);
+    }
+  });
+}
+
+function addPageFeaturesToRadarChart(pageId, features) {
+  var pageColor = chartColors[pageIndex[pageId] % chartColors.length];
+  myRadarChart.data.datasets.push({
+      label: pageData[pageId].title,
+      backgroundColor: "rgba(179,181,198,0.2)",
+      borderColor: pageColor,
+      pointBackgroundColor: pageColor,
+      pointBorderColor: "#fff",
+      pointHoverBackgroundColor: "#fff",
+      pointHoverBorderColor: pageColor,
+      data: [
+        features["maxPeakOrder1"],
+        features["maxPeakOrder2"],
+        features["maxPeakOrder3"],
+        features["maxPeakOrder7"]
+      ]
+  });
+  myRadarChart.options.scale.display = true;
+  myRadarChart.update();
 }

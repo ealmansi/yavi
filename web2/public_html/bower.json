@@ -20,6 +20,8 @@
     "bootstrap-daterangepicker": "^2.1.24",
     "moment": "^2.14.1",
     "select2": "^4.0.3",
-    "lodash": "^4.15.0"
+    "lodash": "^4.15.0",
+    "downloadjs": "^1.4.6",
+    "comma-separated-values": "^3.6.4"
   }
 }

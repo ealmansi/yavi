@@ -44,18 +44,18 @@
       
       <div class="row" style="margin-bottom: 10px;">
         <div class="col-md-3 col-md-offset-3">
-          <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+          <div id="date-range-picker" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
             <div style="float:right"><span></span> <b class="caret"></b></div>
           </div>
         </div>
         <div class="col-md-3" style="text-align:right;">
-<!--           <button class="btn btn-default btn-sm btn-chart-type chart-specific js-test-change-chart" data-target="#chart-type-modal" data-toggle="modal">
+          <button class="btn btn-default btn-sm btn-chart-type chart-specific js-test-change-chart" data-target="#chart-type-modal" data-toggle="modal">
             <span class="glyphicon glyphicon-th"></span> Chart type
-          </button> -->
-          <button class="btn btn-default btn-sm btn-settings js-test-settings" data-target="#settings-modal" data-toggle="modal">
-            <span class="glyphicon glyphicon-wrench"></span> Settings
           </button>
+<!--           <button class="btn btn-default btn-sm btn-settings js-test-settings" data-target="#settings-modal" data-toggle="modal">
+            <span class="glyphicon glyphicon-wrench"></span> Settings
+          </button> -->
           <span class="btn-group dropdown download-btn-group">
             <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="glyphicon glyphicon-download-alt"></span>
@@ -63,22 +63,20 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a class="download-csv" href="#">
-                  CSV          </a>
+                <a id="download-csv-btn" href="#">
+                  <span class="glyphicon glyphicon-list"></span> CSV
+                </a>
               </li>
               <li>
-                <a class="download-json" href="#">
-                  JSON          </a>
+                <a id="download-json-btn" href="#">
+                  <span class="glyphicon glyphicon-file"></span> JSON
+                </a>
               </li>
-              <li class="chart-specific">
-                <a class="download-png" href="#">
-                  PNG          </a>
-              </li>
-              <li class="divider chart-specific" role="separator"></li>
-              <li class="chart-specific">
-                <a class="print-chart" href="#">
-                  <span class="glyphicon glyphicon-print"></span>
-                  Print          </a>
+              <li class="divider" role="separator"></li>
+              <li>
+                <a id="download-png-btn" href="#">
+                  <span class="glyphicon glyphicon-picture"></span> PNG
+                </a>
               </li>
             </ul>
           </span>
@@ -87,11 +85,12 @@
 
       <div class="row">
         <div class="col-md-6 col-md-offset-3">
-          <span style="float:left; margin-right: 5px;">Compare pages by:</span>
+          <span style="float:left; margin-right: 5px;">See data for all pages:</span>
           <ul class="list-inline" style="float:left">
-            <li><a id="set-number-of-revisions-btn" href="#">Number of edits</a></li>
-            <li><a id="set-number-of-editors-btn" href="#">Number of editors</a></li>
-            <li><a id="set-content-size-btn" href="#">Content size</a></li>
+            <li><a id="set-number-of-revisions-btn" href="#lineChart">No. edits</a></li>
+            <li><a id="set-number-of-editors-btn" href="#lineChart">No. editors</a></li>
+            <li><a id="set-content-size-btn" href="#lineChart">Content size</a></li>
+            <li><a id="set-number-of-outlinks-btn" href="#lineChart">No. Wikilinks</a></li>
           </ul>
         </div>
       </div>
@@ -100,6 +99,18 @@
         <div class="col-md-6 col-md-offset-3">
           <span style="float:left; margin-right: 5px;">See page in detail:</span>
           <ul class="list-inline" style="float:left">
+            <li><a id="set-page-0-btn" href="#lineChart">First Page</a></li>
+            <li><a id="set-page-1-btn" href="#lineChart">Second Page</a></li>
+            <li><a id="set-page-2-btn" href="#lineChart">Third Page</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <span style="float:left; margin-right: 5px;">Compare pages by features:</span>
+          <ul class="list-inline" style="float:left">
+            <li><a id="set-edit-features-btn" href="#radarChart">Edit features</a></li>
           </ul>
         </div>
       </div>
@@ -110,7 +121,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-bottom: 80px;">
         <div class="col-md-10 col-md-offset-1">
           <canvas id="radarChart" height="400"></canvas>
         </div>
@@ -126,6 +137,8 @@
   <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
   <script src="node_modules/chart.js/dist/Chart.bundle.min.js"></script>
   <script src="bower_components/select2/dist/js/select2.min.js"></script>
+  <script src="bower_components/downloadjs/download.min.js"></script>
+  <script src="bower_components/comma-separated-values/csv.min.js"></script>
   <script src="js/index.js"></script>
 
 </html>
