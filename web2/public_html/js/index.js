@@ -5,8 +5,8 @@
 var allSignals = [
   {id: "number_of_revisions", label: "No. of edits"},
   {id: "number_of_editors", label: "No. of editors"},
-  {id: "content_size", label: "Article size"},
-  {id: "number_of_outlinks", label: "Number of Wikilinks"}
+  {id: "content_size", label: "Content size"},
+  {id: "number_of_outlinks", label: "No. of Wikilinks"}
 ];
 var signalInvertedIndex = {};
 _.each(allSignals, function(signal, index) { signalInvertedIndex[signal.id] = index; });
@@ -103,10 +103,10 @@ $(".page-select").select2({
     cache: true
   },
   maximumSelectionLength: 3,
-  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+  escapeMarkup: function (markup) { return markup; },
   minimumInputLength: 1,
-  templateResult: formatPage, // omitted for brevity, see the source of this page
-  templateSelection: formatPageSelection // omitted for brevity, see the source of this page
+  templateResult: formatPage,
+  templateSelection: formatPageSelection
 });
 
 function formatPage (page) {
@@ -137,6 +137,7 @@ $('.page-select').on('select2:select', function (evt) {
   pageIndex[page.pageid] = index;
   pageInvertedIndex[index] = page.pageid;
   $("#set-page-" + index + "-btn").text(page.title);
+  $("#set-related-page-" + index + "-btn").text(page.title);
 });
 
 $('.page-select').on("select2:unselect", function (evt) {
@@ -147,7 +148,11 @@ $('.page-select').on("select2:unselect", function (evt) {
  * Download.
  */
 
+var activeChartId = null;
+var activeChart = null;
+
 $("#download-csv-btn").on('click', function() {
+  if (activeChartId != "lineChart") return;
   var dataLength = myLineChart.data.labels.length;
   var datasets = [];
   var dates = [];
@@ -164,6 +169,7 @@ $("#download-csv-btn").on('click', function() {
 });
 
 $("#download-json-btn").on('click', function() {
+  if (activeChartId != "lineChart") return;
   var jsonObject = {};
   jsonObject.label = myLineChart.options.title.text;
   jsonObject.dates = myLineChart.data.labels;
@@ -183,18 +189,20 @@ function getActiveDatasets() {
 }
 
 $("#download-png-btn").on('click', function() {
-  var srcCanvas = document.getElementById("lineChart");
-  var destinationCanvas = document.createElement("canvas");
-  destinationCanvas.width = srcCanvas.width;
-  destinationCanvas.height = srcCanvas.height;
+  if (activeChartId !== null) {
+    var srcCanvas = document.getElementById(activeChartId);
+    var destinationCanvas = document.createElement("canvas");
+    destinationCanvas.width = srcCanvas.width;
+    destinationCanvas.height = srcCanvas.height;
 
-  destCtx = destinationCanvas.getContext('2d');
-  destCtx.fillStyle = "#FFFFFF";
-  destCtx.fillRect(0,0,srcCanvas.width,srcCanvas.height);
-  destCtx.drawImage(srcCanvas, 0, 0);
+    destCtx = destinationCanvas.getContext('2d');
+    destCtx.fillStyle = "#FFFFFF";
+    destCtx.fillRect(0,0,srcCanvas.width,srcCanvas.height);
+    destCtx.drawImage(srcCanvas, 0, 0);
 
-  var pngContent = destinationCanvas.toDataURL("image/png")
-  download(pngContent, myLineChart.options.title.text + ".png", "image/png");
+    var pngContent = destinationCanvas.toDataURL("image/png")
+    download(pngContent, activeChart.options.title.text + ".png", "image/png");
+  }
 });
 
 /**
@@ -207,7 +215,7 @@ var chartColors = [
   "#FFDC00",  // yellow
   "#FF4136",  // red
   "#B10DC9",  // purple
-  "#FFFFFF",  // white
+  "#001F3F",  // navy
   "#3D9970",  // olive
   "#0074D9",  // blue
   "#111111",  // black
@@ -216,7 +224,7 @@ var chartColors = [
   "#85144B",  // maroon
   "#39CCCC",  // teal
   "#AAAAAA",  // gray
-  "#001F3F",  // navy
+  "#FFFFFF",  // white
   "#FF851B",  // orange
   "#F012BE",  // fuchsia
 ];
@@ -289,9 +297,6 @@ var myRadarChart = new Chart($("#radarChart"), {
   }
 });
 
-$("#lineChart").show();
-$("#radarChart").show();
-
 $("#set-number-of-revisions-btn").on('click', function() {
   updateChartTypeToSignal('number_of_revisions');
 });
@@ -348,7 +353,8 @@ function updateChartTypeToPage(pageId) {
 }
 
 function updateChart(chartSpecs) {
-  $("#lineChart").show(); $("#radarChart").hide();
+  $("#lineChart").show(); $("#radarChart").hide(); $("#bubbleChart").hide();
+  activeChartId = "lineChart"; activeChart = myLineChart;
   var periodLength = moment.duration(endDate.diff(startDate)).asDays();
   var dates = _.map(_.range(periodLength), function(dayOffset) {
     return startDate.clone().add(dayOffset, 'days').format(dateFormat);
@@ -367,7 +373,9 @@ function updateChart(chartSpecs) {
 }
 
 function updateChartForSignal(signalId, pageIds) {
-  myLineChart.options.title.text = "Compare " + signalId + " for all pages";
+  var signalIndex = signalInvertedIndex[signalId];
+  var signalLabel = allSignals[signalIndex].label;
+  myLineChart.options.title.text = "Compare " + signalLabel + " for all pages";
   _.each(myLineChart.options.scales.yAxes, function(yAxis) {
     yAxis.display = yAxis.id === signalId;
   });
@@ -500,7 +508,8 @@ function addSignalDatasetToChart(pageId, signalId, values) {
 }
 
 function updateRadarChart(pageIds) {
-  $("#radarChart").show(); $("#lineChart").hide();
+  $("#lineChart").hide(); $("#radarChart").show(); $("#bubbleChart").hide();
+  activeChartId = "radarChart"; activeChart = myRadarChart;
   myRadarChart.data.datasets = [];
   myRadarChart.options.scale.display = false;
   _.each(pageIds, function(pageId) {
@@ -546,3 +555,165 @@ function addPageFeaturesToRadarChart(pageId, features) {
   myRadarChart.options.scale.display = true;
   myRadarChart.update();
 }
+
+Chart.defaults.bubble.scales.xAxes[0].display = true;
+Chart.defaults.bubble.scales.xAxes[0].ticks = {
+  min: -1.5,
+  max: 1.5,
+};
+
+Chart.defaults.bubble.scales.yAxes[0].display = true;
+Chart.defaults.bubble.scales.yAxes[0].ticks = {
+  min: -1.5,
+  max: 1.5,
+};
+
+var myBubbleChart = new Chart($("#bubbleChart"),{
+    type: 'bubble',
+    data: {
+      datasets: []
+    },
+    options: {
+      title: {
+        display: false,
+        text: ""
+      },
+      responsive: true,
+      onClick: bubbleChartOnClick,
+      maintainAspectRatio: false,
+      elements: {
+          points: {
+              borderWidth: 1,
+              borderColor: 'rgb(0, 0, 0)'
+          }
+      },
+      legend: {
+        onClick: _.noop()
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+            var dataPoint = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            return datasetLabel + ' (' + Math.floor(dataPoint.r) + ')';
+          }
+        }
+      }
+    }
+});
+
+function bubbleChartOnClick(e) {
+  var activePoints = myBubbleChart.getElementAtEvent(e);
+  if (activePoints.length == 1) {
+    var dataset = myBubbleChart.data.datasets[activePoints[0]._datasetIndex];
+    console.log(dataset)
+  }
+}
+
+$("#set-related-page-0-btn").on('click', function() {
+  updateBubbleChart(pageInvertedIndex[0]);
+});
+
+$("#set-related-page-1-btn").on('click', function() {
+  updateBubbleChart(pageInvertedIndex[1]);
+});
+
+$("#set-related-page-2-btn").on('click', function() {
+  updateBubbleChart(pageInvertedIndex[2]);
+});
+
+function updateBubbleChart(pageId) {
+  $("#lineChart").hide(); $("#radarChart").hide(); $("#bubbleChart").show();
+  activeChartId = "bubbleChart"; activeChart = myBubbleChart;
+  myBubbleChart.data.datasets = [];
+  myBubbleChart.options.title.display = true;
+  myBubbleChart.options.title.text = "Popular pages related to " + pageData[pageId].title;
+  myBubbleChart.update();
+  requestPageRelatedPages(pageId, requestRelatedPagesData)
+}
+
+function requestPageRelatedPages(pageId, callback) {
+  var requestUrl = "http://localhost:8080/related/";
+  var requestData = {
+    p: pageId
+  };
+  $.ajax({
+    url: requestUrl,
+    data: requestData,
+    dataType: 'jsonp',
+    success: function(response) {
+      callback(pageId, response);
+    }
+  });
+}
+
+function requestRelatedPagesData(pageId, relatedPages) {
+  var relatedPageIds = _.map(relatedPages, 'page_id');
+  if (relatedPageIds.length > 50) relatedPageIds.length = 50;
+  var requestUrl = "https://en.wikipedia.org/w/api.php?";
+  var requestData = {
+    action: "query",
+    format: "json",
+    pageids: relatedPageIds.join("|"),
+    prop: "pageprops|pageimages|pageterms",
+    redirects: "",
+    ppprop: "displaytitle",
+    piprop: "thumbnail",
+    pithumbsize: "80",
+    pilimit: "6",
+    wbptterms: "description"
+  };
+  $.ajax({
+    url: requestUrl,
+    data: requestData,
+    dataType: 'jsonp',
+    success: function(response) {
+      var validRelatedPages = _.filter(relatedPages, function(relatedPage) {
+        return response.query.pages[relatedPage['page_id']] &&
+            response.query.pages[relatedPage['page_id']].ns === 0;
+      });
+      _.each(validRelatedPages, function(relatedPage) {
+        pageData[relatedPage['page_id']] = response.query.pages[relatedPage['page_id']];
+      });
+      if (validRelatedPages.length > 10) validRelatedPages.length = 10;
+      addRelatedPagesToBubbleChart(validRelatedPages);
+    }
+  });
+}
+
+function addRelatedPagesToBubbleChart(relatedPages) {
+  var bubbleCoords = getCoords(relatedPages.length);
+  var radiusScaleFactor = 50 / (_.max(_.map(relatedPages, 'score')) + 1);
+  var datasets = _.map(relatedPages, function(page, index) {
+    return {
+      label: pageData[page['page_id']].title,
+      data: [{ x: bubbleCoords[index].x, y: bubbleCoords[index].y, r: Math.max(page['score'] * radiusScaleFactor, 5)}],
+      backgroundColor: chartColors[index],
+      hoverBackgroundColor: chartColors[index]
+    }
+  });
+  myBubbleChart.data.datasets = datasets;
+  myBubbleChart.update();
+}
+
+function getCoords(n) {
+    if (n == 0) return [];
+    if (n == 1) return [{x: 0.0, y: 0.0}];
+    var coords = [];
+    var mult = 2 * Math.PI / n;
+    for (var i = 0; i < n; ++i) {
+        coords.push({
+            x: Math.cos(mult * i),
+            y: Math.sin(mult * i)
+        });
+    }
+    return coords;
+}
+
+
+setTimeout(function() {
+  $("#lineChart").hide();
+  $("#radarChart").hide();
+  $("#bubbleChart").hide();
+}, 0);
+

@@ -93,6 +93,25 @@ function computeMaxPeak(array, order) {
     return maxPeak;
 }
 
+app.get('/related', function(request, response) {
+    var pageId = request.query.p % 10001;
+    var queryString = '';
+    queryString += 'select * ';
+    queryString += 'from related_demo_sm where page_id / 10 = ' + pageId + ' ';
+    console.log(queryString)
+    db.query(queryString)
+    .then(function(result) {
+        var relatedPageIds = _.pluck(result, 'related_page_id');
+        var result = _.map(relatedPageIds, function(pageId) {
+            return {
+                page_id: pageId,
+                score: Math.floor(Math.random() * 5000)
+            };
+        });
+        response.jsonp(result);
+    });
+});
+
 // START THE SERVER
 // =============================================================================
 var port = process.env.PORT || 8080;        // set our port
