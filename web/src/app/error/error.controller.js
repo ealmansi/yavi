@@ -3,16 +3,17 @@
 
     angular
         .module('yavi')
-        .controller('ErrorController', controllerFunction);
+        .controller('ErrorController', ErrorController);
 
     /** @ngInject */
-    function controllerFunction($stateParams, $log) {
+    function ErrorController(
+                $stateParams,
+                $log
+            ) {
         
-        var error = this;
+        var self = this;
 
-        error.wiki = $stateParams.wiki;
-
-        return error;
+        return self;
     }
     
 })();

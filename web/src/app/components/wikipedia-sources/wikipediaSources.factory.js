@@ -10,10 +10,10 @@
 
         var factory = {};
 
-        var wikipediaSourceIds = ['en', 'de', 'ja', 'ru', 'es', 'fr', 'it', 'pt', 'zh', 'pl'];
+        var wikipediaIds = ['en', 'de', 'ja', 'ru', 'es', 'fr', 'it', 'pt', 'zh', 'pl'];
 
-        factory.isValidId = function(wikipediaSourceId) {
-            return _.contains(wikipediaSourceIds, wikipediaSourceId);
+        factory.isValidId = function(wikipediaId) {
+            return _.contains(wikipediaIds, wikipediaId);
         }
 
         return factory;

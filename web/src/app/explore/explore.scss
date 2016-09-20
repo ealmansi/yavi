@@ -5,43 +5,65 @@
  *  Variables.
  */
 
-// Explore container heights.
-$header-height: 50px;
-$footer-height: 30px;
-$content-min-height: calc(100% - 50px - 30px); // 100% - $header-height - $footer-height;
+$header-row-height: 50px;
+$footer-row-height: 30px;
+$content-row-height: calc(100% - 50px - 30px); // 100% - $header-height - $footer-height;
+
+/**
+ *  Styles.
+ */
 
 #explore-container {
     height: 100%;
     padding: 0px;
     margin: 0px;
-
-    #explore-header-container {
-        height: $header-height;
+    
+    #explore-header-row {
+        height: $header-row-height;
         padding: 0px;
         margin: 0px;
 
-        #explore-navbar-wrapper {
+        #explore-header {
             height: 100%;
             padding: 0px;
+            margin: 0px;
             z-index: 1;
         }
     }
-
-    #explore-content-container {
-        min-height: $content-min-height;
+    
+    #explore-content-row {
+        height: $content-row-height;
         padding: 0px;
         margin: 0px;
+        overflow-y: scroll;
 
+        #explore-content {
+            min-height: 100%;
+            background-color: white;
+
+            .page-carousel-wrapper {
+            }
+
+            .page-bubble-chart-wrapper {
+            }
+
+            .page-feature-chart-wrapper {
+            }
+
+            .page-signal-chart-wrapper {
+            }
+        }
     }
-
-    #explore-footer-container {
-        min-height: $footer-height;
+    
+    #explore-footer-row {
+        height: $footer-row-height;
         padding: 0px;
         margin: 0px;
 
-        #explore-footer-wrapper {
-
+        #explore-footer {
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
         }
     }
 }
-

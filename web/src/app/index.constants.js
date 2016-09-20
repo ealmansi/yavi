@@ -4,11 +4,12 @@
     angular
         .module('yavi')
         .constant('yaviDefaults', {
-            query: '',
+            wikipediaId: 'en',
+            queryString: '',
             startDate: '2014-01-01',
-            endDate: '2014-03-01',
-            wikipediaSourceId: 'en',
-            commaDangle: null
-        });
+            endDate: '2014-03-01'
+        })
+        .constant('yaviApiUrl', CONFIG.get("YAVI_API_URL"))
+        .constant('yaviApiPort', CONFIG.get("YAVI_API_PORT"));
 
 })();

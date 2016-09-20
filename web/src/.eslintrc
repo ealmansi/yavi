@@ -8,8 +8,10 @@
         "quotes": 0
     },
     "globals":{
+        "CONFIG": true,
         "_": true,
         "angular": true,
+        "Chart": true,
         "d3": true,
         "moment": true,
         "zzz-comma-dangle": true
