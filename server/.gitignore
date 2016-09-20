@@ -1,13 +1,3 @@
-# Local Resources
-local/
-*.sublime-project
-*.sublime-workspace
-
-# Eclipse
-.classpath
-.project
-.settings/
-
-# Build
-build/
-target/
+node_modules/*
+bower_components/*
+.env

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.5" xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eclipse.org/eclipselink/xsds/persistence/orm http://www.eclipse.org/eclipselink/xsds/eclipselink_orm_2_5.xsd">
-	<persistence-unit-metadata>
-		<persistence-unit-defaults>
-			<schema>enwiki20160113</schema>
-		</persistence-unit-defaults>
-	</persistence-unit-metadata>
-</entity-mappings>
