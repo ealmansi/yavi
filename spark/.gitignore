@@ -27,3 +27,7 @@ project/plugins/project/
 
 # Intelli-J
 .idea/
+
+# Spark shell.
+derby.log
+metastore_db/
