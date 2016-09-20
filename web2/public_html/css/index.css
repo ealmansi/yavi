@@ -1,3 +1,24 @@
+html {
+    overflow-y: scroll;
+    /*height: 100%;*/
+}
+
+body {
+    background-image: url("../assets/img/background.png");
+    background-color: #cccccc;
+    padding-right: 0px!important;
+    /*height: 100%;*/
+}
+
+#page-content {
+  background: white;
+  /*min-height: calc(100% - 50px);*/
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
 .navbar-brand img {
   height: 100%;
 }
@@ -25,4 +46,11 @@ li.select2-selection__choice:nth-child(2) {
 
 li.select2-selection__choice:nth-child(3) {
   background-color: #FFDC00!important;
+}
+
+#chart-type-modal .modal-dialog {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -20%);
 }

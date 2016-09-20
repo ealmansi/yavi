@@ -3,6 +3,9 @@
 // BASE SETUP
 // =============================================================================
 
+// Env variables.
+require('dotenv').config()
+
 // General deps.
 var _ = require('underscore');
 var moment = require('moment');
@@ -20,77 +23,88 @@ app.use(bodyParser.json());
 // Set up database.
 var pgp = require('pg-promise')();
 var db = pgp({
-    host: 'localhost',
-    port: 5434,
-    database: 'emilio',
-    user: 'emilio',
-    password: 'qwertyuiop'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
 });
 
 // ROUTES FOR OUR API
 // =============================================================================
 
+var dayZero = moment("01-01-2000", "DD-MM-YYYY");
+
 app.get('/stats', function(request, response) {
-    var pageId = request.query.p % 10001;
+    var pageId = request.query.p;
     var startDay = moment(request.query.f, "DD-MM-YYYY");
     var endDay = moment(request.query.t, "DD-MM-YYYY");
     var signalId = request.query.s;
-    var startDayNumber = moment.duration(startDay.diff(moment("01-01-2016", "DD-MM-YYYY"))).asDays();
-    var endDayNumber = moment.duration(endDay.diff(moment("01-01-2016", "DD-MM-YYYY"))).asDays();
+    var startDayNumber = Math.floor(moment.duration(startDay.diff(dayZero)).asDays());
+    var endDayNumber = Math.ceil(moment.duration(endDay.diff(dayZero)).asDays());
     var queryString = '';
-    queryString += 'select ' + signalId + ' ';
-    queryString += 'from data_demo_sm where page_id / 10 = ' + pageId + ' ';
+    queryString += 'select day_number, ' + signalId + ' ';
+    queryString += 'from daily_signals where page_id = ' + pageId + ' ';
     queryString += 'AND day_number >= ' + startDayNumber + ' ';
     queryString += 'AND day_number <= ' + endDayNumber;
     console.log(queryString)
     db.query(queryString)
     .then(function(result) {
         _.each(result, function(row) {
-            row.day = moment("01-01-2016", "DD-MM-YYYY").add(row.day_number - 1, 'days').format("DD-MM-YYYY");
+            row.day = dayZero.clone().add(row.day_number - 1, 'days').format("DD-MM-YYYY");
         })
         response.jsonp(result);   
-    });
+    })
+    .catch(function(e) {console.log(e)});
 });
 
 app.get('/feats', function(request, response) {
-    var pageId = request.query.p % 10001;
+    var pageId = request.query.p;
     var startDay = moment(request.query.f, "DD-MM-YYYY");
     var endDay = moment(request.query.t, "DD-MM-YYYY");
-    var signalId = "number_of_revisions";
-    var startDayNumber = moment.duration(startDay.diff(moment("01-01-2016", "DD-MM-YYYY"))).asDays();
-    var endDayNumber = moment.duration(endDay.diff(moment("01-01-2016", "DD-MM-YYYY"))).asDays();
+    var signalId = "num_revisions";
+    var startDayNumber = Math.floor(moment.duration(startDay.diff(dayZero)).asDays());
+    var endDayNumber = Math.ceil(moment.duration(endDay.diff(dayZero)).asDays());
     var queryString = '';
-    queryString += 'select ' + signalId + ' ';
-    queryString += 'from data_demo_sm where page_id / 10 = ' + pageId + ' ';
+    queryString += 'select day_number, ' + signalId + ' ';
+    queryString += 'from daily_signals where page_id = ' + pageId + ' ';
     queryString += 'AND day_number >= ' + startDayNumber + ' ';
-    queryString += 'AND day_number <= ' + endDayNumber;
+    queryString += 'AND day_number <= ' + endDayNumber + ' ';
+    queryString += 'ORDER BY day_number;'
     console.log(queryString)
     db.query(queryString)
-    .then(function(result) {
-        var values = _.pluck(result, 'number_of_revisions');
-        var maxPeakOrder1 = Math.max.apply(Math, values);
-        var maxPeakOrder2 = computeMaxPeak(values, 2);
-        var maxPeakOrder3 = computeMaxPeak(values, 3);
-        var maxPeakOrder7 = computeMaxPeak(values, 7);
+    .then(function(dateValues) {
+       var maxPeakOrder1 = computeMaxPeak(dateValues, 'num_revisions', 1);
+       var maxPeakOrder2 = computeMaxPeak(dateValues, 'num_revisions', 2);
+       var maxPeakOrder3 = computeMaxPeak(dateValues, 'num_revisions', 3);
+       var maxPeakOrder5 = computeMaxPeak(dateValues, 'num_revisions', 5);
+       var maxPeakOrder7 = computeMaxPeak(dateValues, 'num_revisions', 7);
+       var maxPeakOrder10 = computeMaxPeak(dateValues, 'num_revisions', 10);
+       var maxPeakOrder14 = computeMaxPeak(dateValues, 'num_revisions', 14);
         response.jsonp({
             maxPeakOrder1: maxPeakOrder1,
             maxPeakOrder2: maxPeakOrder2,
             maxPeakOrder3: maxPeakOrder3,
-            maxPeakOrder7: maxPeakOrder7
+            maxPeakOrder5: maxPeakOrder5,
+            maxPeakOrder7: maxPeakOrder7,
+            maxPeakOrder10: maxPeakOrder10,
+            maxPeakOrder14: maxPeakOrder14
         });   
     });
 });
 
-function computeMaxPeak(array, order) {
-    var windowSize = Math.min(array.length, order);
-    var windowAccumulator = 0;
-    var maxPeak = 0;
-    for (var i = 0; i < array.length; ++i) {
-        windowAccumulator += array[i];
-        if (i > windowSize - 1) windowAccumulator -= array[i - windowSize];
-        maxPeak = Math.max(windowAccumulator, maxPeak);
+function computeMaxPeak(dateValues, valueName, order) {
+    var accum = 0, best = 0;
+    var start = 0;
+    for (var end = 0; end < dateValues.length; ++end) {
+        accum += dateValues[end][valueName];
+        while (start < end && dateValues[start]['day_number'] + order - 1 < dateValues[end]['day_number']) {
+            accum -= dateValues[start][valueName];
+            ++start;
+        }
+        best = Math.max(best, accum);
     }
-    return maxPeak;
+    return best;
 }
 
 app.get('/related', function(request, response) {
