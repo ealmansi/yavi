@@ -6,7 +6,7 @@ main_class=de.mpg.mpi.inf.d5.yavi.wikipedia.export.YaviPageMetadataExport
 # Build jar if missing.
 if [ ! -e "$jar_file" ]; then
   mvn -f ../pom.xml package || exit 1
-fi 
+fi
 
 # Make sure data dir is set.
 YAVI_LOCAL_DATA_DIR=${YAVI_LOCAL_DATA_DIR:?Need to set YAVI_LOCAL_DATA_DIR to non-empty value.}
@@ -25,7 +25,7 @@ wiki_id=$1
 dump_date=$2
 
 # Define input/output directories.
-input_dir=$YAVI_LOCAL_DATA_DIR/${wiki_id}/${dump_date}/xml/pages-meta-current/
+input_dir=$YAVI_LOCAL_DATA_DIR/${wiki_id}/${dump_date}/xml/pages-articles/
 output_dir=$YAVI_LOCAL_DATA_DIR/${wiki_id}/${dump_date}/avro/page_metadata/ && mkdir -p $output_dir
 
 # Check input dir exists.
