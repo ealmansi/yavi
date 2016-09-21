@@ -28,7 +28,7 @@ wiki_data_dir=$YAVI_DATA_DIR/$wiki_id/$dump_date/
 if [ ! -e "$job_file" ]; then
   >&2 echo "Job could not be submitted: $job_id. File not found: $job_file."
   exit 1
-fi 
+fi
 
 # Define submit directory and log file.
 current_date_time=$(date '+%Y%m%d-%Hh%Mm%Ss')
@@ -42,3 +42,6 @@ runJob(\"$wiki_data_dir\", sqlContext)"
 # Submit job.
 (cd $submit_dir && echo "$run_job" | \
   spark-shell --packages com.databricks:spark-avro_2.10:2.0.1,com.databricks:spark-csv_2.10:1.4.0 $shell_args >> $log_file 2>&1 &)
+
+# Report job started.
+echo "Job submitted succesfully. Log file: $log_file."
