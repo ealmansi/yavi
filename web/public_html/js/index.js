@@ -23,14 +23,15 @@ var pageInvertedIndex = {};
  */
 
 var dateFormat = "DD-MM-YYYY";
-var startDate = moment("01-01-2015", dateFormat);
-var endDate = moment("10-01-2015", dateFormat);
+var endDate = moment("31-08-16", dateFormat);
+var startDate = endDate.clone().subtract(3, 'months');
+var currentDate = moment();
 
 var rangeShortcuts = {
-    'First Quarter 2015': [moment("01-01-2015", dateFormat), moment("01-04-2015", dateFormat)],
-    'Second Quarter 2015': [moment("01-04-2015", dateFormat), moment("01-07-2015", dateFormat)],
-    'Third Quarter 2015': [moment("01-07-2015", dateFormat), moment("01-10-2015", dateFormat)],
-    'Fourth Quarter 2015': [moment("01-10-2015", dateFormat), moment("01-01-2016", dateFormat)]
+    'Fourth Quarter 2015': [moment("01-10-2015", dateFormat), moment("01-01-2016", dateFormat)],
+    'First Quarter 2016': [moment("01-01-2016", dateFormat), moment("01-04-2016", dateFormat)],
+    'Second Quarter 2016': [moment("01-04-2016", dateFormat), moment("01-07-2016", dateFormat)],
+    'Third Quarter 2016': [moment("01-07-2016", dateFormat), moment("01-10-2017", dateFormat)]
 };
 
 var dateRangePickerConfig = {
@@ -49,6 +50,9 @@ onRangeSelect(startDate, endDate);
 function onRangeSelect(selectedStartDate, selectedEndDate) {
   startDate = selectedStartDate;
   endDate = selectedEndDate;
+  if (endDate.isAfter(currentDate)) {
+    endDate = currentDate.clone();
+  }
   var startDateText = startDate.format('MMM D, YYYY');
   var endDateText = endDate.format('MMM D, YYYY');
   var inputText = startDateText + ' - ' + endDateText;
@@ -470,6 +474,7 @@ function requestPageSignal(pageId, startDate, endDate, signalId, callback) {
     data: requestData,
     dataType: 'jsonp',
     success: function(response) {
+      var signal = allSignals[signalInvertedIndex[signalId]];
       var dateToValue = {};
       _.each(response, function(data) { dateToValue[data['day']] = data[signalId]; });
       var values = [];
@@ -478,12 +483,17 @@ function requestPageSignal(pageId, startDate, endDate, signalId, callback) {
         if (key in dateToValue) {
           values.push(dateToValue[key]);
         } else {
-          var signal = allSignals[signalInvertedIndex[signalId]];
           if (values.length == 0 || signal.onMissing == "zero") {
             values.push(0);
           } else if (signal.onMissing == "same") {
             values.push(values[values.length - 1]);
           }
+        }
+      }
+      if (signal.onMissing == "same") {
+        var firstNonZero = _.head(_.filter(values, function(v) { return v != 0; })) || 0;
+        for (var i = 0; i < values.length && values[i] == 0; i++) {
+          values[i] = firstNonZero;
         }
       }
       callback(pageId, signalId, values);
@@ -527,6 +537,19 @@ function addPageDatasetToChart(pageId, signalId, values) {
     return dataset.pageIndex;
   }), 0, dataset);
   myLineChart.update();
+  $("#line-chart-correlations").html("");
+  for (var i = 0; i < myLineChart.data.datasets.length; ++i) {
+    var datasetA = myLineChart.data.datasets[i];
+    for (var j = i + 1; j < myLineChart.data.datasets.length; ++j) {
+      var datasetB = myLineChart.data.datasets[j];
+      var correlationCoefficient = (jStat.corrcoeff(datasetA.data, datasetB.data) || 0).toFixed(4);
+      var element = "";
+      element += "<h4>";
+      element += "Pearson's correlation coefficient between \"" + datasetA.label + "\" and \"" + datasetB.label + "\": " + correlationCoefficient;
+      element += "</h4>";
+      $("#line-chart-correlations").append(element);
+    }
+  }
 }
 
 function addSignalDatasetToChart(pageId, signalId, values) {
