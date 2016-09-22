@@ -108,10 +108,12 @@ function computeMaxPeak(dateValues, valueName, order) {
 }
 
 app.get('/related', function(request, response) {
-    var pageId = request.query.p % 10001;
+    var pageId = request.query.p;
     var queryString = '';
     queryString += 'select * ';
-    queryString += 'from related_demo_sm where page_id / 10 = ' + pageId + ' ';
+    queryString += 'from page_outlinks where page_id = ' + pageId + ' ';
+    queryString += 'and related_page_id <> ' + pageId + ' ';
+    queryString += 'limit 100';
     console.log(queryString)
     db.query(queryString)
     .then(function(result) {
