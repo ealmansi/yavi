@@ -4,21 +4,8 @@ import org.apache.spark.sql.SQLContext
 
 def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
 
-  loadTable("page_outlinks", workDirectory, sqlContext)
-
-  defineTable("neighbourhood_size", s"""
-    SELECT po.page_id, COUNT(*) AS size
-    FROM page_outlinks po
-    GROUP BY po.page_id
-  """, sqlContext)
-
-  defineTable("neighbourhood_intersection_size", s"""
-    SELECT po1.page_id AS page_id_1, po2.page_id AS page_id_2, COUNT(*) AS size
-    FROM page_outlinks po1
-    INNER JOIN page_outlinks po2 ON po1.outlink = po2.outlink
-    WHERE po1.page_id < po2.page_id
-    GROUP BY po1.page_id, po2.page_id
-  """, sqlContext)
+  loadTable("neighbourhood_size", workDirectory, sqlContext)
+  loadTable("neighbourhood_intersection_size", workDirectory, sqlContext)
 
   defineTable("page_similarity", s"""
     SELECT
