@@ -30,11 +30,11 @@ def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
     SELECT tpo1.page_id AS page_id_1, tpo2.page_id AS page_id_2, COUNT(*) AS size
     FROM trimmed_page_outlinks tpo1
     INNER JOIN trimmed_page_outlinks tpo2 ON tpo1.outlink = tpo2.outlink
-    WHERE tpo1.page_id < tpo2.page_id
+    WHERE tpo1.page_id <> tpo2.page_id
     GROUP BY tpo1.page_id, tpo2.page_id
   """, sqlContext)
 
-  defineTable("page_similarity", s"""
+  defineTable("page_similarity_full", s"""
     SELECT
       ns1.page_id AS page_id_1,
       ns2.page_id AS page_id_2,
@@ -42,6 +42,18 @@ def runJob(workDirectory: String, sqlContext: SQLContext): Unit = {
     FROM neighbourhood_intersection_size nis
     INNER JOIN neighbourhood_size ns1 ON nis.page_id_1 = ns1.page_id
     INNER JOIN neighbourhood_size ns2 ON nis.page_id_2 = ns2.page_id
+  """, sqlContext)
+
+  defineTable("page_similarity", s"""
+    SELECT page_id_1, page_id_2, score
+    FROM (
+        SELECT
+          page_id_1,
+          page_id_2,
+          score, 
+          rank() OVER (PARTITION BY page_id_1 ORDER BY score DESC) AS rank 
+        FROM page_similarity_full ) t
+    WHERE rank <= 100
   """, sqlContext)
 
   saveTable("page_similarity", workDirectory, sqlContext)
