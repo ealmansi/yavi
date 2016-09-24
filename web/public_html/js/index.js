@@ -11,12 +11,12 @@ var allSignals = [
 var signalInvertedIndex = {};
 _.each(allSignals, function(signal, index) { signalInvertedIndex[signal.id] = index; });
 
-
-
 var pageData = {};
 var pageIndex = {};
 var pageInvertedIndex = {};
 
+// var serverHost = "139.19.61.15";
+var serverHost = "localhost";
 
 /**
  * Date range picker.
@@ -264,9 +264,9 @@ var myLineChart = new Chart($("#lineChart"), {
             display: true,
             labelString: signal.label
           },
-          ticks: {
-            min: 0
-          }
+          ticks: ((signal.id != "text_size" && {
+                                min: 0
+                              }) || {})
         };
       })
     },
@@ -462,7 +462,7 @@ function onLegendClickForPage(e, legendItem) {
 }
 
 function requestPageSignal(pageId, startDate, endDate, signalId, callback) {
-  var requestUrl = "http://localhost:8080/stats/";
+  var requestUrl = "http://" + serverHost + ":8080/stats/";
   var requestData = {
     p: pageId,
     f: startDate.format(dateFormat),
@@ -606,7 +606,7 @@ function updateRadarChart(pageIds) {
 }
 
 function requestPageFeatures(pageId, startDate, endDate, callback) {
-  var requestUrl = "http://localhost:8080/feats/";
+  var requestUrl = "http://" + serverHost + ":8080/feats/";
   var requestData = {
     p: pageId,
     f: startDate.format(dateFormat),
@@ -698,7 +698,6 @@ function bubbleChartOnClick(e) {
   var activePoints = myBubbleChart.getElementAtEvent(e);
   if (activePoints.length == 1) {
     var dataset = myBubbleChart.data.datasets[activePoints[0]._datasetIndex];
-    console.log(dataset)
   }
 }
 
@@ -711,28 +710,31 @@ function updateBubbleChart(pageId) {
     myBubbleChart.options.title.display = true;
     myBubbleChart.options.title.text = "Popular pages related to " + pageData[pageId].title;
     myBubbleChart.update();
-    requestPageRelatedPages(pageId, requestRelatedPagesData)
+    requestPageRelatedPages(pageId, startDate, endDate, requestRelatedPagesData)
   }
 }
 
-function requestPageRelatedPages(pageId, callback) {
-  var requestUrl = "http://localhost:8080/related/";
+function requestPageRelatedPages(pageId, startDate, endDate, callback) {
+  var requestUrl = "http://" + serverHost + ":8080/related/";
   var requestData = {
-    p: pageId
+    p: pageId,
+    f: startDate.format(dateFormat),
+    t: endDate.format(dateFormat)
   };
   $.ajax({
     url: requestUrl,
     data: requestData,
     dataType: 'jsonp',
     success: function(response) {
+      console.log(response)
       callback(pageId, response);
     }
   });
 }
 
 function requestRelatedPagesData(pageId, relatedPages) {
-  var relatedPageIds = _.map(relatedPages, 'page_id');
-  if (relatedPageIds.length > 50) relatedPageIds.length = 50;
+  var relatedPageIds = _.map(relatedPages, 'related_page_id');
+  if (relatedPageIds.length > 10) relatedPageIds.length = 10;
   var requestUrl = "https://en.wikipedia.org/w/api.php?";
   var requestData = {
     action: "query",
@@ -752,13 +754,12 @@ function requestRelatedPagesData(pageId, relatedPages) {
     dataType: 'jsonp',
     success: function(response) {
       var validRelatedPages = _.filter(relatedPages, function(relatedPage) {
-        return response.query.pages[relatedPage['page_id']] &&
-            response.query.pages[relatedPage['page_id']].ns === 0;
+        return response.query.pages[relatedPage['related_page_id']] &&
+            response.query.pages[relatedPage['related_page_id']].ns === 0;
       });
       _.each(validRelatedPages, function(relatedPage) {
-        pageData[relatedPage['page_id']] = response.query.pages[relatedPage['page_id']];
+        pageData[relatedPage['related_page_id']] = response.query.pages[relatedPage['related_page_id']];
       });
-      if (validRelatedPages.length > 10) validRelatedPages.length = 10;
       addRelatedPagesToBubbleChart(validRelatedPages);
     }
   });
@@ -766,10 +767,11 @@ function requestRelatedPagesData(pageId, relatedPages) {
 
 function addRelatedPagesToBubbleChart(relatedPages) {
   var bubbleCoords = getCoords(relatedPages.length);
-  var radiusScaleFactor = 50 / (_.max(_.map(relatedPages, 'score')) + 1);
+  var maxScore = _.max(_.map(relatedPages, 'score'));
+  var radiusScaleFactor = maxScore > 0 ? 50 / maxScore : 1;
   var datasets = _.map(relatedPages, function(page, index) {
     return {
-      label: pageData[page['page_id']].title,
+      label: pageData[page['related_page_id']].title,
       data: [{ x: bubbleCoords[index].x, y: bubbleCoords[index].y, r: Math.max(page['score'] * radiusScaleFactor, 5)}],
       backgroundColor: chartColors[index],
       hoverBackgroundColor: chartColors[index]

@@ -111,21 +111,52 @@ app.get('/related', function(request, response) {
     var pageId = request.query.p;
     var queryString = '';
     queryString += 'select * ';
-    queryString += 'from page_outlinks where page_id = ' + pageId + ' ';
+    queryString += 'from page_similarity where page_id = ' + pageId + ' ';
     queryString += 'and related_page_id <> ' + pageId + ' ';
-    queryString += 'limit 100';
     console.log(queryString)
     db.query(queryString)
     .then(function(result) {
-        var relatedPageIds = _.pluck(result, 'related_page_id');
-        var result = _.map(relatedPageIds, function(pageId) {
-            return {
-                page_id: pageId,
-                score: Math.floor(Math.random() * 5000)
-            };
-        });
         response.jsonp(result);
     });
+});
+
+// http://localhost:8080/rankingdata/?p=21148&f=31-05-2016&t=31-08-2016
+app.get('/rankingdata', function(request, response) {
+    var pageId = request.query.p;
+    var startDay = moment(request.query.f, "DD-MM-YYYY");
+    var endDay = moment(request.query.t, "DD-MM-YYYY");
+    var startDayNumber = Math.floor(moment.duration(startDay.diff(dayZero)).asDays());
+    var endDayNumber = Math.ceil(moment.duration(endDay.diff(dayZero)).asDays());
+    var queryString = '';
+    queryString += 'select *' + ' ';
+    queryString += 'from page_similarity ps' + ' ';
+    queryString += 'where ps.page_id = ' + pageId + ' and ps.related_page_id <> ' + pageId + ' ';
+    console.log(queryString)
+    db.query(queryString)
+    .then(function(outerResult) {
+        var subQueryString = '';
+        subQueryString += 'select related_page_id' + ' ';
+        subQueryString += 'from page_similarity ps' + ' ';
+        subQueryString += 'where ps.page_id = ' + pageId + ' and ps.related_page_id <> ' + pageId + ' ';
+        var queryString = '';
+        queryString += 'select *' + ' ';
+        queryString += 'from daily_signals ds' + ' ';
+        queryString += 'where page_id in (' + subQueryString + ')' + ' ';
+        queryString += 'and day_number >= ' + startDayNumber + ' ';
+        queryString += 'and day_number <= ' + endDayNumber + ' ';
+        queryString += 'order by page_id, day_number' + ' ';
+        console.log(queryString)
+        db.query(queryString)
+        .then(function(innerResult) {
+            response.jsonp({
+                page_id: pageId,
+                related_pages: _.map(outerResult, function(obj) { return _.pick(obj, 'related_page_id', 'score'); }),
+                signals: innerResult
+            });
+        })
+        .catch(function(e) { console.log(e); });
+    })
+    .catch(function(e) { console.log(e); });
 });
 
 // START THE SERVER
